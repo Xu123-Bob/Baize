@@ -43,21 +43,16 @@
 
 - pip
 
-## 从 PyPI 安装（推荐）
-
-bash
-
-pip install baize-agent
-
 ## 从源码安装
 
 bash
 
-git clone https://github.com/你的用户名/baize-agent.git
+git clone https://github.com/Xu123-Bob/baize.git
 cd baize-agent
 pip install -e .
 
 安装完成后，在任意目录输入 baize 即可启动。
+文件中有下载使用说明
 
 # 🚀 快速开始
 1. 首次运行
