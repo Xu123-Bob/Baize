@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baize"
+version = "0.1.0"
+description = "白泽 - 通晓万物的 Vibe Coding 助手"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0",
+    "tiktoken",
+    "python-dotenv",
+    "psutil",
+    "duckduckgo-search",
+    "requests",
+    "beautifulsoup4",
+    "tenacity",
+    "httpx",
+    "wcwidth",
+    "rich",
+]
+
+[project.scripts]
+baize = "agent.Baize:main"
+
+[tool.setuptools.packages.find]
+include = ["agent*"]
+
+[tool.setuptools.package-data]
+agent = [
+    "skills/**/*",
+    "subagent/**/*",
+    "hooks/**/*",
+    "MCP/*.json",
+    "logo.txt",
+]

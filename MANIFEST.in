@@ -1,0 +1,7 @@
+recursive-include agent/skills *
+recursive-include agent/subagent *
+recursive-include agent/hooks *
+recursive-include agent/MCP *.json
+include agent/logo.txt
+include README.md
+include LICENSE

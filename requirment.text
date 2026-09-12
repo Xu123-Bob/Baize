@@ -1,0 +1,11 @@
+openai>=1.0
+tiktoken
+python-dotenv
+psutil
+duckduckgo-search
+requests
+beautifulsoup4
+tenacity
+httpx
+wcwidth
+rich
