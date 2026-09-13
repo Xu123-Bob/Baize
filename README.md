@@ -44,15 +44,27 @@
 - pip
 
 ## 从源码安装
+### 下载方式两个
+1.pip install https://github.com/Xu123-Bob/Baize.git
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
-bash
+2、<>Code  --> Download ZIP
+(1)解压后进入本文件目录：
+bash  -->win+R 输入cmd
 
-git clone https://github.com/Xu123-Bob/baize.git
-cd baize-agent
-pip install -e .
+cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入cmd，就不需要这一步）
+pip install -r requirements.txt    
+python -m Baize              
 
-安装完成后，在任意目录输入 baize 即可启动。
-文件中有下载使用说明
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
+
+(2)下载 ZIP 后本地安装
+解压后进入目录，执行：
+bash -->win+R 输入cmd
+
+pip install .
+
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
 # 🚀 快速开始
 1. 首次运行
