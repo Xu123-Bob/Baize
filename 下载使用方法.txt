@@ -6,7 +6,7 @@ bash  -->win+R 输入cmd
 
 cd Baize-main
 pip install -r requirements.txt    
-python -m agent.Baize              
+python -m Baize              
 
 (2)下载 ZIP 后本地安装
 解压后进入目录，执行：
