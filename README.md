@@ -6,7 +6,7 @@
 
 **通晓万物，陪你直觉编程。**
 
-[![在 AtomGit 上 Star 本项目](atomgit-star.jpg)](https://atomgit.com/Com_Xu/Baize)
+[![在 AtomGit 上 Star 本项目]](https://atomgit.com/Com_Xu/Baize)
 
 </div>
 
