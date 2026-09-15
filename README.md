@@ -1,9 +1,17 @@
-*白泽 Baize*
+<div align="center">
+
+<img src="logo.png" alt="白泽 Baize Logo" width="320" />
+
+# 白泽 Baize
+
+**通晓万物，陪你直觉编程。**
+
+[![在 AtomGit 上 Star 本项目](atomgit-star.jpg)](https://atomgit.com/Com_Xu/Baize)
+
+</div>
 
 ----------
 
-
-**通晓万物，陪你直觉编程。**
 
 白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
 
@@ -328,11 +336,12 @@ A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显
 MIT License
 
 # 🙏 致谢
-灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
+- 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
 
-基于 DeepSeek、OpenAI SDK、MCP 构建
+- 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
 
-感谢所有在 Vibe Coding 路上同行的开发者
+- 基于 DeepSeek、OpenAI SDK、MCP 构建
 
-开发者专注创意与决策，白泽处理琐碎与执行。
-让编程回归直觉，让创造如神话般流畅。
+- 感谢所有在 Vibe Coding 路上同行的开发者
+
+- 开发者专注创意与决策，白泽处理琐碎与执行。让编程回归直觉，让创造如神话般流畅。
