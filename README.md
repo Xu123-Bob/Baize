@@ -6,7 +6,7 @@
 
 **通晓万物，陪你直觉编程。**
 
-[![在 AtomGit 上 Star 本项目]](https://atomgit.com/Com_Xu/Baize)
+[在 AtomGit 上 Star 本项目](https://atomgit.com/Com_Xu/Baize)
 
 </div>
 
@@ -169,17 +169,17 @@ text
 不想用云 API？用本地 Ollama：
 
 bash
-# 1. 安装 Ollama：https://ollama.com/download
-# 2. 拉取模型
+## 1. 安装 Ollama：https://ollama.com/download
+## 2. 拉取模型
 ollama pull qwen2.5:7b
 
-# 3. 启动 Ollama 服务
+## 3. 启动 Ollama 服务
 ollama serve
 
-# 4. 修改 ~/.baize/config.toml
-#    active_provider = "ollama"
+## 4. 修改 ~/.baize/config.toml
+active_provider = "ollama"
 
-# 5. 启动白泽
+## 5. 启动白泽
 baize
 推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
 
