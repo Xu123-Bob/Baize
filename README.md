@@ -7,6 +7,7 @@
 **通晓万物，陪你直觉编程。**
 
 [在 AtomGit 上 Star 本项目](https://atomgit.com/Com_Xu/Baize)
+
 [在 Github 上 Star 本项目](https://github.com/Xu123-Bob/Baize)
 
 </div>
@@ -66,9 +67,9 @@ bash  --win+R 输入cmd
 
 cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入cmd，就不需要这一步）
 
-pip install -r requirements.txt    
+    pip install -r requirements.txt    
 
-python -m Baize>             
+    python -m Baize             
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
@@ -78,7 +79,7 @@ python -m Baize>
 
 bash --win+R 输入cmd
 
-pip install .
+    pip install .
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
@@ -222,13 +223,14 @@ baize
 
 markdown
 
+
 name: pandas-eda
 
 description: 使用 pandas 进行探索性数据分析的最佳实践
 
 tags: data,python
 
----
+
 #Pandas EDA 指南
 
 ##核心步骤
@@ -244,11 +246,12 @@ tags: data,python
 
 markdown
 
+
 name: code-reviewer
 
 description: 严格的代码审查员
 
----
+
 你是资深代码审查员。审查时优先关注：
 1. 边界条件与异常处理
 2. 资源泄漏
@@ -262,17 +265,17 @@ description: 严格的代码审查员
 
 bash
 
-#!/bin/bash
+    #!/bin/bash
 
-#PreToolUse-guard.sh
+    #PreToolUse-guard.sh
 
-read -r input
+    read -r input
 
-if echo "$input" | grep -q "rm -rf"; then
+    if echo "$input" | grep -q "rm -rf"; then
 
-  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"禁止删除"}}'
+    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"禁止删除"}}'
 
-fi
+    fi
 
 Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
@@ -283,27 +286,27 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
 json
 
-{
-
-  "mcpServers": [
-
     {
 
-      "name": "filesystem",
+      "mcpServers": [
 
-      "command": "npx",
+        {
 
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+          "name": "filesystem",
 
-      "env": {},
+          "command": "npx",
 
-      "enabled": true
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
 
-    }
+          "env": {},
 
-  ]
+          "enabled": true
 
-}
+        }
+
+      ]
+
+     }
 
 
 # 🛡️ 安全设计
@@ -329,41 +332,41 @@ json
 text
 baize-agent/
 
-├── pyproject.toml              # 打包配置
+    ├── pyproject.toml              # 打包配置
 
-├── README.md
+    ├── README.md
 
-├── .env.example                # 环境变量示例
+    ├── .env.example                # 环境变量示例
 
-├── .gitignore
+    ├── .gitignore
 
-└── agent/                      # 主包
-
-    ├── __init__.py
-
-    ├── Baize.py                # 主程序与 Agent Loop
-
-    ├── config.py               # 多后端配置加载
-
-    ├── ui_theme.py             # CLI 渲染主题
-
-    ├── utils.py                # 通用工具
-
-    ├── logo.txt
-
-    ├── skills/                 # 内置技能
-
-    ├── subagent/               # 内置子代理
-
-    ├── hooks/                  # 内置钩子
-
-    └── MCP/                    # MCP 客户端与配置
+    └── agent/                      # 主包
 
         ├── __init__.py
 
-        ├── mcp_client.py
+        ├── Baize.py                # 主程序与 Agent Loop
 
-        └── mcp_config.json
+        ├── config.py               # 多后端配置加载
+
+        ├── ui_theme.py             # CLI 渲染主题
+
+        ├── utils.py                # 通用工具
+
+        ├── logo.txt
+
+        ├── skills/                 # 内置技能
+
+        ├── subagent/               # 内置子代理
+
+        ├── hooks/                  # 内置钩子
+
+        └── MCP/                    # MCP 客户端与配置
+
+            ├── __init__.py
+
+            ├── mcp_client.py
+
+            └── mcp_config.json
 
 
 # ⚙️ 环境变量参考
