@@ -107,22 +107,37 @@ Windows 用户路径为 C:\Users\你的用户名\.baize\。
 toml
 active_provider = "deepseek"    # 或 "openai" / "ollama"
 
+
 [model_providers.deepseek]
+
 name = "DeepSeek"
+
 base_url = "https://api.deepseek.com"
+
 env_key = "DEEPSEEK_API_KEY"
+
 model = "deepseek-v4-pro"
 
+
 [model_providers.openai]
+
 name = "OpenAI"
+
 base_url = "https://api.openai.com/v1"
+
 env_key = "OPENAI_API_KEY"
+
 model = "gpt-4o-mini"
 
+
 [model_providers.ollama]
+
 name = "Ollama (本地)"
+
 base_url = "http://localhost:11434/v1"
+
 env_key = ""
+
 model = "qwen2.5:7b">
 
 
@@ -135,6 +150,7 @@ env
 #DeepSeek 后端必填
 
 DEEPSEEK_API_KEY=sk-你的密钥
+
 
 #OpenAI 兼容接口必填
 
@@ -205,12 +221,14 @@ baize
 在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
 
 markdown
----
-name: pandas-eda
-description: 使用 pandas 进行探索性数据分析的最佳实践
-tags: data,python
----
 
+name: pandas-eda
+
+description: 使用 pandas 进行探索性数据分析的最佳实践
+
+tags: data,python
+
+---
 #Pandas EDA 指南
 
 ##核心步骤
@@ -225,11 +243,12 @@ tags: data,python
 在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
 
 markdown
----
-name: code-reviewer
-description: 严格的代码审查员
----
 
+name: code-reviewer
+
+description: 严格的代码审查员
+
+---
 你是资深代码审查员。审查时优先关注：
 1. 边界条件与异常处理
 2. 资源泄漏
@@ -244,11 +263,17 @@ description: 严格的代码审查员
 bash
 
 #!/bin/bash
+
 #PreToolUse-guard.sh
+
 read -r input
+
 if echo "$input" | grep -q "rm -rf"; then
+
   echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"禁止删除"}}'
+
 fi
+
 Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
 
@@ -303,37 +328,55 @@ json
 # 📁 目录结构
 text
 baize-agent/
+
 ├── pyproject.toml              # 打包配置
+
 ├── README.md
+
 ├── .env.example                # 环境变量示例
+
 ├── .gitignore
+
 └── agent/                      # 主包
+
     ├── __init__.py
+
     ├── Baize.py                # 主程序与 Agent Loop
+
     ├── config.py               # 多后端配置加载
+
     ├── ui_theme.py             # CLI 渲染主题
+
     ├── utils.py                # 通用工具
+
     ├── logo.txt
+
     ├── skills/                 # 内置技能
+
     ├── subagent/               # 内置子代理
+
     ├── hooks/                  # 内置钩子
+
     └── MCP/                    # MCP 客户端与配置
+
         ├── __init__.py
+
         ├── mcp_client.py
+
         └── mcp_config.json
 
 
 # ⚙️ 环境变量参考
 		
-变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
+- 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
 
-变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
+- 变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
 
-变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
+- 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
 
-变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
+- 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
 
-变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
+- 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
 
 变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。
 
