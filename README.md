@@ -417,6 +417,8 @@ MIT License
 # 🙏 致谢
 - 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
 
+- 感谢AtomGit将本项目已纳入G-star孵化项目
+
 - 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
 
 - 基于 DeepSeek、OpenAI SDK、MCP 构建
