@@ -1,0 +1,73 @@
+# ===== 密钥与配置 =====
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials.json
+secrets.yaml
+secrets.yml
+config.local.*
+MCP/mcp_config.json
+!MCP/mcp_config.example.json
+
+# ===== Baize 会话与运行时数据 =====
+.baize_session.json
+.baize_session.json.*
+.transcripts/
+.tasks/
+.claude/
+logs/
+*.log
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ===== Node（如果用到 hooks / prettier / eslint） =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== 数据库与临时文件 =====
+*.sqlite
+*.sqlite3
+*.db
+*.tmp
+*.temp
+tmp/
+temp/
+*.bak
+*.backup
+
+# ===== IDE / OS =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ===== 测试输出（不要忽略真实测试代码） =====
+test-output/
+tests/_output/
+
+# macOS
+.DS_Store
