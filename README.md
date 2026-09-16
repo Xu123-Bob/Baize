@@ -7,6 +7,7 @@
 **通晓万物，陪你直觉编程。**
 
 [在 AtomGit 上 Star 本项目](https://atomgit.com/Com_Xu/Baize)
+[在 Github 上 Star 本项目](https://github.com/Xu123-Bob/Baize)
 
 </div>
 
@@ -54,25 +55,26 @@
 ## 从源码安装
 ### 下载方式两个
 1.pip install https://github.com/Xu123-Bob/Baize.git
+
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
 2、<>Code  --> Download ZIP
-(1)解压后进入本文件目录：
-bash  -->win+R 输入cmd
 
+(1)解压后进入本文件目录：
+
+<bash  --win+R 输入cmd
 cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入cmd，就不需要这一步）
 pip install -r requirements.txt    
-python -m Baize              
+python -m Baize>              
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
 (2)下载 ZIP 后本地安装
+
 解压后进入目录，执行：
-bash -->win+R 输入cmd
-
+<bash --win+R 输入cmd
 pip install .
-
-下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行>
 
 # 🚀 快速开始
 1. 首次运行
@@ -83,36 +85,33 @@ baize
 
 首次运行时，白泽会自动生成两个配置文件：
 
-text
+<text
 ~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
-~/.baize/.env          # 密钥文件
+~/.baize/.env          # 密钥文件>
 
-Windows 用户路径为 C:\Users\你的用户名\.baize\。
+Windows 用户路径为 <C:\Users\你的用户名\.baize\。>
 
 
 2. 选择后端
 打开 ~/.baize/config.toml，修改 active_provider：
 
-toml
+<toml
 active_provider = "deepseek"    # 或 "openai" / "ollama"
-
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
 model = "deepseek-v4-pro"
-
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
 model = "gpt-4o-mini"
-
 [model_providers.ollama]
 name = "Ollama (本地)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b"
+model = "qwen2.5:7b">
 
 
 3. 填入密钥
