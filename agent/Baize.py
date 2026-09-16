@@ -32,6 +32,9 @@ import importlib.util
 from duckduckgo_search import DDGS
 from datetime import datetime
 import requests
+import socket
+import ipaddress
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import atexit
@@ -1429,6 +1432,18 @@ def run_webfetch(url: str, max_length: int = 10000) -> str:
     """
     if not url.startswith(('http://', 'https://')):
         return "Error: URL must start with http:// or https://"
+
+    hostname = urlparse(url).hostname
+    if not hostname:
+        return "Error: URL must contain a valid hostname"
+    try:
+        resolved_ips = {info[4][0] for info in socket.getaddrinfo(hostname, None)}
+    except socket.gaierror as e:
+        return f"Error resolving URL host: {e}"
+    for ip in resolved_ips:
+        addr = ipaddress.ip_address(ip)
+        if not addr.is_global or addr.is_multicast:
+            return "Error: URL resolves to a disallowed private/internal address"
 
     try:
         response = requests.get(url, timeout=15, headers={
