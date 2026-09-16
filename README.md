@@ -62,19 +62,25 @@
 
 (1)解压后进入本文件目录：
 
-<bash  --win+R 输入cmd
+bash  --win+R 输入cmd
+
 cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入cmd，就不需要这一步）
+
 pip install -r requirements.txt    
-python -m Baize>              
+
+python -m Baize>             
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
 (2)下载 ZIP 后本地安装
 
 解压后进入目录，执行：
-<bash --win+R 输入cmd
+
+bash --win+R 输入cmd
+
 pip install .
-下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行>
+
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
 # 🚀 快速开始
 1. 首次运行
@@ -85,28 +91,34 @@ baize
 
 首次运行时，白泽会自动生成两个配置文件：
 
-<text
+text
+
 ~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
+
 ~/.baize/.env          # 密钥文件>
 
-Windows 用户路径为 <C:\Users\你的用户名\.baize\。>
+Windows 用户路径为 C:\Users\你的用户名\.baize\。
 
 
 2. 选择后端
+
 打开 ~/.baize/config.toml，修改 active_provider：
 
-<toml
+toml
 active_provider = "deepseek"    # 或 "openai" / "ollama"
+
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
 model = "deepseek-v4-pro"
+
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
 model = "gpt-4o-mini"
+
 [model_providers.ollama]
 name = "Ollama (本地)"
 base_url = "http://localhost:11434/v1"
@@ -119,10 +131,13 @@ model = "qwen2.5:7b">
 编辑 ~/.baize/.env：
 
 env
+
 #DeepSeek 后端必填
+
 DEEPSEEK_API_KEY=sk-你的密钥
 
 #OpenAI 兼容接口必填
+
 #OPENAI_API_KEY=你的密钥
 
 #Ollama 本地无需密钥
@@ -142,25 +157,24 @@ baize
 启动后在 >>> 降旨： 提示符下用自然语言描述需求即可：
 
 text
->>> 降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
+>降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
 
->>> 降旨：帮我检查 src/ 下所有 Python 文件的类型错误
+>降旨：帮我检查 src/ 下所有 Python 文件的类型错误
 
->>> 降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
+>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
 
 ## 内置命令
-命令	说明
-/exit、/quit	退出白泽
-/clear	清空对话历史、待办、思考记录和工具记录
-/compact	手动压缩上下文（对话过长时使用）
-/commit	保存当前会话并提交到 Git（若在 Git 仓库内）
-/skills	列出所有可用技能
-/skills reload	重新加载用户技能目录
-/unload	卸载当前激活的技能
-/show thought	查看完整思考记录
-/show tool	查看工具调用记录
-/show all	查看全部会话历史
-/技能名	加载指定技能（支持模糊匹配）
+- /exit、/quit --> 退出白泽
+- /clear	--> 清空对话历史、待办、思考记录和工具记录
+- /compact	--> 手动压缩上下文（对话过长时使用）
+- /commit	--> 保存当前会话并提交到 Git（若在 Git 仓库内）
+- /skills	--> 列出所有可用技能
+- /skills reload	--> 重新加载用户技能目录
+- /unload	--> 卸载当前激活的技能
+- /show thought	--> 查看完整思考记录
+- /show tool	--> 查看工具调用记录
+- /show all	--> 查看全部会话历史
+- /技能名	--> 加载指定技能（支持模糊匹配）
 
 
 # 🔌 Ollama 本地模型（零成本）
@@ -191,7 +205,6 @@ baize
 在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
 
 markdown
-
 ---
 name: pandas-eda
 description: 使用 pandas 进行探索性数据分析的最佳实践
@@ -212,7 +225,6 @@ tags: data,python
 在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
 
 markdown
-
 ---
 name: code-reviewer
 description: 严格的代码审查员
@@ -245,16 +257,27 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 在 ./MCP/mcp_config.json 中配置外部工具服务器：
 
 json
+
 {
+
   "mcpServers": [
+
     {
+
       "name": "filesystem",
+
       "command": "npx",
+
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+
       "env": {},
+
       "enabled": true
+
     }
+
   ]
+
 }
 
 
@@ -301,31 +324,42 @@ baize-agent/
 
 
 # ⚙️ 环境变量参考
-变量	说明	默认值
-DEEPSEEK_API_KEY	DeepSeek API 密钥	—
-DEEPSEEK_BASE_URL	DeepSeek 接口地址	https://api.deepseek.com
-OPENAI_API_KEY	OpenAI 兼容接口密钥	—
-OPENAI_BASE_URL	OpenAI 兼容接口地址	https://api.openai.com/v1
-OLLAMA_BASE_URL	Ollama 服务地址	http://localhost:11434
+		
+变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
+
+变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
+
+变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
+
+变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
+
+变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
+
 变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。
 
 # ❓ 常见问题
-Q：密钥应该填在哪里？
+- Q：密钥应该填在哪里？
+
 A：~/.baize/.env，不是项目根目录的 .env。
 
-Q：换了后端要重装吗？
+- Q：换了后端要重装吗？
+
 A：不用。改 ~/.baize/config.toml 里的 active_provider 即可。
 
-Q：本地 Ollama 需要填密钥吗？
+- Q：本地 Ollama 需要填密钥吗？
+
 A：不需要。选 active_provider = "ollama" 即可，env_key 留空。
 
-Q：如何切换工作目录？
+- Q：如何切换工作目录？
+
 A：在对话中直接说"切换到 /path/to/project"，白泽会调用 set_workspace 工具。
 
-Q：上下文太长会怎样？
+- Q：上下文太长会怎样？
+
 A：白泽会自动两级压缩：先截断旧工具结果，再请求 LLM 生成摘要。也可手动 /compact。
 
-Q：会误删我的文件吗？
+- Q：会误删我的文件吗？
+
 A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显示 Diff 并请求确认。
 
 # 🤝 贡献
