@@ -3,7 +3,7 @@
     {
       "name": "github",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "args": ["-y", "@modelcontextprotocol/server-github@0.6.2"],
       "env": {
         "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
       },
@@ -12,7 +12,7 @@
     {
       "name": "filesystem",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./workspace"],
       "env": {},
       "enabled": false
     }
