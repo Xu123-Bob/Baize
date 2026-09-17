@@ -30,14 +30,14 @@
 
 白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
 
-一个开源的 AI Coding Agent CLI，支持多后端（DeepSeek / OpenAI 兼容 / Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。在终端即可与 AI 结对编程。
+一个开源的 AI Coding Agent CLI，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。在终端即可与 AI 结对编程。
 
 ----------
 
 
 # 特性
 
-- 多后端支持：DeepSeek、任意 OpenAI 兼容接口（Groq / 智谱 / 通义 / Moonshot / OpenAI）、本地 Ollama，一键切换。
+- 多后端支持：DeepSeek、任意 OpenAI 兼容接口（智谱 / 通义 / Kimi/ OpenAI）、本地 Ollama，一键切换。
 
 - 零配置启动：首次运行自动生成配置文件，用户只需填一次密钥。
 
@@ -152,7 +152,7 @@ env
     DEEPSEEK_API_KEY=sk-你的密钥
 
 
-    #OpenAI 兼容接口必填
+    #OpenAI 兼容接口必填(智谱 / 通义 / Kimi/ OpenAI)
 
     #OPENAI_API_KEY=你的密钥
 
