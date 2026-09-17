@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logopage02.png" alt="白泽 Baize Logo" width="320" />
+<img src="image/logopage02.png" alt="白泽 Baize Logo" width="320" />
 
 # 白泽 Baize
 
@@ -10,14 +10,17 @@
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
   </a>
+</p>
+
+<p align="center">
   <a href="https://github.com/Xu123-Bob/Baize/stargazers">
-    <img src="https://img.shields.io/github/stars/Xu123-Bob/Baize?style=flat&logo=github" alt="GitHub stars">
+    <img src="https://img.shields.io/github/stars/Xu123-Bob/Baize?style=flat-square&logo=github" alt="GitHub stars">
+  </a>
+  <a href="https://github.com/Xu123-Bob/Baize/forks">
+    <img src="https://img.shields.io/github/forks/Xu123-Bob/Baize?style=flat-square&logo=github" alt="GitHub forks">
   </a>
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
-  </a>
-  <a href="https://github.com/Xu123-Bob/Baize/forks">
-  <img src="https://img.shields.io/github/forks/Xu123-Bob/Baize?style=flat-square&logo=github" alt="GitHub forks">
   </a>
 </p>
 
@@ -176,6 +179,18 @@ text
     >>>降旨：帮我检查 src/ 下所有 Python 文件的类型错误
 
     >>>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
+
+
+## 白泽CLI界面
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
+</p>
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="白泽 CLI 运行界面" width="800" />
+</p>
+
 
 ## 内置命令
 - /exit、/quit --> 退出白泽
