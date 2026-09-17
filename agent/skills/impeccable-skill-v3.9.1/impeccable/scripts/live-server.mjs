@@ -509,7 +509,11 @@ function createRequestHandler({ detectScript, liveScriptParts }) {
 
     // --- Health ---
     if (p === '/status') {
-      const token = url.searchParams.get('token');
+      // Prefer the Authorization header (not logged/cached like a URL query
+      // string) over the legacy ?token= query param, which older clients
+      // still send.
+      const authHeader = req.headers.authorization || '';
+      const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : url.searchParams.get('token');
       if (token !== state.token) { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
       const sessions = activeSessionSummaries();
       res.writeHead(200, { 'Content-Type': 'application/json' });
