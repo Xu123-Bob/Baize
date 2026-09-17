@@ -1,19 +1,29 @@
 <div align="center">
 
-<img src="logopage.png" alt="白泽 Baize Logo" width="320" />
+<img src="logopage02.png" alt="白泽 Baize Logo" width="320" />
 
 # 白泽 Baize
 
 **通晓万物，陪你直觉编程。**
 
-[在 AtomGit 上 Star 本项目](https://atomgit.com/Com_Xu/Baize)
-
-[在 Github 上 Star 本项目](https://github.com/Xu123-Bob/Baize)
+<p align="center">
+  <a href="https://atomgit.com/Com_Xu/Baize">
+    <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
+  <a href="https://github.com/Xu123-Bob/Baize/stargazers">
+    <img src="https://img.shields.io/github/stars/Xu123-Bob/Baize?style=flat&logo=github" alt="GitHub stars">
+  </a>
+  <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
+  </a>
+  <a href="https://github.com/Xu123-Bob/Baize/forks">
+  <img src="https://img.shields.io/github/forks/Xu123-Bob/Baize?style=flat-square&logo=github" alt="GitHub forks">
+  </a>
+</p>
 
 </div>
 
 ----------
-
 
 白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
 
@@ -22,7 +32,7 @@
 ----------
 
 
-# ✨ 特性
+# 特性
 
 - 多后端支持：DeepSeek、任意 OpenAI 兼容接口（Groq / 智谱 / 通义 / Moonshot / OpenAI）、本地 Ollama，一键切换。
 
@@ -45,7 +55,7 @@
 - 黑金主题 CLI：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
 
 
-# 📦 安装
+# 安装
 
 ## 前置要求
 
@@ -57,7 +67,9 @@
 ### 下载方式两个
 1.pip install https://github.com/Xu123-Bob/Baize.git
 
-下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
+bash --win+R 输入cmd
+
+    baize
 
 2、<>Code  --> Download ZIP
 
@@ -65,7 +77,7 @@
 
 bash  --win+R 输入cmd
 
-cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入cmd，就不需要这一步）
+    cd 解压后进入本文件目录 #如果在本文件目录已经win+R 输入cmd，就不需要这一步
 
     pip install -r requirements.txt    
 
@@ -73,9 +85,7 @@ cd 解压后进入本文件目录 （如果在本文件目录已经win+R 输入c
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
-(2)下载 ZIP 后本地安装
-
-解压后进入目录，执行：
+(2)下载 ZIP 后本地安装，解压后进入目录，执行：
 
 bash --win+R 输入cmd
 
@@ -83,20 +93,20 @@ bash --win+R 输入cmd
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
-# 🚀 快速开始
+# 快速开始
 1. 首次运行
 
 bash
 
-baize
+    baize
 
 首次运行时，白泽会自动生成两个配置文件：
 
 text
 
-~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
+    ~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
 
-~/.baize/.env          # 密钥文件>
+    ~/.baize/.env          # 密钥文件>
 
 Windows 用户路径为 C:\Users\你的用户名\.baize\。
 
@@ -106,40 +116,26 @@ Windows 用户路径为 C:\Users\你的用户名\.baize\。
 打开 ~/.baize/config.toml，修改 active_provider：
 
 toml
-active_provider = "deepseek"    # 或 "openai" / "ollama"
 
+    active_provider = "deepseek"    # 或 "openai" / "ollama"
 
-[model_providers.deepseek]
+    [model_providers.deepseek]
+    name = "DeepSeek"
+    base_url = "https://api.deepseek.com"
+    env_key = "DEEPSEEK_API_KEY"
+    model = "deepseek-v4-pro"
 
-name = "DeepSeek"
+    [model_providers.openai]
+    name = "OpenAI"
+    base_url = "https://api.openai.com/v1"
+    env_key = "OPENAI_API_KEY"
+    model = "gpt-4o-mini"
 
-base_url = "https://api.deepseek.com"
-
-env_key = "DEEPSEEK_API_KEY"
-
-model = "deepseek-v4-pro"
-
-
-[model_providers.openai]
-
-name = "OpenAI"
-
-base_url = "https://api.openai.com/v1"
-
-env_key = "OPENAI_API_KEY"
-
-model = "gpt-4o-mini"
-
-
-[model_providers.ollama]
-
-name = "Ollama (本地)"
-
-base_url = "http://localhost:11434/v1"
-
-env_key = ""
-
-model = "qwen2.5:7b">
+    [model_providers.ollama]
+    name = "Ollama (本地)"
+    base_url = "http://localhost:11434/v1"
+    env_key = ""
+    model = "qwen2.5:7b">
 
 
 3. 填入密钥
@@ -148,37 +144,38 @@ model = "qwen2.5:7b">
 
 env
 
-#DeepSeek 后端必填
+    #DeepSeek 后端必填
 
-DEEPSEEK_API_KEY=sk-你的密钥
+    DEEPSEEK_API_KEY=sk-你的密钥
 
 
-#OpenAI 兼容接口必填
+    #OpenAI 兼容接口必填
 
-#OPENAI_API_KEY=你的密钥
+    #OPENAI_API_KEY=你的密钥
 
-#Ollama 本地无需密钥
+    #Ollama 本地无需密钥
 
 
 4. 重新启动
 
 bash
 
-baize
+    baize
 
 看到黑金 Logo 和欢迎信息即启动成功。
 
 
-# 🎯 使用示例
+# 使用示例
 
 启动后在 >>> 降旨： 提示符下用自然语言描述需求即可：
 
 text
->降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
 
->降旨：帮我检查 src/ 下所有 Python 文件的类型错误
+    >>>降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
 
->降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
+    >>>降旨：帮我检查 src/ 下所有 Python 文件的类型错误
+
+    >>>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
 
 ## 内置命令
 - /exit、/quit --> 退出白泽
@@ -194,27 +191,29 @@ text
 - /技能名	--> 加载指定技能（支持模糊匹配）
 
 
-# 🔌 Ollama 本地模型（零成本）
+# Ollama 本地模型（零成本）
 
 不想用云 API？用本地 Ollama：
 
 bash
-## 1. 安装 Ollama：https://ollama.com/download
-## 2. 拉取模型
-ollama pull qwen2.5:7b
 
-## 3. 启动 Ollama 服务
-ollama serve
+    #1. 安装 Ollama：https://ollama.com/download
+    #2. 拉取模型
+    ollama pull qwen2.5:7b
 
-## 4. 修改 ~/.baize/config.toml
-active_provider = "ollama"
+    #3. 启动 Ollama 服务
+    ollama serve
 
-## 5. 启动白泽
-baize
+    #4. 修改 ~/.baize/config.toml
+    active_provider = "ollama"
+
+    #5. 启动白泽
+    baize
+
 推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
 
 
-# 🧩 扩展机制
+# 扩展机制
 
 白泽支持四种扩展方式，全部放在当前工作目录下即可生效。
 
@@ -223,21 +222,21 @@ baize
 
 markdown
 
+    ---
+    name: pandas-eda
 
-name: pandas-eda
+    description: 使用 pandas 进行探索性数据分析的最佳实践
 
-description: 使用 pandas 进行探索性数据分析的最佳实践
+    tags: data,python
+    ---
 
-tags: data,python
+    #Pandas EDA 指南
 
-
-#Pandas EDA 指南
-
-##核心步骤
-1. df.info() 查看字段类型和缺失
-2. df.describe() 统计描述
-...
-也可以在对话中用 /pandas-eda 手动加载。
+    ##核心步骤
+    1. df.info() 查看字段类型和缺失
+    2. df.describe() 统计描述
+    ...
+    也可以在对话中用 /pandas-eda 手动加载。
 
 
 ## 子代理（Subagents）
@@ -246,22 +245,26 @@ tags: data,python
 
 markdown
 
+    ---
+    name: code-reviewer
 
-name: code-reviewer
+    description: 严格的代码审查员
+    ---
 
-description: 严格的代码审查员
-
-
-你是资深代码审查员。审查时优先关注：
-1. 边界条件与异常处理
-2. 资源泄漏
-3. 并发安全
-...
+    你是资深代码审查员。审查时优先关注：
+    1. 边界条件与异常处理
+    2. 资源泄漏
+    3. 并发安全
+    ...
 
 
 ## 钩子（Hooks）
 
-在 ./hooks/ 下放置 PreToolUse-*.sh、PostToolUse-*.sh、Stop-*.sh，接收 JSON 输入，返回决策：
+在 ./hooks/ 下放置 
+- PreToolUse-*.
+- sh、PostToolUse-*.
+- sh、Stop-*.sh
+接收 JSON 输入，返回决策：
 
 bash
 
@@ -309,67 +312,51 @@ json
      }
 
 
-# 🛡️ 安全设计
+# 安全设计
 
 白泽默认启用以下安全机制：
 
-- 命令白名单：仅允许 ls、cat、grep、git、python3 等常用命令。
+- **命令白名单**：仅允许 ls、cat、grep、git、python3 等常用命令。
 
-- 路径逃逸检测：所有文件操作限制在当前工作目录和 /tmp 内。
+- **路径逃逸检测**：所有文件操作限制在当前工作目录和 /tmp 内。
 
-- 危险命令拦截：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
+- **危险命令拦截**：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
 
-- 敏感文件保护：禁止修改 .env、.ssh/、id_rsa、*.pem 等。
+- **敏感文件保护**：禁止修改 .env、.ssh/、id_rsa、*.pem 等。
 
-- 脚本注入拦截：检测 python -c "os.system(...)" 类绕过。
+- **脚本注入拦截**：检测 python -c "os.system(...)" 类绕过。
 
-- 进程资源限制：Linux/macOS 下限制 CPU、内存、进程数。
+- **进程资源限制**：Linux/macOS 下限制 CPU、内存、进程数。
 
 如果你需要在受信任的项目中放宽限制，可修改 Baize.py 中的 ALLOWED_COMMANDS 和 FORBIDDEN_PATH_PATTERNS。
 
 
-# 📁 目录结构
+# 目录结构
 text
+
 baize-agent/
 
     ├── pyproject.toml              # 打包配置
-
     ├── README.md
-
     ├── .env.example                # 环境变量示例
-
     ├── .gitignore
-
     └── agent/                      # 主包
-
         ├── __init__.py
-
         ├── Baize.py                # 主程序与 Agent Loop
-
         ├── config.py               # 多后端配置加载
-
         ├── ui_theme.py             # CLI 渲染主题
-
         ├── utils.py                # 通用工具
-
         ├── logo.txt
-
         ├── skills/                 # 内置技能
-
         ├── subagent/               # 内置子代理
-
         ├── hooks/                  # 内置钩子
-
         └── MCP/                    # MCP 客户端与配置
-
             ├── __init__.py
-
             ├── mcp_client.py
-
             └── mcp_config.json
 
 
-# ⚙️ 环境变量参考
+# 环境变量参考
 		
 - 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
 
@@ -410,11 +397,13 @@ A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显
 
 # 🤝 贡献
 欢迎提交 Issue 和 PR。建议先阅读 Baize.py 中的 agent_loop 函数，理解 Agent 主循环后再做扩展。
+### Thank you for every Contributor to Submit PR
+- Github Contributor：*Anupam Mediratta*
 
-# 📄 许可证
+# 许可证
 MIT License
 
-# 🙏 致谢
+# 致谢
 - 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
 
 - 感谢AtomGit将本项目已纳入G-star孵化项目
