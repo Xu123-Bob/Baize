@@ -182,10 +182,17 @@ text
 
 
 ## 白泽CLI界面
+<div align="center">
+白泽 CLI 启动界面
+</div>
 
 <p align="center">
   <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
+
+<div align="center">
+白泽 CLI 运行界面
+</div>
 
 <p align="center">
   <img src="image/clipage02.jpg" alt="白泽 CLI 运行界面" width="800" />
