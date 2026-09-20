@@ -23,7 +23,6 @@ try:
 except Exception:
     # 回退：源码直接运行时，__file__ 所在目录就是包目录
     project_root = Path(__file__).parent
-import tiktoken
 import shlex
 import threading
 import queue
@@ -43,6 +42,12 @@ import difflib
 from agent.config import build_client_and_model
 from agent.MCP.mcp_client import init_mcp_client, get_mcp_tools, call_mcp_tool, reload_mcp_user_config
 from agent import utils
+from agent.core.history import (
+    sanitize_history,
+    estimate_tokens,
+    micro_compact,
+    auto_compact as _auto_compact_impl,
+)
 import wcwidth  # 引入 wcwidth 库用于计算中文显示宽度
 from agent.ui_theme import (llm_status,render_thinking, render_answer, render_tool_call,render_tool_result, render_final, render_system)
 from tenacity import (retry,stop_after_attempt,wait_exponential,retry_if_exception_type,before_sleep_log)
@@ -63,8 +68,6 @@ def get_tasks_dir() -> Path:
 #压缩相关全局配置 
 TRANSCRIPT_DIR = CURRENT_WORKDIR / ".transcripts"
 KEEP_RECENT = 10
-#初始化 tiktoken 编码器（用于精确 token 计数）
-_TOKENIZER = tiktoken.get_encoding("cl100k_base")  # 根据实际 token 限制调整
 #任务管理模块
 TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 #消息历史（对话上下文）的 Token 数量阈值
@@ -115,72 +118,6 @@ def _log_retry(retry_state):
     before_sleep=_log_retry,
 )
 
-def sanitize_history(messages: list) -> list:
-    """
-    修复“悬空的 tool 消息”（dangling tool_calls / dangling tool results）。
-
-    DeepSeek 对消息格式有严格要求，两类历史损坏都会导致 400 错误：
-      1) 带 tool_calls 的 assistant 消息，其后面必须紧跟对应数量的 tool 结果消息，否则报：
-         "An assistant message with 'tool_calls' must be followed by tool messages..."
-      2) 带 role=tool 的结果消息，其前面必须有对应的 tool_calls assistant 消息，否则报：
-         "Messages with role 'tool' must be a response to a preceding message with 'tool_calls'"
-
-    这两类悬空消息通常在以下场景产生，并随 save_session 被持久化到 .baize_session.json：
-      - 工具执行被 Ctrl+C 中断、或工具抛异常未写入结果（悬空 tool_calls）；
-      - 某些工具（如 set_workspace）在 agent_loop 中间原地重载了历史，抹掉了 assistant(tool_calls)（悬空 tool 结果）。
-
-    处理策略：
-      1) 收集“被调用”的 tool_call_id（出现在 assistant tool_calls 中）与“被回答”的 tool_call_id（存在 tool 结果）；
-      2) 对 assistant 消息：只保留“有结果”的 tool_calls，其余丢弃；若去掉后既无文本也无调用则整条删除；
-      3) 对 tool 消息：若其 tool_call_id 没有对应的 assistant tool_calls，则整条删除（悬空结果）。
-    本函数就地修改 messages（并返回它），保证发送给 API 的历史始终合法。
-    """
-    # 1) 收集“被调用”的 tool_call_id（出现在 assistant 消息的 tool_calls 里）
-    called_ids: set = set()
-    for m in messages:
-        if isinstance(m, dict) and m.get("role") == "assistant" and m.get("tool_calls"):
-            for tc in (m.get("tool_calls") or []):
-                if isinstance(tc, dict):
-                    tcid = tc.get("id")
-                    if tcid is not None:
-                        called_ids.add(str(tcid))
-
-    # 2) 收集“被回答”的 tool_call_id（存在对应的 tool 结果消息）
-    answered_ids: set = set()
-    for m in messages:
-        if isinstance(m, dict) and m.get("role") == "tool":
-            tcid = m.get("tool_call_id")
-            if tcid is not None:
-                answered_ids.add(str(tcid))
-
-    # 3) 逐条清洗
-    cleaned = []
-    for m in messages:
-        if not isinstance(m, dict):
-            cleaned.append(m)
-            continue
-        role = m.get("role")
-        if role == "assistant" and m.get("tool_calls"):
-            tcs = m.get("tool_calls") or []
-            kept = [tc for tc in tcs if str((tc or {}).get("id", "")) in answered_ids]
-            # 没有保留的调用且无文本内容 → 这条 assistant 消息没有意义，整条丢弃
-            if not kept and not m.get("content"):
-                continue
-            new_m = dict(m)
-            if kept:
-                new_m["tool_calls"] = kept
-            else:
-                new_m.pop("tool_calls", None)
-            cleaned.append(new_m)
-        elif role == "tool":
-            # 悬空的 tool 结果：没有对应的 assistant tool_calls → 丢弃
-            if str(m.get("tool_call_id", "")) in called_ids:
-                cleaned.append(m)
-        else:
-            cleaned.append(m)
-
-    messages[:] = cleaned
-    return messages
 
 #是整个代理系统的核心通信函数，它封装了与 LLM（大语言模型）API 的交互逻辑，负责将对话历史和可用工具列表发送给模型，并返回模型的响应
 def send_messages(messages, tools):
@@ -1576,156 +1513,16 @@ def set_workspace(path: str) -> str:
     framed_print("Tool (SET_WORKSPACE)", f"Switched to {CURRENT_WORKDIR}", "success")
     return f"Workspace changed to {CURRENT_WORKDIR}"
 
-#压缩部分
-#预测token数，用于后续自动压缩上下文使用
-def estimate_tokens(messages: list) -> int:
-    """
-    将消息列表序列化为紧凑的 JSON 字符串，然后使用 tiktoken 计算 token 数量。
-    这更接近 OpenAI API 的实际计费方式。
-    """
-    def to_dict(msg):
-        """将消息对象（可能是 dict 或自定义对象）转换为可序列化的 dict。"""
-        if isinstance(msg, dict):
-            return msg
-        # 处理 OpenAI 的响应对象（如 ChatCompletionMessage）
-        d = {"role": getattr(msg, "role", "")}
-        if hasattr(msg, "content"):
-            d["content"] = getattr(msg, "content")
-        if hasattr(msg, "tool_calls") and getattr(msg, "tool_calls"):
-            d["tool_calls"] = [
-                {
-                    "id": t.id,
-                    "function": {
-                        "name": t.function.name,
-                        "arguments": t.function.arguments
-                    }
-                }
-                for t in msg.tool_calls
-            ]
-        if hasattr(msg, "tool_call_id"):
-            d["tool_call_id"] = getattr(msg, "tool_call_id")
-        return d
-
-    serialized = [to_dict(m) for m in messages]
-    json_str = json.dumps(serialized, separators=(',', ':'), ensure_ascii=False)
-    return len(_TOKENIZER.encode(json_str))
-
-#第一层压缩：针对历史工具调用及其返回结果进行压缩
-def micro_compact(messages: list) -> list:
-    """
-    第一层压缩：将较早的工具结果替换为简短占位符，保留最近 KEEP_RECENT 个。
-    直接修改 messages 列表，不影响系统消息。
-    """
-    #初始化tool_results，用于暂存所有角色为tool的对话消息
-    tool_results: list[tuple[int, dict]] = []
-    #扫描整个历史对话列表，筛选出所有符合格式要求的工具，返回消息并存入该列表
-    for msg_idx, msg in enumerate(messages):
-        # 兼容 dict 和 object
-        role = msg.get("role") if isinstance(msg, dict) else getattr(msg, "role", None)
-        if role == "tool" and (isinstance(msg, dict) and isinstance(msg.get("content"), str)):
-            tool_results.append((msg_idx, msg))
-
-    #保留近KEEP_RECENT个工具调用结果
-    if len(tool_results) <= KEEP_RECENT:
-        return messages
-
-    # 构建 tool_call_id -> 工具名 映射（来自 assistant 消息）
-    tool_name_map: dict[str, str] = {}
-    for msg in messages:
-        role = msg.get("role") if isinstance(msg, dict) else getattr(msg, "role", None)
-        if role != "assistant":
-            continue
-        # 获取 tool_calls
-        tc = msg.get("tool_calls") if isinstance(msg, dict) else getattr(msg, "tool_calls", None)
-        if not tc:
-            continue
-        for tool_call in tc:
-            # 兼容 dict 或对象
-            if isinstance(tool_call, dict):
-                tool_call_id = tool_call.get("id")
-                tool_fn_name = tool_call.get("function", {}).get("name")
-            else:
-                tool_call_id = getattr(tool_call, "id", None)
-                fn = getattr(tool_call, "function", None)
-                tool_fn_name = getattr(fn, "name", None) if fn else None
-            if tool_call_id and tool_fn_name:
-                tool_name_map[str(tool_call_id)] = str(tool_fn_name)
-
-    # 清空旧结果（保留最后 KEEP_RECENT 个）
-    to_clear = tool_results[:-KEEP_RECENT]
-    for idx, result in to_clear:
-        content = result.get("content")
-        if isinstance(content, str) and len(content) > 200:   # 仅对超过200字符的内容进行截断
-            tool_id = str(result.get("tool_call_id", ""))
-            tool_name = tool_name_map.get(tool_id, "unknown")
-            result["content"] = f"[Previous: used {tool_name}, result truncated]\n{content[:200]}..."
-    
-    return messages 
-
-#第二层：自动压缩
-def auto_compact(messages: list) -> list:
-    # ===== 进度：开始压缩 =====
-    print("\033[90m[压缩] 开始压缩对话上下文...\033[0m")
-    # 分离系统消息
-    system_msgs = [m for m in messages if (m.get("role") if isinstance(m, dict) else getattr(m, "role", None)) == "system"]
-    other_msgs = [m for m in messages if (m.get("role") if isinstance(m, dict) else getattr(m, "role", None)) != "system"]       
-    # 保存完整对话（包括系统）到磁盘
-    transcript_dir = get_transcript_dir()          # <-- 改动点：使用动态函数
-    transcript_dir.mkdir(exist_ok=True)
-    transcript_path = transcript_dir / f"transcript_{int(time.time())}.jsonl"
-    # 将所有消息转为 dict 以便序列化
-    def to_dict(msg):
-        if isinstance(msg, dict):
-            return msg
-        d = {"role": getattr(msg, "role", "")}
-        if hasattr(msg, "content"):
-            d["content"] = getattr(msg, "content")
-        if hasattr(msg, "tool_calls") and getattr(msg, "tool_calls"):
-            d["tool_calls"] = [
-                {"id": t.id, "function": {"name": t.function.name, "arguments": t.function.arguments}}
-                for t in msg.tool_calls
-            ]
-        if hasattr(msg, "tool_call_id"):
-            d["tool_call_id"] = getattr(msg, "tool_call_id")
-        return d
-    
-    with open(transcript_path, "w",encoding='utf-8') as f:
-        for msg in messages:
-            f.write(json.dumps(to_dict(msg), default=str) + "\n")
-    print(f"[transcript saved: {transcript_path}]")
-
-    # 仅对非系统部分生成摘要
-    conversation_text = json.dumps([to_dict(m) for m in other_msgs], default=str)[:80000]
-    summary_prompt = f"""
-Summarize this conversation for continuity. Include: 
-1) What was accomplished, 2) Current state, 3) Key decisions made. 
-Be concise but preserve critical details.
-
-{conversation_text}
-"""
-    summary_messages = [{"role": "user", "content": summary_prompt}]
-    # ===== 进度：正在请求摘要 =====
-    print("\033[93m[压缩] 正在请求 LLM 生成摘要...\033[0m")
-    try:
-        response = send_messages(summary_messages, tools=[])  # 使用主 agent 的 send_messages，不带工具
-        summary = response.choices[0].message.content
-        # ===== 进度：摘要成功 =====
-        print("\033[92m[压缩] 摘要生成完成。\033[0m")
-    except Exception as e:
-        # 如果压缩过程中 API 调用失败（网络、限流等），打印警告并跳过压缩
-        print(f"\033[91m[压缩] 失败：{e}，跳过压缩。\033[0m")
-        # 返回原始消息列表，不进行任何修改
-        return messages
-    # ========== 异常处理修改结束 ==========
-
-    new_messages = system_msgs + [
-        {"role": "user", "content": f"[Conversation compressed. Transcript: {transcript_path}]\n\n{summary}"},
-        {"role": "assistant", "content": "Understood. I have the context from the summary. Continuing."},
-    ]
-    HOOK.trigger('compact_end', new_messages) # 埋点
-    # ===== 进度：压缩完成 =====
-    print("\033[92m[压缩] 上下文已替换为摘要，对话继续。\033[0m")
-    return new_messages
+#把外部依赖注入给 history.auto_compact：（自动压缩两级，供 agent_loop 调用）
+def auto_compact(messages, callback=None):
+    """薄封装：把 Baize 的全局依赖注入到 agent.core.history.auto_compact。"""
+    return _auto_compact_impl(
+        messages,
+        send_fn=send_messages,
+        transcript_dir=get_transcript_dir(),
+        hook_trigger=HOOK.trigger,
+        callback=callback,
+    )
 
 # TaskManager任务管理工具函数（供 agent_loop 调用）
 def task_create(subject: str, description: str = "") -> str:
@@ -2349,7 +2146,7 @@ def agent_loop(messages, output_callback=None):
                 messages.append({"role": "assistant", "content": "Noted background results."})
 
             # 每次循环开始时进行压缩，micro_compact一级压缩
-            micro_compact(messages)
+            micro_compact(messages, keep_recent=10)
             #二级压缩
             if estimate_tokens(messages) > THRESHOLD:
                 msg = "[auto_compact triggered]"
