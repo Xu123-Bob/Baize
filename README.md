@@ -356,10 +356,12 @@ json
 # 目录结构
 text
 
-baize-agent/
-
+    baize-agent/
     ├── pyproject.toml              # 打包配置
     ├── README.md
+    ├── tests/                      # 测试（不随包发布）
+    |   ├── __init__.py
+    |   └── test_history.py
     ├── .env.example                # 环境变量示例
     ├── .gitignore
     └── agent/                      # 主包
@@ -371,6 +373,9 @@ baize-agent/
         ├── logo.txt
         ├── skills/                 # 内置技能
         ├── subagent/               # 内置子代理
+        ├── core/                   # 核心逻辑（无副作用，可单测）
+        |   ├── __init__.py
+        |   └── history.py          # 会话历史清洗 / token 估算 / 压缩
         ├── hooks/                  # 内置钩子
         └── MCP/                    # MCP 客户端与配置
             ├── __init__.py
@@ -391,6 +396,30 @@ baize-agent/
 - 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
 
 变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。
+
+
+# 开发
+
+## 运行测试
+
+本项目使用 pytest。开发前请以可编辑模式安装包与开发依赖：
+
+    pip install -e ".[dev]"
+
+运行全部测试：
+
+    python -m pytest tests/ -v
+
+只跑单个文件：
+
+    python -m pytest tests/test_history.py -v
+
+## 代码结构约定
+
+- `agent/`：随包发布的主包。所有运行时逻辑与资源（skills、subagent、hooks、MCP）都在这里。
+- `agent/core/`：纯逻辑模块，无外部副作用，**必须能被单独测试**。新增此类逻辑请放这里，并配套测试。
+- `tests/`：与 `agent/` 下的源文件一一对应，命名为 `test_<模块名>.py`。
+- 任何有外部依赖（网络、磁盘、全局状态）的函数，请通过参数注入依赖，便于在测试中替换。
 
 # ❓ 常见问题
 - Q：密钥应该填在哪里？
@@ -430,6 +459,8 @@ MIT License
 
 - 感谢AtomGit将本项目已纳入G-star孵化项目
 
+- 感谢PR的贡献者、抖音的粉丝、关注我的学生们
+
 - 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
 
 - 基于 DeepSeek、OpenAI SDK、MCP 构建
@@ -437,3 +468,18 @@ MIT License
 - 感谢所有在 Vibe Coding 路上同行的开发者
 
 - 开发者专注创意与决策，白泽处理琐碎与执行。让编程回归直觉，让创造如神话般流畅。
+
+# 联系我
+如果你对白泽感兴趣，或者想参与开源合作，又或者想持续了解我的更新情况，可以通过以下方式联系我：
+
+<p align="center">
+  <img src="image/weixin.jpg" alt="微信二维码" width="200" />
+</p>
+
+<p align="center">微信扫码，请注明“Baize 开源合作”</p>
+
+<p align="center">
+  <img src="image/抖音.png" alt="抖音二维码" width="200" />
+</p>
+
+<p align="center">抖音扫码关注”</p>
