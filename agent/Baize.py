@@ -6,7 +6,6 @@ if os.name == 'posix':   # Linux/macOS
 else:
     resource = None      # Windows 下置空
 import time
-from openai import OpenAI
 import subprocess
 import shutil
 from agent.utils import lined_print, framed_print
@@ -23,6 +22,7 @@ try:
 except Exception:
     # 回退：源码直接运行时，__file__ 所在目录就是包目录
     project_root = Path(__file__).parent
+
 import shlex
 import threading
 import queue
@@ -37,7 +37,6 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import atexit
-import logging
 import difflib
 from agent.config import build_client_and_model
 from agent.MCP.mcp_client import init_mcp_client, get_mcp_tools, call_mcp_tool, reload_mcp_user_config
@@ -68,6 +67,7 @@ def get_tasks_dir() -> Path:
 #压缩相关全局配置 
 TRANSCRIPT_DIR = CURRENT_WORKDIR / ".transcripts"
 KEEP_RECENT = 10
+
 #任务管理模块
 TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 #消息历史（对话上下文）的 Token 数量阈值
@@ -117,7 +117,6 @@ def _log_retry(retry_state):
     # 重试前执行的回调（打印提示）
     before_sleep=_log_retry,
 )
-
 
 #是整个代理系统的核心通信函数，它封装了与 LLM（大语言模型）API 的交互逻辑，负责将对话历史和可用工具列表发送给模型，并返回模型的响应
 def send_messages(messages, tools):
@@ -2146,7 +2145,7 @@ def agent_loop(messages, output_callback=None):
                 messages.append({"role": "assistant", "content": "Noted background results."})
 
             # 每次循环开始时进行压缩，micro_compact一级压缩
-            micro_compact(messages, keep_recent=10)
+            micro_compact(messages, keep_recent=KEEP_RECENT)
             #二级压缩
             if estimate_tokens(messages) > THRESHOLD:
                 msg = "[auto_compact triggered]"

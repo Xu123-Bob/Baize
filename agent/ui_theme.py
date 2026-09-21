@@ -8,7 +8,6 @@ from rich import box
 import re
 from rich.status import Status
 import sys
-from rich import box
 
 # 定义黑金主题
 BLACK_GOLD_THEME = Theme({

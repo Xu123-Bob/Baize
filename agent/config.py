@@ -50,37 +50,6 @@ def load_config() -> dict:
         print(f"\033[91m[配置] {CONFIG_PATH} 编码不是 UTF-8，请用 UTF-8 重新保存。\033[0m")
         raise
     
-
-
-def _write_default_config():
-    """首次运行时生成默认配置，方便用户编辑"""
-    content = '''# 白泽配置文件
-# 修改 active_provider 切换后端，然后在 shell 中设置对应的环境变量
-
-active_provider = "deepseek"
-
-[model_providers.deepseek]
-name = "DeepSeek"
-base_url = "https://api.deepseek.com"
-env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
-
-[model_providers.openai]
-name = "OpenAI"
-base_url = "https://api.openai.com/v1"
-env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
-
-[model_providers.ollama]
-name = "Ollama (本地)"
-base_url = "http://localhost:11434/v1"
-env_key = ""
-model = "qwen2.5:7b"
-'''
-    # 用 utf-8（不带 BOM）写入
-    CONFIG_PATH.write_text(content, encoding="utf-8")
-    print(f"\033[90m[配置] 已生成默认配置文件：{CONFIG_PATH}\033[0m")
-
 def _write_env_template():
     """首次运行时生成 ~/.baize/.env 模板"""
     BAIZE_HOME.mkdir(parents=True, exist_ok=True)
@@ -155,30 +124,14 @@ def build_client_and_model():
     return client, prov["model"], prov["name"]
 
 def _write_default_config():
-    content = '''# 白泽配置文件
-# 修改 active_provider 切换后端
-
-active_provider = "deepseek"
-
-[model_providers.deepseek]
-name = "DeepSeek"
-base_url = "https://api.deepseek.com"
-env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
-
-[model_providers.openai]
-name = "OpenAI"
-base_url = "https://api.openai.com/v1"
-env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
-
-[model_providers.ollama]
-name = "Ollama (本地)"
-base_url = "http://localhost:11434/v1"
-env_key = ""
-model = "qwen2.5:7b"
-'''
-    CONFIG_PATH.write_text(content, encoding="utf-8", newline="\n")
+    lines = ["# 白泽配置文件", "# 修改 active_provider 切换后端", "",
+             f'active_provider = "{DEFAULT_CONFIG["active_provider"]}"', ""]
+    for key, prov in DEFAULT_CONFIG["model_providers"].items():
+        lines.append(f"[model_providers.{key}]")
+        for k, v in prov.items():
+            lines.append(f'{k} = "{v}"')
+        lines.append("")
+    CONFIG_PATH.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     print(f"\033[90m[配置] 已生成默认配置文件：{CONFIG_PATH}\033[0m")
     
     # ===== 新增：同时生成 .env 模板 =====
