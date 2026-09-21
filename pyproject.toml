@@ -1,39 +1,59 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "baize"
-version = "0.1.0"
-description = "白泽 - 通晓万物的 Vibe Coding 助手"
+version = "0.2.0"
+dynamic = ["version"]
+description = "白泽 —— Vibe Coding 助手"
 readme = "README.md"
-license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "openai>=1.0",
-    "tiktoken",
-    "python-dotenv",
-    "psutil",
-    "duckduckgo-search",
-    "requests",
-    "beautifulsoup4",
-    "tenacity",
     "httpx",
-    "wcwidth",
+    "tiktoken",
+    "duckduckgo-search",
+    "beautifulsoup4",
+    "requests",
     "rich",
+    "wcwidth",
+    "tenacity",
+    "psutil",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "pytest-cov",
+    "ruff",
 ]
 
 [project.scripts]
 baize = "agent.Baize:main"
 
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["agent*"]
 
 [tool.setuptools.package-data]
 agent = [
-    "skills/**/*",
-    "subagent/**/*",
-    "hooks/**/*",
-    "MCP/*.json",
+    "skills/**/*.md",
+    "subagent/**/*.md",
+    "hooks/*.py",
     "logo.txt",
+    "MCP/*.json",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+
+[tool.ruff.lint]
+# 起步阶段先屏蔽历史上"风格性"的规则，逐步收紧
+ignore = ["E501", "E402", "E722", "F401", "F841"]
