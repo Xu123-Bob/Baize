@@ -476,10 +476,10 @@ MIT License
   <img src="image/weixin.jpg" alt="微信二维码" width="200" />
 </p>
 
-<p align="center">微信扫码，请注明“Baize 开源合作”</p>
+<p align="center">微信扫码，请注明“Baize 开源合作</p>
 
 <p align="center">
   <img src="image/抖音.png" alt="抖音二维码" width="200" />
 </p>
 
-<p align="center">抖音扫码关注”</p>
+<p align="center">抖音扫码关注</p>
