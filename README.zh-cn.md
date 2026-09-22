@@ -22,6 +22,12 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Xu123-Bob/Baize/releases">
+    <img src="https://img.shields.io/github/v/release/Xu123-Bob/Baize?style=flat-square&logo=github&label=Release&include_prereleases" alt="GitHub release">
+  </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
   </a>
@@ -458,7 +464,10 @@ A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显
 # 🤝 贡献
 欢迎提交 Issue 和 PR。建议先阅读 Baize.py 中的 agent_loop 函数，理解 Agent 主循环后再做扩展。
 ### Thank you for every Contributor to Submit PR
-- Github Contributor：*Anupam Mediratta*
+- Github Contributor：
+[@anupamme](https://github.com/anupamme)
+
+[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
 # 许可证
 MIT License
@@ -477,6 +486,12 @@ MIT License
 - 感谢所有在 Vibe Coding 路上同行的开发者
 
 - 开发者专注创意与决策，白泽处理琐碎与执行。让编程回归直觉，让创造如神话般流畅。
+
+# ☕ 赞助支持
+如果白泽对你有用，欢迎赞助打赏。独立开发也花费很多时间，赞助不会改变产品更新的排期，谢谢支持！
+<p align="center">
+  <img src="image/support.jpg" alt="微信二维码" width="200" />
+</p>
 
 # 联系我
 如果你对白泽感兴趣，或者想参与开源合作，又或者想持续了解我的更新情况，可以通过以下方式联系我：

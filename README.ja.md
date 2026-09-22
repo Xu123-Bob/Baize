@@ -22,6 +22,12 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Xu123-Bob/Baize/releases">
+    <img src="https://img.shields.io/github/v/release/Xu123-Bob/Baize?style=flat-square&logo=github&label=Release&include_prereleases" alt="GitHub release">
+  </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
   </a>
@@ -446,7 +452,10 @@ Issue と PR を歓迎します。まず `Baize.py` の `agent_loop` 関数を�
 
 ### Thank you for every Contributor to Submit PR
 
-- GitHub Contributor：*Anupam Mediratta*
+- GitHub Contributor：
+[@anupamme](https://github.com/anupamme)
+
+[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
 # ライセンス
 
@@ -467,6 +476,13 @@ MIT License
 - Vibe Coding の道を共に歩むすべての開発者に感謝
 
 - 開発者はアイデアと意思決定に集中し、白澤が雑務と実行を処理する。プログラミングを直感に戻し、創造を神話のように流暢に。
+
+# サポート
+もし白沢があなたに役立つなら、ぜひスポンサーとしてご支援ください。独立開発には多くの時間と労力がかかりますので、ご支援は製品の更新スケジュールを変えるものではありません。ありがとうございます！
+<p align="center">
+  <img src="image/support.jpg" alt="WeChat QR" width="200" />
+</p>
+
 
 # 連絡先
 

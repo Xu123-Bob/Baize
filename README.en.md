@@ -22,6 +22,12 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Xu123-Bob/Baize/releases">
+    <img src="https://img.shields.io/github/v/release/Xu123-Bob/Baize?style=flat-square&logo=github&label=Release&include_prereleases" alt="GitHub release">
+  </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
   </a>
@@ -445,7 +451,11 @@ Issues and PRs are welcome. It is recommended to first read the `agent_loop` fun
 
 ### Thank you for every Contributor to Submit PR
 
-- GitHub Contributor: *Anupam Mediratta*
+- GitHub Contributor: 
+[@anupamme](https://github.com/anupamme)
+
+[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
+
 
 # License
 
@@ -466,6 +476,12 @@ MIT License
 - Thanks to all developers walking the Vibe Coding path together
 
 - Developers focus on ideas and decisions; Baize handles the trivial and execution. Let programming return to intuition, and let creation flow like myth.
+
+# ☕ Support
+If Baize is useful to you, you’re welcome to sponsor or tip. Independent development also takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
+<p align="center">
+  <img src="image/support.jpg" alt="WeChat QR" width="200" />
+</p>
 
 # Contact Me
 
