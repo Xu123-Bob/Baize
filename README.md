@@ -22,9 +22,6 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
-  <a href="https://github.com/Xu123-Bob/Baize/graphs/traffic">
-    <img src="https://img.shields.io/badge/dynamic/json?color=blue&label=Clones&query=count&url=https://raw.githubusercontent.com/Xu123-Bob/Baize/clonometer-stats/numbers.json&logo=github" alt="GitHub Clones">
-  </a>
 </p>
 
 <p align="center">
