@@ -123,7 +123,12 @@ export async function postReply(base, token, reply) {
 }
 
 export async function fetchServerStatus(base, token) {
-  const res = await fetch(`${base}/status?token=${token}`);
+  // Send the token via an Authorization header instead of a URL query
+  // string so it isn't captured in access logs, history, or Referer
+  // headers, and can't be replayed by a simple cross-origin GET/navigation
+  // (e.g. DNS-rebinding or a malicious local webpage) that cannot set
+  // custom headers.
+  const res = await fetch(`${base}/status`, { headers: { Authorization: `Bearer ${token}` } });
   if (res.status === 401) {
     const err = new Error('Authentication failed. The server token may have changed.');
     err.code = 'AUTH_FAILED';
