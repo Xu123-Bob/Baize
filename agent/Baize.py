@@ -94,9 +94,19 @@ def _log_retry(retry_state):
     attempt = retry_state.attempt_number
     next_wait = retry_state.next_action.sleep if retry_state.next_action else 0
     print(f"\n\033[93m[API] 第 {attempt} 次重试，等待 {next_wait:.1f} 秒后继续...\033[0m")
-    # 可选的：打印异常信息
-    if retry_state.outcome and retry_state.outcome.exception():
-        print(f"\033[90m[API] 上次错误：{retry_state.outcome.exception().__class__.__name__}\033[0m")
+    try:
+        outcome = getattr(retry_state, 'outcome', None)
+        if outcome is not None:
+            exc = None
+            if hasattr(outcome, 'exception'):
+                exc = outcome.exception()
+            if exc is not None:
+                exc_name = type(exc).__name__
+                print(f"\033[90m[API] 上次错误：{exc_name}\033[0m")
+            else:
+                print(f"\033[90m[API] 上次错误：未知（无异常对象）\033[0m")
+    except Exception as e:
+        print(f"\033[90m[API] 上次错误：无法获取异常信息 ({type(e).__name__})\033[0m")
 @retry(
     # 最多重试 3 次（首次调用不计入，即总共会尝试 1 + 3 = 4 次）
     stop=stop_after_attempt(3),
@@ -2066,8 +2076,10 @@ def run_subagent(prompt: str, subagent_name: str = "default") -> str:
             tool_calls = getattr(msg, 'tool_calls', None)
             # ---- 3. 处理工具调用 ----
             if tool_calls:
-                sub_messages.append(msg)
-                for tool_call in tool_calls:
+                msg_dict = msg.model_dump()
+                call_ids = _ensure_tool_call_ids(msg_dict)
+                sub_messages.append(msg_dict)
+                for i, tool_call in enumerate(tool_calls):
                     # 特殊处理 todo，使用子代理自己的实例
                     if tool_call.function.name == "todo":
                         args = json.loads(tool_call.function.arguments)
@@ -2084,6 +2096,8 @@ def run_subagent(prompt: str, subagent_name: str = "default") -> str:
             else:
                 # ---- 无工具调用，视为子代理已完成任务 ----
                 # 如果子代理有未完成的 todo，记录警告但仍以当前内容作为结果
+                # ===== 修复点：无工具调用时也转为 dict =====
+                sub_messages.append(msg.model_dump())
                 if sub_todo.items and not all(item['status'] == 'completed' for item in sub_todo.items):
                     print("[子代理] 警告：无工具调用但待办事项未全部完成。")
                 final_result = content if content else "子代理未生成回答。"
