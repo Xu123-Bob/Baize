@@ -45,7 +45,7 @@
 
 Baize — an auspicious beast in ancient Chinese mythology that knows all things, now reincarnated as a Vibe Coding assistant.
 
-An open-source AI Coding Agent CLI that supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Tongyi / Kimi / local Ollama), with complete capabilities such as tool calling, skill loading, subagent delegation, context compression, and a secure sandbox. Pair-program with AI right in your terminal.
+**An open-source AI Coding Agent CLI, a substitute product for Claude Code CLI, supports multiple backends (DeepSeek / OpenAI compatible / ZhiPu / Tongyi / Kimi / Ollama local), and possesses complete capabilities such as tool invocation, skill loading, sub-agent delegation, context compression, and security sandbox. It enables pair programming with AI directly from the terminal.**
 
 ----------
 
@@ -485,13 +485,14 @@ If Baize is useful to you, you’re welcome to sponsor or tip. Independent devel
 
 # Contact Me
 
-If you are interested in Baize, want to participate in open-source collaboration, or want to keep up with my updates, you can contact me through:
+- If you are interested in Baize, want to participate in open-source collaboration, or want to keep up with my updates, you can contact me through
+- **Currently, I am also in the job-hunting process. I have experience in market research and user research, and I have some knowledge of Agents. If my skills meet your requirements, I would also like to work with you (Desired Position: AI product operation / user research / market research)**
 
 <p align="center">
   <img src="image/weixin.jpg" alt="WeChat QR code" width="200" />
 </p>
 
-<p align="center">Scan with WeChat; please note "Baize open-source collaboration"</p>
+<p align="center">Scan the QR code with WeChat. Please indicate "Baize Open Source Cooperation" or "Corporate Recruitment".</p>
 
 <p align="center">
   <img src="image/抖音.png" alt="Douyin QR code" width="200" />

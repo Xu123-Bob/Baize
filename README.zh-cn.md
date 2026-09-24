@@ -45,7 +45,7 @@
 
 白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
 
-一个开源的 AI Coding Agent CLI，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。在终端即可与 AI 结对编程。
+**一个开源的 AI Coding Agent CLI，Claude Code CLI的平替产品，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。在终端即可与 AI 结对编程。**
 
 ----------
 
@@ -494,13 +494,14 @@ MIT License
 </p>
 
 # 联系我
-如果你对白泽感兴趣，或者想参与开源合作，又或者想持续了解我的更新情况，可以通过以下方式联系我：
+- 如果你对白泽感兴趣，或者想参与开源合作，可以通过以下方式联系我
+- **目前，本人在求职状态，本人从事过市场研究与用户研究工作，对Agent也有一定了解，如果我的能力符合您的需求，也希望与您共事（意向岗位：AI产品运营/用户研究/市场调研）**
 
 <p align="center">
   <img src="image/weixin.jpg" alt="微信二维码" width="200" />
 </p>
 
-<p align="center">微信扫码，请注明“Baize 开源合作</p>
+<p align="center">微信扫码，请注明Baize开源合作或者企业招聘</p>
 
 <p align="center">
   <img src="image/抖音.png" alt="抖音二维码" width="200" />
