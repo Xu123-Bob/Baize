@@ -12,7 +12,6 @@ requires-python = ">=3.11"
 dependencies = [
     "openai>=1.0",
     "httpx",
-    "tiktoken",
     "duckduckgo-search",
     "beautifulsoup4",
     "requests",
