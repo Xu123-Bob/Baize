@@ -52,7 +52,7 @@ from agent.ui_theme import (llm_status,render_thinking, render_answer, render_to
 from tenacity import (retry,stop_after_attempt,wait_exponential,retry_if_exception_type,before_sleep_log)
 import logging
 import httpx
-
+from typing import Optional
 
 #获取脚本运行时的当前工作目录
 CURRENT_WORKDIR = Path.cwd()
@@ -858,6 +858,17 @@ class BackgroundManager:
         return notifs
 
 BG = BackgroundManager()
+# ==================== 工具并发执行池 ====================
+# 全局单例，避免每次 agent_loop 迭代都新建 ThreadPoolExecutor
+# max_workers 同时充当「并行工具调用的并发上限」：
+#   - 太小：并行收益低
+#   - 太大：web_search 等易触发限流
+# 推荐 3：既能利用并行，又不易被 DDGS / 第三方 API 限流
+_TOOL_MAX_WORKERS = 3
+_TOOL_EXECUTOR = ThreadPoolExecutor(
+    max_workers=_TOOL_MAX_WORKERS,
+    thread_name_prefix="baize-tool-",
+)
 
 #约定：每个钩子模块必须提供一个 register_hooks 函数，接收 HookManager 实例
 def load_hooks_from_folder(folder: Path, hook_manager: HookManager, source="builtin"):
@@ -1929,6 +1940,22 @@ def _dispatch_tool(tool_call):
     else:
         return "Error: Unknown tool"
 
+# tool_call.id 规范化辅助函数
+def _ensure_tool_call_ids(msg_dict: dict) -> list[str]:
+    """
+    确保 msg_dict["tool_calls"] 中每个调用都有非空 id。
+    缺失时生成稳定的唯一 id 并写回。
+    返回与 tool_calls 顺序一致的 id 列表。
+    """
+    ids: list[str] = []
+    for tc in msg_dict.get("tool_calls") or []:
+        tid = tc.get("id")
+        if not tid:
+            tid = f"call_{uuid.uuid4().hex[:12]}"
+            tc["id"] = tid
+        ids.append(str(tid))
+    return ids
+
 #定义单工具执行函数
 #确保 run_shell_hooks 函数在 _execute_single_tool 之前已定义
 def _execute_single_tool(tool_call):
@@ -1998,18 +2025,27 @@ def run_subagent(prompt: str, subagent_name: str = "default") -> str:
                 # 获取最后一条消息（如果有）
                 last_msg = sub_messages[-1] if sub_messages else None
                 has_tool_calls = False
-                if last_msg and last_msg.get("role") == "assistant":
+                if isinstance(last_msg, dict) and last_msg.get("role") == "assistant":
                     has_tool_calls = bool(last_msg.get("tool_calls"))
                 # 检查子代理的 todo 是否全部完成
                 todos_done = (not sub_todo.items) or all(item['status'] == 'completed' for item in sub_todo.items)
+                # 是否可以正常结束
+                can_finish = todos_done and not has_tool_calls
+                if can_finish:
+                    # 正常结束：提取最终回答
+                    if isinstance(last_msg, dict) and last_msg.get("role") == "assistant":
+                        final_result = last_msg.get("content", "")
+                    else:
+                        final_result = "子代理未给出有效回答。"
+                    break
                 # 如果还有工具调用或待办未完成，且未达到绝对上限，则延长轮次
-                if (has_tool_calls or not todos_done) and max_rounds < absolute_max_rounds:
+                if  max_rounds < absolute_max_rounds:
                     max_rounds += extension_step
                     print(f"⚠️ 子代理轮次已达上限 {current_round}，但任务未完成，自动延长至 {max_rounds} 轮。")
-                    continue   # 跳过本次调用，进入下一轮（此时 current_round 未变，但 max_rounds 已增大）
+                    # 注意：此处不再 continue，让流程继续执行 current_round += 1
                 else:
-                    # 正常结束或强制退出
-                    if last_msg and last_msg.get("role") == "assistant":
+                    # 到达绝对上限，强制退出
+                    if isinstance(last_msg, dict) and last_msg.get("role") == "assistant":
                         final_result = last_msg.get("content", "")
                     else:
                         final_result = "子代理未给出有效回答。"
@@ -2111,23 +2147,24 @@ def agent_loop(messages, output_callback=None):
             if current_round >= max_rounds:
                 tasks_done = _are_tasks_completed()
                 todos_done = _are_todos_completed()
-                if tasks_done and todos_done:
-                    # 无明确任务时，检查最近是否有工具调用
-                    last_msg = messages[-1] if messages else None
-                    has_tool_calls = False
-                    if last_msg and last_msg.get("role") == "assistant":
-                        has_tool_calls = bool(last_msg.get("tool_calls"))
-                    if not has_tool_calls:
-                        break
-                # 否则认为工作未完成
+                last_msg = messages[-1] if messages else None
+                has_tool_calls = False
+                if isinstance(last_msg, dict) and last_msg.get("role") == "assistant":
+                    has_tool_calls = bool(last_msg.get("tool_calls"))
+                # 三者都满足才真正结束
+                if tasks_done and todos_done and not has_tool_calls:
+                    break  # 正常结束
+                # 否则认为工作未完成 → 尝试延长
                 if max_rounds < absolute_max_rounds:
+                    #让"延长"看起来更像"再加 100 轮 LLM 调用"
                     max_rounds += extension_step
                     msg = f"⚠️ 当前轮次已达上限 {current_round}，但任务尚未全部完成。自动延长至 {max_rounds} 轮。"
                     if output_callback:
                         output_callback('system', {'content': msg})
                     else:
                         print(msg)
-                    continue   # 跳过本次后续逻辑，进入下一轮
+                    # 注意：此处不再 continue。
+                    # 让流程落到下方的 current_round += 1，正常进入新一轮。
                 else:
                     msg = f"❌ 已达到绝对上限 {absolute_max_rounds} 轮，任务仍未完成，强制退出。"
                     if output_callback:
@@ -2222,56 +2259,64 @@ def agent_loop(messages, output_callback=None):
 
             tool_calls = getattr(msg, 'tool_calls', None)
             if tool_calls:
-                messages.append(msg.model_dump())
-                #======== 并行 + 串行混合执行 =======
-                # 分类：并行安全工具 vs 串行工具
-                parallel_calls = []
-                serial_calls = []
-                for tc in tool_calls:
+                # ---------- 1. 落盘 assistant 消息（含 tool_calls） ----------
+                msg_dict = msg.model_dump()
+                # 保证每个 tool_call 都有 id（防止后端返回空 id 导致后续 400）
+                call_ids = _ensure_tool_call_ids(msg_dict)
+                messages.append(msg_dict)
+                # ---------- 2. 分类：并行安全工具 vs 串行工具 ----------
+                # 用 index 而不是 tc.id 来跟踪结果，彻底避免 id 重复/缺失的问题
+                parallel_indices: list[int] = []
+                serial_indices: list[int] = []
+                for i, tc in enumerate(tool_calls):
                     if tc.function.name in PARALLEL_SAFE_TOOLS:
-                        parallel_calls.append(tc)
+                        parallel_indices.append(i)
                     else:
-                        serial_calls.append(tc)
-
-                results_map = {}
-                # 1) 并行执行安全工具
-                if parallel_calls:
-                    with ThreadPoolExecutor(max_workers=min(len(parallel_calls), 5)) as executor:
-                        future_to_call = {
-                            executor.submit(_execute_single_tool, tc): tc
-                            for tc in parallel_calls
-                        }
-                        for future in as_completed(future_to_call):
-                            tc = future_to_call[future]
-                            try:
-                                tool_id, result = future.result()
-                                results_map[tool_id] = result
-                            except Exception as e:
-                                results_map[tc.id] = f"Parallel execution error: {e}"
-                # 2) 串行执行有副作用的工具
-                for tc in serial_calls:
-                    tool_id, result = _execute_single_tool(tc)
-                    results_map[tool_id] = result
-                # 3) 按原始顺序将结果附加到消息中（保持对话连贯性）
-                for tc in tool_calls:
-                    result = results_map.get(tc.id, "Error: Result not found")
-                     # 工具调用开始（可放在执行前，这里为简化放在结果前）
+                        serial_indices.append(i)
+                # 结果槽：按 index 存放，最后按原顺序取用
+                results: list[Optional[str]] = [None] * len(tool_calls)
+                # ---------- 3. 并行执行安全工具 ----------
+                if parallel_indices:
+                    future_to_idx: dict = {}
+                    for i in parallel_indices:
+                        # 提交到全局单例线程池；max_workers 已限制并发上限
+                        future = _TOOL_EXECUTOR.submit(_execute_single_tool, tool_calls[i])
+                        future_to_idx[future] = i
+                    for future in as_completed(future_to_idx):
+                        i = future_to_idx[future]
+                        tc = tool_calls[i]
+                        try:
+                            _, result = future.result()
+                            results[i] = result
+                        except Exception as e:
+                            # 单个工具失败不影响其他工具
+                            results[i] = f"Parallel execution error ({tc.function.name}): {e}"
+                # ---------- 4. 串行执行有副作用的工具 ----------
+                for i in serial_indices:
+                    tc = tool_calls[i]
+                    try:
+                        _, result = _execute_single_tool(tc)
+                        results[i] = result
+                    except Exception as e:
+                        results[i] = f"Tool execution error ({tc.function.name}): {e}"
+                # ---------- 5. 按原始顺序追加 tool 结果消息 ----------
+                # 关键：用 call_ids[i] 而不是 tc.id，确保 id 非空且与 assistant 消息中的一致
+                for i, tc in enumerate(tool_calls):
+                    result = results[i] if results[i] is not None else "Error: Result not found"
+                
                     if output_callback:
-                        # 工具调用信息
                         output_callback('tool_call', {
                             'name': tc.function.name,
-                            'arguments': tc.function.arguments
+                            'arguments': tc.function.arguments,
                         })
-                    # 工具执行已在 _execute_single_tool 内部完成，这里直接发送结果
-                    if output_callback:
                         output_callback('tool_result', {
                             'tool': tc.function.name,
-                            'result': result
+                            'result': result,
                         })
                     messages.append({
                         "role": "tool",
                         "content": result,
-                        "tool_call_id": tc.id
+                        "tool_call_id": call_ids[i],   # ← 用规范化后的 id
                     })
             else:
                 # ===== 没有工具调用，进入最终化 =====
@@ -2448,7 +2493,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v3.3  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v0.5.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2522,7 +2567,7 @@ def main():
     # 打印欢迎信息（去掉外框线，纯文本居中显示）
     welcome_lines = [
         f"{GOLD}{BOLD}  ◈ 灵兽归位！{RESET}",
-        f"{GRAY}  deepseek-flash · API 计费信息{RESET}",
+        f"{GRAY}  LLM · API 计费信息{RESET}",
         f"{GRAY}  工作目录：{CURRENT_WORKDIR}{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 初问白泽{RESET}",
@@ -2530,7 +2575,7 @@ def main():
         "",
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
         f"{GRAY}  错误修复和可靠性改进{RESET}",
-        f"{GRAY}  增加打断机制<Ctrl+C>并提升响应速度{RESET}"
+        f"{GRAY}  工具调用能力大幅增强{RESET}"
     ]
     for line in welcome_lines:
         if line == "":
