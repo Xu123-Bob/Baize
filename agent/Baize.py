@@ -386,55 +386,52 @@ class SkillLoader:
                 }
 
     def load_user(self, user_dir: Path):
-            """
-            加载用户目录下的技能，替换旧的用户技能，但不覆盖内置技能。
-    
-            采用"先扫描、后提交"的两阶段策略：
+        """
+        加载用户目录下的技能，替换旧的用户技能，但不覆盖内置技能。
+
+        采用"先扫描、后提交"的两阶段策略：
             - 第一阶段：遍历 user_dir，把所有能成功解析的技能放入临时 dict。
-                单个文件读取/解析失败只跳过该文件，不影响整体。
+            单个文件读取/解析失败只跳过该文件，不影响整体。
             - 第二阶段：原子替换——先移除旧的用户技能，再写入新的。
-                任何异常都不会导致"技能全丢"。
-            """
-            # ========== 第一阶段：扫描 ==========
-            new_skills: dict = {}
-            new_names: set = set()
-    
-            if user_dir.exists():
-                seen_in_user: set = set()   # 处理用户目录内重名（后遇到的跳过）
-                for f in user_dir.rglob("SKILL.md"):
-                    # 单个文件失败 → 跳过该文件，不影响其他
-                    try:
-                        text = f.read_text(encoding='utf-8')
-                        meta, body = self._parse_frontmatter(text)
-                    except Exception as e:
-                        print(f"[SkillLoader] 跳过 {f}: {e}")
-                        continue
-    
-                    name = meta.get("name", f.parent.name)
-    
-                    # 内置优先：不覆盖内置技能
-                    if self._is_builtin(name):
-                        continue
-                    # 用户目录内去重
-                    if name in seen_in_user:
-                        print(f"[SkillLoader] 用户技能重名，跳过: {name} ({f})")
-                        continue
-                    seen_in_user.add(name)
-    
-                    new_skills[name] = {
-                        "meta": meta,
-                        "body": body,
-                        "path": str(f),
-                        "source": "user",
-                    }
-                    new_names.add(name)
-    
-            # ========== 第二阶段：原子提交 ==========
-            # 到这里说明扫描全部成功（或已跳过失败项），可以安全替换
-            for old_name in self.user_names:
-                self.skills.pop(old_name, None)
-            self.skills.update(new_skills)
-            self.user_names = new_names
+            任何异常都不会导致"技能全丢"。
+        """
+        # ========== 第一阶段：扫描 ==========
+        new_skills: dict = {}
+        new_names: set = set()
+
+        if user_dir.exists():
+            seen_in_user: set = set()   # 处理用户目录内重名（后遇到的跳过）
+            for f in user_dir.rglob("SKILL.md"):
+            # 单个文件失败 → 跳过该文件，不影响其他
+                try:
+                    text = f.read_text(encoding='utf-8')
+                    meta, body = self._parse_frontmatter(text)
+                except Exception as e:
+                    print(f"[SkillLoader] 跳过 {f}: {e}")
+                    continue
+                name = meta.get("name", f.parent.name)
+
+                # 内置优先：不覆盖内置技能
+                if self._is_builtin(name):
+                    continue
+                # 用户目录内去重
+                if name in seen_in_user:
+                    print(f"[SkillLoader] 用户技能重名，跳过: {name} ({f})")
+                    continue
+                seen_in_user.add(name)
+                new_skills[name] = {
+                    "meta": meta,
+                    "body": body,
+                    "path": str(f),
+                    "source": "user",
+                }
+                new_names.add(name)
+        # ========== 第二阶段：原子提交 ==========
+        # 到这里说明扫描全部成功（或已跳过失败项），可以安全替换
+        for old_name in self.user_names:
+            self.skills.pop(old_name, None)
+        self.skills.update(new_skills)
+        self.user_names = new_names
 
     def _parse_frontmatter(self, text: str) -> tuple:
         """Parse YAML frontmatter between --- delimiters."""
