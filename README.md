@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="image/logopage02.png" alt="Baize Logo" width="320" />
+<img src="image/logopage02.png" alt="白泽 Baize Logo" width="320" />
 
-# Baize
+# 白泽 Baize
 
-**Know all things, and code with you by intuition.**
+**通晓万物，陪你直觉编程。**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -22,8 +22,11 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
-  <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
+    <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
     <img src="https://img.shields.io/github/issues-pr-closed/Xu123-Bob/Baize?style=flat-square&logo=github&label=Closed%20PRs" alt="GitHub Closed Pull Requests">
+  </a>
+  <a href="https://github.com/Xu123-Bob/Baize/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/Xu123-Bob/Baize?style=flat-square&logo=github&label=Contributors" alt="GitHub Contributors">
   </a>
 </p>
 
@@ -34,10 +37,11 @@
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
   </a>
+  
 </p>
 
 <p align="center">
-  <a href="README.zh-cn.md">简体中文</a> |
+  <a href="README.md">简体中文</a> |
   <a href="README.en.md">English</a> |
   <a href="README.ja.md">日本語</a>
 </p>
@@ -46,459 +50,470 @@
 
 ----------
 
-Baize — an auspicious beast in ancient Chinese mythology that knows all things, now reincarnated as a Vibe Coding assistant.
+白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
 
-**An open-source AI Coding Agent CLI, a substitute product for Claude Code CLI, supports multiple backends (DeepSeek / OpenAI compatible / ZhiPu / Tongyi / Kimi / Ollama local), and possesses complete capabilities such as tool invocation, skill loading, sub-agent delegation, context compression, and security sandbox. It enables pair programming with AI directly from the terminal.**
+**一个开源的 AI Coding Agent CLI，Claude Code CLI的平替产品，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。在终端即可与 AI 结对编程。**
 
 ----------
 
-# Features
 
-- Multi-backend support: DeepSeek, any OpenAI-compatible API (Zhipu / Tongyi / Kimi / OpenAI), and local Ollama. Switch with one setting.
+# 特性
 
-- Zero-config startup: Automatically generates configuration files on first run. Users only need to enter the key once.
+- 多后端支持：DeepSeek、任意 OpenAI 兼容接口（智谱 / 通义 / Kimi/ OpenAI）、本地 Ollama，一键切换。
 
-- Complete toolchain: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
+- 零配置启动：首次运行自动生成配置文件，用户只需填一次密钥。
 
-- Skills system: Load domain knowledge (SKILL.md) on demand, making the AI more professional in specific scenarios.
+- 完整工具链：bash 执行、文件读写编辑、glob/grep 搜索、网页搜索抓取、后台任务、任务与待办管理。
 
-- Subagents: Delegate complex tasks to subagents with independent contexts to avoid polluting the main session.
+- 技能系统（Skills）：按需加载领域知识（SKILL.md），让 AI 在特定场景下更专业。
 
-- Hooks: Python or Shell hooks that support pre/post tool-call interception, audit logging, auto-formatting, and test gating.
+- 子代理（Subagents）：把复杂任务委派给独立上下文的子代理，避免污染主会话。
 
-- MCP protocol: Connect external tool servers (GitHub, Filesystem, etc.) via Model Context Protocol.
+- 钩子（Hooks）：Python 或 Shell 钩子，支持工具调用前后拦截、审计日志、自动格式化、测试门控。
 
-- Context compression: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
+- MCP 协议：通过 Model Context Protocol 接入外部工具服务器（GitHub、Filesystem 等）。
 
-- Secure sandbox: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
+- 上下文压缩：两级压缩（工具结果截断 + LLM 摘要），支持超长对话。
 
-- Black-gold themed CLI: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
+- 安全沙箱：命令白名单、路径逃逸检测、危险命令拦截、敏感文件保护、脚本注入拦截。
 
-# Installation
+- 黑金主题 CLI：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
 
-## Prerequisites
 
-- Python 3.10+ (requires tomllib; built in on 3.11+; on 3.10 install tomli)
+# 安装
+
+## 前置要求
+
+- Python 3.10+（需要 tomllib，3.11+ 内置；3.10 需安装 tomli）
 
 - pip
 
-## Install from Source
-### Two download methods
-1. pip install https://github.com/Xu123-Bob/Baize.git
+## 从源码安装
+### 下载方式两个
+1.pip install https://github.com/Xu123-Bob/Baize.git
 
-bash -- Press Win+R and enter cmd
+bash --win+R 输入cmd
 
-```bash
-baize
-```
+    baize
 
-2. <>Code --> Download ZIP
+2、<>Code  --> Download ZIP
 
-(1) After unzipping, enter this file directory:
+(1)解压后进入本文件目录：
 
-bash -- Press Win+R and enter cmd
+bash  --win+R 输入cmd
 
-```bash
-cd path/to/extracted/directory # If you are already in this file directory and press Win+R then cmd, skip this step
+    cd 解压后进入本文件目录 #如果在本文件目录已经win+R 输入cmd，就不需要这一步
 
-pip install -r requirements.txt
+    pip install -r requirements.txt    
 
-python -m Baize
-```
+    python -m Baize             
 
-After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
-(2) After downloading the ZIP, install locally: unzip, enter the directory, and run:
+(2)下载 ZIP 后本地安装，解压后进入目录，执行：
 
-bash -- Press Win+R and enter cmd
+bash --win+R 输入cmd
 
-```bash
-pip install .
-```
+    pip install .
 
-After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
+下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
-# Quick Start
+# 快速开始
+1. 首次运行
 
-1. First run
+bash
 
-```bash
-baize
-```
+    baize
 
-On first run, Baize automatically generates two configuration files:
+首次运行时，白泽会自动生成两个配置文件：
 
-```text
-~/.baize/config.toml   # Backend configuration (choose DeepSeek / OpenAI / Ollama)
+text
 
-~/.baize/.env          # Key file
-```
+    ~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
 
-Windows path: `C:\Users\your-username\.baize\`.
+    ~/.baize/.env          # 密钥文件>
 
-2. Choose a backend
-
-Open `~/.baize/config.toml` and modify `active_provider`:
-
-```toml
-active_provider = "deepseek"    # or "openai" / "ollama"
-
-[model_providers.deepseek]
-name = "DeepSeek"
-base_url = "https://api.deepseek.com"
-env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
-
-[model_providers.openai]
-name = "OpenAI"
-base_url = "https://api.openai.com/v1"
-env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
-
-[model_providers.ollama]
-name = "Ollama (local)"
-base_url = "http://localhost:11434/v1"
-env_key = ""
-model = "qwen2.5:7b"
-```
-
-3. Fill in the key
-
-Edit `~/.baize/.env`:
-
-```env
-# Required for DeepSeek backend
-
-DEEPSEEK_API_KEY=sk-your-key
+Windows 用户路径为 C:\Users\你的用户名\.baize\。
 
 
-# Required for OpenAI-compatible APIs (Zhipu / Tongyi / Kimi / OpenAI)
+2. 选择后端
 
-#OPENAI_API_KEY=your-key
+打开 ~/.baize/config.toml，修改 active_provider：
 
-#Ollama local requires no key
-```
+toml
 
-4. Restart
+    active_provider = "deepseek"    # 或 "openai" / "ollama"
 
-```bash
-baize
-```
+    [model_providers.deepseek]
+    name = "DeepSeek"
+    base_url = "https://api.deepseek.com"
+    env_key = "DEEPSEEK_API_KEY"
+    model = "deepseek-v4-pro"
 
-If you see the black-gold logo and welcome message, startup succeeded.
+    [model_providers.openai]
+    name = "OpenAI"
+    base_url = "https://api.openai.com/v1"
+    env_key = "OPENAI_API_KEY"
+    model = "gpt-4o-mini"
 
-# Usage Examples
+    [model_providers.ollama]
+    name = "Ollama (本地)"
+    base_url = "http://localhost:11434/v1"
+    env_key = ""
+    model = "qwen2.5:7b">
 
-After startup, describe your needs in natural language at the `>>> Decree:` prompt:
 
-```text
->>> Decree: Write a Python script to scrape Douban Top250 and save it as CSV
+3. 填入密钥
 
->>> Decree: Help me check type errors in all Python files under src/
+编辑 ~/.baize/.env：
 
->>> Decree: Find all places in this repository that use requests and change them to httpx
-```
+env
 
-## Baize CLI Interface
+    #DeepSeek 后端必填
 
+    DEEPSEEK_API_KEY=sk-你的密钥
+
+
+    #OpenAI 兼容接口必填(智谱 / 通义 / Kimi/ OpenAI)
+
+    #OPENAI_API_KEY=你的密钥
+
+    #Ollama 本地无需密钥
+
+
+4. 重新启动
+
+bash
+
+    baize
+
+看到黑金 Logo 和欢迎信息即启动成功。
+
+
+# 使用示例
+
+启动后在 >>> 降旨： 提示符下用自然语言描述需求即可：
+
+text
+
+    >>>降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
+
+    >>>降旨：帮我检查 src/ 下所有 Python 文件的类型错误
+
+    >>>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
+
+
+## 白泽CLI界面
 <div align="center">
-Baize CLI startup screen
+白泽 CLI 启动界面
 </div>
 
 <p align="center">
-  <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
+  <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
 
 <div align="center">
-Baize CLI running screen
+白泽 CLI 运行界面
 </div>
 
 <p align="center">
-  <img src="image/clipage02.jpg" alt="Baize CLI running screen" width="800" />
+  <img src="image/clipage02.jpg" alt="白泽 CLI 运行界面" width="800" />
 </p>
 
-## Built-in Commands
 
-- `/exit`, `/quit` --> Exit Baize
-- `/clear` --> Clear conversation history, todos, thought records, and tool records
-- `/compact` --> Manually compress context (use when the conversation is too long)
-- `/commit` --> Save the current session and commit to Git (if inside a Git repository)
-- `/skills` --> List all available skills
-- `/skills reload` --> Reload the user skills directory
-- `/unload` --> Unload the currently active skill
-- `/show thought` --> View the full thought record
-- `/show tool` --> View tool call records
-- `/show all` --> View all session history
-- `/skill-name` --> Load the specified skill (supports fuzzy matching)
+## 内置命令
+- /exit、/quit --> 退出白泽
+- /clear	--> 清空对话历史、待办、思考记录和工具记录
+- /compact	--> 手动压缩上下文（对话过长时使用）
+- /commit	--> 保存当前会话并提交到 Git（若在 Git 仓库内）
+- /skills	--> 列出所有可用技能
+- /skills reload	--> 重新加载用户技能目录
+- /unload	--> 卸载当前激活的技能
+- /show thought	--> 查看完整思考记录
+- /show tool	--> 查看工具调用记录
+- /show all	--> 查看全部会话历史
+- /技能名	--> 加载指定技能（支持模糊匹配）
 
-# Ollama Local Models (Zero Cost)
 
-Don't want to use a cloud API? Use local Ollama:
+# Ollama 本地模型（零成本）
 
-```bash
-#1. Install Ollama: https://ollama.com/download
-#2. Pull a model
-ollama pull qwen2.5:7b
+不想用云 API？用本地 Ollama：
 
-#3. Start the Ollama service
-ollama serve
+bash
 
-#4. Modify ~/.baize/config.toml
-active_provider = "ollama"
+    #1. 安装 Ollama：https://ollama.com/download
+    #2. 拉取模型
+    ollama pull qwen2.5:7b
 
-#5. Start Baize
-baize
-```
+    #3. 启动 Ollama 服务
+    ollama serve
 
-Recommended models: `qwen2.5:7b` (strong Chinese), `llama3.1:8b`, `deepseek-r1:7b`.
+    #4. 修改 ~/.baize/config.toml
+    active_provider = "ollama"
 
-# Extension Mechanisms
+    #5. 启动白泽
+    baize
 
-Baize supports four extension methods. Place them in the current working directory to take effect.
+推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
 
-## Skills
 
-Write domain knowledge in `./skills/skill-name/SKILL.md`. The AI will proactively load it when encountering complex tasks.
+# 扩展机制
 
-```markdown
----
-name: pandas-eda
+白泽支持四种扩展方式，全部放在当前工作目录下即可生效。
 
-description: Best practices for exploratory data analysis with pandas
+## 技能（Skills）
+在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
 
-tags: data,python
----
+markdown
 
-# Pandas EDA Guide
+    ---
+    name: pandas-eda
 
-## Core Steps
-1. Use df.info() to inspect field types and missing values
-2. Use df.describe() for statistical description
-...
-```
+    description: 使用 pandas 进行探索性数据分析的最佳实践
 
-You can also manually load it in conversation with `/pandas-eda`.
+    tags: data,python
+    ---
 
-## Subagents
+    #Pandas EDA 指南
 
-Define specialized subagents in `./subagent/role-name/AGENT.md`. The main agent can delegate tasks through the `agent` tool.
+    ##核心步骤
+    1. df.info() 查看字段类型和缺失
+    2. df.describe() 统计描述
+    ...
+    也可以在对话中用 /pandas-eda 手动加载。
 
-```markdown
----
-name: code-reviewer
 
-description: A strict code reviewer
----
+## 子代理（Subagents）
 
-You are a senior code reviewer. During review, prioritize:
-1. Boundary conditions and exception handling
-2. Resource leaks
-3. Concurrency safety
-...
-```
+在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
 
-## Hooks
+markdown
 
-Place the following under `./hooks/`:
-- `PreToolUse-*.sh`
-- `PostToolUse-*.sh`
-- `Stop-*.sh`
+    ---
+    name: code-reviewer
 
-They receive JSON input and return a decision:
+    description: 严格的代码审查员
+    ---
 
-```bash
-#!/bin/bash
+    你是资深代码审查员。审查时优先关注：
+    1. 边界条件与异常处理
+    2. 资源泄漏
+    3. 并发安全
+    ...
 
-#PreToolUse-guard.sh
 
-read -r input
+## 钩子（Hooks）
 
-if echo "$input" | grep -q "rm -rf"; then
+在 ./hooks/ 下放置 
+- PreToolUse-*.
+- sh、PostToolUse-*.
+- sh、Stop-*.sh
+接收 JSON 输入，返回决策：
 
-echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
+bash
 
-fi
-```
+    #!/bin/bash
 
-Python hooks can directly call built-in APIs (see the `hook_*` functions in `Baize.py`).
+    #PreToolUse-guard.sh
 
-## MCP Servers
+    read -r input
 
-Configure external tool servers in `./MCP/mcp_config.json`:
+    if echo "$input" | grep -q "rm -rf"; then
 
-```json
-{
-  "mcpServers": [
+    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"禁止删除"}}'
+
+    fi
+
+Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
+
+
+## MCP 服务器
+
+在 ./MCP/mcp_config.json 中配置外部工具服务器：
+
+json
+
     {
-      "name": "filesystem",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-      "env": {},
-      "enabled": true
-    }
-  ]
-}
-```
 
-# Security Design
+      "mcpServers": [
 
-Baize enables the following security mechanisms by default:
+        {
 
-- **Command whitelist**: Only common commands such as `ls`, `cat`, `grep`, `git`, `python3`, etc. are allowed.
-- **Path escape detection**: All file operations are restricted to the current working directory and `/tmp`.
-- **Dangerous command blocking**: Blocks patterns such as `rm -rf /`, fork bombs, `curl | sh`, `git push --force`, etc.
-- **Sensitive file protection**: Prohibits modifying `.env`, `.ssh/`, `id_rsa`, `*.pem`, etc.
-- **Script injection interception**: Detects bypasses such as `python -c "os.system(...)"`.
-- **Process resource limits**: On Linux/macOS, limits CPU, memory, and process count.
+          "name": "filesystem",
 
-If you need to relax restrictions in a trusted project, modify `ALLOWED_COMMANDS` and `FORBIDDEN_PATH_PATTERNS` in `Baize.py`.
+          "command": "npx",
 
-# Directory Structure
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
 
-```text
-baize-agent/
-├── pyproject.toml              # Packaging configuration
-├── README.md
-├── tests/                      # Tests (not shipped with the package)
-|   ├── __init__.py
-|   └── test_history.py
-├── .env.example                # Environment variable example
-├── .gitignore
-└── agent/                      # Main package
-    ├── __init__.py
-    ├── Baize.py                # Main program and Agent Loop
-    ├── config.py               # Multi-backend configuration loading
-    ├── ui_theme.py             # CLI rendering theme
-    ├── utils.py                # General utilities
-    ├── logo.txt
-    ├── skills/                 # Built-in skills
-    ├── subagent/               # Built-in subagents
-    ├── core/                   # Core logic (side-effect free, unit-testable)
+          "env": {},
+
+          "enabled": true
+
+        }
+
+      ]
+
+     }
+
+
+# 安全设计
+
+白泽默认启用以下安全机制：
+
+- **命令白名单**：仅允许 ls、cat、grep、git、python3 等常用命令。
+
+- **路径逃逸检测**：所有文件操作限制在当前工作目录和 /tmp 内。
+
+- **危险命令拦截**：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
+
+- **敏感文件保护**：禁止修改 .env、.ssh/、id_rsa、*.pem 等。
+
+- **脚本注入拦截**：检测 python -c "os.system(...)" 类绕过。
+
+- **进程资源限制**：Linux/macOS 下限制 CPU、内存、进程数。
+
+如果你需要在受信任的项目中放宽限制，可修改 Baize.py 中的 ALLOWED_COMMANDS 和 FORBIDDEN_PATH_PATTERNS。
+
+
+# 目录结构
+text
+
+    baize-agent/
+    ├── pyproject.toml              # 打包配置
+    ├── README.md
+    ├── tests/                      # 测试（不随包发布）
     |   ├── __init__.py
-    |   └── history.py          # Session history cleaning / token estimation / compression
-    ├── hooks/                  # Built-in hooks
-    └── MCP/                    # MCP client and configuration
+    |   ├── test_history.py
+    |   └── test_skill_loader.py 
+    ├── .env.example                # 环境变量示例
+    ├── .gitignore
+    └── agent/                      # 主包
         ├── __init__.py
-        ├── mcp_client.py
-        └── mcp_config.json
-```
+        ├── Baize.py                # 主程序与 Agent Loop
+        ├── config.py               # 多后端配置加载
+        ├── ui_theme.py             # CLI 渲染主题
+        ├── utils.py                # 通用工具
+        ├── logo.txt
+        ├── skills/                 # 内置技能
+        ├── subagent/               # 内置子代理
+        ├── core/                   # 核心逻辑（无副作用，可单测）
+        |   ├── __init__.py
+        |   └── history.py          # 会话历史清洗 / token 估算 / 压缩
+        ├── hooks/                  # 内置钩子
+        └── MCP/                    # MCP 客户端与配置
+            ├── __init__.py
+            ├── mcp_client.py
+            └── mcp_config.json
 
-# Environment Variable Reference
 
-- Variable: `DEEPSEEK_API_KEY`  Description: DeepSeek API  Default: key  —
-- Variable: `DEEPSEEK_BASE_URL`  Description: DeepSeek endpoint  Default: `https://api.deepseek.com`
-- Variable: `OPENAI_API_KEY`  Description: OpenAI  Default: compatible API key  —
-- Variable: `OPENAI_BASE_URL`  Description: OpenAI-compatible endpoint  Default: `https://api.openai.com/v1`
-- Variable: `OLLAMA_BASE_URL`  Description: Ollama service address  Default: `http://localhost:11434`
+# 环境变量参考
+		
+- 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
 
-Write variables to `~/.baize/.env`; there is no need to modify shell config files.
+- 变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
 
-# Development
+- 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
 
-## Running Tests
+- 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
 
-This project uses pytest. Before development, install the package in editable mode with dev dependencies:
+- 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
 
-```bash
-pip install -e ".[dev]"
-```
+变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。
 
-Run all tests:
 
-```bash
-python -m pytest tests/ -v
-```
+# 开发
 
-Run a single file:
+## 运行测试
 
-```bash
-python -m pytest tests/test_history.py -v
-```
+本项目使用 pytest。开发前请以可编辑模式安装包与开发依赖：
 
-## Code Structure Conventions
+    pip install -e ".[dev]"
 
-- `agent/`: The main package shipped with the package. All runtime logic and resources (skills, subagent, hooks, MCP) are here.
-- `agent/core/`: Pure logic modules with no external side effects. **They must be independently testable.** Put new logic of this kind here and add tests.
-- `tests/`: Corresponds one-to-one with source files under `agent/`, named `test_<module>.py`.
-- Any function with external dependencies (network, disk, global state) should have dependencies injected via parameters to make replacement easy in tests.
+运行全部测试：
 
-# ❓ FAQ
+    python -m pytest tests/ -v
 
-- Q: Where should I put the API key?
+只跑单个文件：
 
-A: `~/.baize/.env`, not the `.env` in the project root.
+    python -m pytest tests/test_history.py -v
 
-- Q: Do I need to reinstall after switching backends?
+## 代码结构约定
 
-A: No. Just change `active_provider` in `~/.baize/config.toml`.
+- `agent/`：随包发布的主包。所有运行时逻辑与资源（skills、subagent、hooks、MCP）都在这里。
+- `agent/core/`：纯逻辑模块，无外部副作用，**必须能被单独测试**。新增此类逻辑请放这里，并配套测试。
+- `tests/`：与 `agent/` 下的源文件一一对应，命名为 `test_<模块名>.py`。
+- 任何有外部依赖（网络、磁盘、全局状态）的函数，请通过参数注入依赖，便于在测试中替换。
 
-- Q: Does local Ollama require an API key?
+# ❓ 常见问题
+- Q：密钥应该填在哪里？
 
-A: No. Select `active_provider = "ollama"` and leave `env_key` empty.
+A：~/.baize/.env，不是项目根目录的 .env。
 
-- Q: How do I switch the working directory?
+- Q：换了后端要重装吗？
 
-A: Just say "switch to /path/to/project" in the conversation, and Baize will call the `set_workspace` tool.
+A：不用。改 ~/.baize/config.toml 里的 active_provider 即可。
 
-- Q: What happens when the context gets too long?
+- Q：本地 Ollama 需要填密钥吗？
 
-A: Baize automatically performs two-level compression: first truncating old tool results, then requesting the LLM to generate a summary. You can also manually run `/compact`.
+A：不需要。选 active_provider = "ollama" 即可，env_key 留空。
 
-- Q: Will it accidentally delete my files?
+- Q：如何切换工作目录？
 
-A: The default command whitelist blocks dangerous operations such as `rm -rf /`; before writing files, it shows a Diff and asks for confirmation.
+A：在对话中直接说"切换到 /path/to/project"，白泽会调用 set_workspace 工具。
 
-# 🤝 Contributing
+- Q：上下文太长会怎样？
 
-Issues and PRs are welcome. It is recommended to first read the `agent_loop` function in `Baize.py` to understand the Agent main loop before extending it.
+A：白泽会自动两级压缩：先截断旧工具结果，再请求 LLM 生成摘要。也可手动 /compact。
 
+- Q：会误删我的文件吗？
+
+A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显示 Diff 并请求确认。
+
+# 🤝 贡献
+欢迎提交 Issue 和 PR。建议先阅读 Baize.py 中的 agent_loop 函数，理解 Agent 主循环后再做扩展。
 ### Thank you for every Contributor to Submit PR
-
-- GitHub Contributor: 
+- Github Contributor：
 [@anupamme](https://github.com/anupamme)
+[@wangyipeng0724](https://github.com/wangyipeng0724)
 
-[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
-
-# License
-
+# 许可证
 MIT License
 
-# Acknowledgements
+# 致谢
+- 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
 
-- This project is hosted on AtomGit in China: https://atomgit.com/Com_Xu/Baize
+- 感谢AtomGit将本项目已纳入G-star孵化项目
 
-- Thanks to AtomGit for including this project in the G-star incubation program
+- 感谢PR的贡献者、抖音的粉丝、关注我的学生们
 
-- Thanks to PR contributors, Douyin followers, and students who follow me
+- 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
 
-- Inspired by excellent AI Coding tools such as Claude Code and Codex
+- 基于 DeepSeek、OpenAI SDK、MCP 构建
 
-- Built on DeepSeek, OpenAI SDK, and MCP
+- 感谢所有在 Vibe Coding 路上同行的开发者
 
-- Thanks to all developers walking the Vibe Coding path together
+- 开发者专注创意与决策，白泽处理琐碎与执行。让编程回归直觉，让创造如神话般流畅。
 
-- Developers focus on ideas and decisions; Baize handles the trivial and execution. Let programming return to intuition, and let creation flow like myth.
-
-# ☕ Support
-If Baize is useful to you, you’re welcome to sponsor or tip. Independent development also takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
+# ☕ 赞助支持
+如果白泽对你有用，欢迎赞助打赏。独立开发也花费很多时间，赞助不会改变产品更新的排期，谢谢支持！
 <p align="center">
-  <img src="image/support.jpg" alt="WeChat QR" width="200" />
+  <img src="image/support.jpg" alt="微信二维码" width="200" />
 </p>
 
-# Contact Me
-
-- If you are interested in Baize, want to participate in open-source collaboration, or want to keep up with my updates, you can contact me through
-- **Currently, I am also in the job-hunting process. I have experience in market research and user research, and I have some knowledge of Agents. If my skills meet your requirements, I would also like to work with you (Desired Position: AI product operation / user research / market research)**
-
-<p align="center">
-  <img src="image/weixin.jpg" alt="WeChat QR code" width="200" />
-</p>
-
-<p align="center">Scan the QR code with WeChat. Please indicate "Baize Open Source Cooperation" or "Corporate Recruitment".</p>
+# 联系我
+- 如果你对白泽感兴趣，或者想参与开源合作，可以通过以下方式联系我
+- **目前，本人在求职状态，本人从事过市场研究与用户研究工作，对Agent也有一定了解，如果我的能力符合您的需求，也希望与您共事（意向岗位：AI产品运营/用户研究/市场调研）**
 
 <p align="center">
-  <img src="image/抖音.png" alt="Douyin QR code" width="200" />
+  <img src="image/weixin.jpg" alt="微信二维码" width="200" />
 </p>
 
-<p align="center">Scan with Douyin to follow</p>
+<p align="center">微信扫码，请注明Baize开源合作或者企业招聘</p>
+
+<p align="center">
+  <img src="image/抖音.png" alt="抖音二维码" width="200" />
+</p>
+
+<p align="center">抖音扫码关注</p>
