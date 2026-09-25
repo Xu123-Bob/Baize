@@ -25,6 +25,9 @@
   <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
     <img src="https://img.shields.io/github/issues-pr-closed/Xu123-Bob/Baize?style=flat-square&logo=github&label=Closed%20PRs" alt="GitHub Closed Pull Requests">
   </a>
+  <a href="https://github.com/Xu123-Bob/Baize/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/Xu123-Bob/Baize?style=flat-square&logo=github&label=Contributors" alt="GitHub Contributors">
+  </a>
 </p>
 
 <p align="center">
@@ -457,8 +460,9 @@ Issue と PR を歓迎します。まず `Baize.py` の `agent_loop` 関数を�
 
 - GitHub Contributor：
 [@anupamme](https://github.com/anupamme)
+[@wangyipeng0724](https://github.com/wangyipeng0724)
 
-[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
 # ライセンス
 
