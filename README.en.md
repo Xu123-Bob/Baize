@@ -59,7 +59,7 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 
 # Features
 
-- Multi-backend support: DeepSeek, any OpenAI-compatible API (Zhipu / Tongyi / Kimi / OpenAI), and local Ollama. Switch with one setting.
+- Multi-backend support: DeepSeek, any OpenAI-compatible API (GLM / Qwen / Kimi / OpenAI), and local Ollama. Switch with one setting.
 
 - Zero-config startup: Automatically generates configuration files on first run. Users only need to enter the key once.
 
