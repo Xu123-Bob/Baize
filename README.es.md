@@ -54,14 +54,14 @@
 
 Baize —— La bestia auspiciosa de la mitología china antigua que conocía todas las cosas, ahora reencarnada como asistente de Vibe Coding.
 
-**Un CLI de Agente de Programación con IA de código abierto, alternativa a Claude Code CLI. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / Zhipu / Tongyi / Kimi / Ollama local), con capacidades completas de llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad. Programa en pareja con IA directamente desde la terminal.**
+**Un CLI de Agente de Programación con IA de código abierto, alternativa a Claude Code CLI. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / GLM / Qwen / Kimi / Ollama local), con capacidades completas de llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad. Programa en pareja con IA directamente desde la terminal.**
 
 ----------
 
 
 # Características
 
-- Soporte multi-backend: DeepSeek, cualquier interfaz compatible con OpenAI (Zhipu / Tongyi / Kimi / OpenAI), Ollama local, cambio con un clic.
+- Soporte multi-backend: DeepSeek, cualquier interfaz compatible con OpenAI (GLM / Qwen / Kimi / OpenAI), Ollama local, cambio con un clic.
 
 - Inicio sin configuración: la primera ejecución genera automáticamente archivos de configuración; solo necesitas ingresar tu clave una vez.
 
@@ -175,7 +175,7 @@ env
     DEEPSEEK_API_KEY=sk-tu_clave
 
 
-    #Obligatorio para interfaz compatible con OpenAI (Zhipu / Tongyi / Kimi / OpenAI)
+    #Obligatorio para interfaz compatible con OpenAI (GLM / Qwen / Kimi / OpenAI)
 
     #OPENAI_API_KEY=tu_clave
 

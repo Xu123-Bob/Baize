@@ -177,7 +177,7 @@ Edit `~/.baize/.env`:
 DEEPSEEK_API_KEY=sk-your-key
 
 
-# Required for OpenAI-compatible APIs (Zhipu / Tongyi / Kimi / OpenAI)
+# Required for OpenAI-compatible APIs (GLM / Qwen / Kimi / OpenAI)
 
 #OPENAI_API_KEY=your-key
 

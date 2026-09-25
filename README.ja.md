@@ -53,13 +53,13 @@
 
 白澤 —— 中国古代神話に登場し、万物に通じる瑞獣。今は Vibe Coding アシスタントへ。
 
-**オープンソースのAIコーディングエージェントCLIで、Claude Code CLIの代替製品として、複数のバックエンド（DeepSeek／OpenAI互換／Zhi Spe／Tongyi／Kimi／Ollamaローカル）に対応し、ツール呼び出し、スキル読み込み、サブプロキシ委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。ターミナルから直接AIとペアプログラミングが可能です**
+**オープンソースのAIコーディングエージェントCLIで、Claude Code CLIの代替製品として、複数のバックエンド（DeepSeek／OpenAI互換／GLM／Qwen／Kimi／Ollamaローカル）に対応し、ツール呼び出し、スキル読み込み、サブプロキシ委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。ターミナルから直接AIとペアプログラミングが可能です**
 
 ----------
 
 # 特徴
 
-- マルチバックエンド対応：DeepSeek、任意の OpenAI 互換 API（智譜 / 通義 / Kimi / OpenAI）、ローカル Ollama をワンクリックで切り替え。
+- マルチバックエンド対応：DeepSeek、任意の OpenAI 互換 API（GLM / Qwen / Kimi / OpenAI）、ローカル Ollama をワンクリックで切り替え。
 
 - ゼロ設定起動：初回実行時に設定ファイルを自動生成。ユーザーは一度だけキーを入力すればよい。
 
@@ -178,7 +178,7 @@ model = "qwen2.5:7b"
 DEEPSEEK_API_KEY=sk-あなたのキー
 
 
-# OpenAI 互換 API では必須（智譜 / 通義 / Kimi / OpenAI）
+# OpenAI 互換 API では必須（GLM / Qwen / Kimi / OpenAI）
 
 #OPENAI_API_KEY=あなたのキー
 

@@ -54,14 +54,14 @@
 
 백택(Baize) —— 고대 중국 신화에서 만물을 통달한 상서로운 짐승이 이제 Vibe Coding 어시스턴트로 환생했습니다.
 
-**오픈소스 AI Coding Agent CLI로, Claude Code CLI의 대체품입니다. 다중 백엔드(DeepSeek / OpenAI 호환 / Zhipu / Tongyi / Kimi / Ollama 로컬)를 지원하며, 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다. 터미널에서 바로 AI와 페어 프로그래밍을 즐기세요.**
+**오픈소스 AI Coding Agent CLI로, Claude Code CLI의 대체품입니다. 다중 백엔드(DeepSeek / OpenAI 호환 / GLM / Qwen / Kimi / Ollama 로컬)를 지원하며, 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다. 터미널에서 바로 AI와 페어 프로그래밍을 즐기세요.**
 
 ----------
 
 
 # 주요 기능
 
-- 다중 백엔드 지원: DeepSeek, 모든 OpenAI 호환 인터페이스(Zhipu / Tongyi / Kimi / OpenAI), 로컬 Ollama, 원클릭 전환.
+- 다중 백엔드 지원: DeepSeek, 모든 OpenAI 호환 인터페이스(GLM / Qwen / Kimi / OpenAI), 로컬 Ollama, 원클릭 전환.
 
 - 제로 설정 시작: 첫 실행 시 자동으로 설정 파일을 생성하며, 사용자는 키만 한 번 입력하면 됩니다.
 
@@ -175,7 +175,7 @@ env
     DEEPSEEK_API_KEY=sk-당신의_키
 
 
-    #OpenAI 호환 인터페이스 필수(Zhipu / Tongyi / Kimi / OpenAI)
+    #OpenAI 호환 인터페이스 필수(GLM / Qwen / Kimi / OpenAI)
 
     #OPENAI_API_KEY=당신의_키
 
