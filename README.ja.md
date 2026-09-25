@@ -42,7 +42,9 @@
 <p align="center">
   <a href="README.md">简体中文</a> |
   <a href="README.en.md">English</a> |
-  <a href="README.ja.md">日本語</a>
+  <a href="README.ja.md">日本語</a> |
+  <a href="README.ko.md">한국어</a> |
+  <a href="README.es.md">Español</a>
 </p>
 
 </div>
@@ -365,7 +367,8 @@ baize-agent/
 ├── README.md
 ├── tests/                      # テスト（パッケージには含まれない）
 |   ├── __init__.py
-|   └── test_history.py
+|   ├── test_history.py
+|   └── test_skill_loader.py
 ├── .env.example                # 環境変数例
 ├── .gitignore
 └── agent/                      # メインパッケージ

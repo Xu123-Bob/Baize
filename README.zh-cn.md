@@ -42,7 +42,9 @@
 <p align="center">
   <a href="README.md">简体中文</a> |
   <a href="README.en.md">English</a> |
-  <a href="README.ja.md">日本語</a>
+  <a href="README.ja.md">日本語</a> |
+  <a href="README.ko.md">한국어</a> |
+  <a href="README.es.md">Español</a>
 </p>
 
 </div>
@@ -382,7 +384,8 @@ text
     ├── README.md
     ├── tests/                      # 测试（不随包发布）
     |   ├── __init__.py
-    |   └── test_history.py
+    |   ├── test_history.py
+    |   └── test_skill_loader.py
     ├── .env.example                # 环境变量示例
     ├── .gitignore
     └── agent/                      # 主包
