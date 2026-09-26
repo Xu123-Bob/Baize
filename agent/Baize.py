@@ -55,6 +55,8 @@ import logging
 import httpx
 from typing import Optional
 
+
+
 #获取脚本运行时的当前工作目录
 CURRENT_WORKDIR = Path.cwd()
 workdir_lock = threading.Lock()
@@ -74,7 +76,6 @@ def get_tasks_dir() -> Path:
 #压缩相关全局配置 
 TRANSCRIPT_DIR = CURRENT_WORKDIR / ".transcripts"
 KEEP_RECENT = 10
-
 #任务管理模块
 TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 #消息历史（对话上下文）的 Token 数量阈值
@@ -88,6 +89,122 @@ ACTIVE_SKILL = None
 SESSION_HISTORY = []
 # 标记当前会话是否已提交到 Git（防止重复提交）
 _GIT_COMMITTED_FLAG = False
+# ==================== 多语言支持 ====================
+# 当前语言（全局状态，默认中文）
+CURRENT_LANGUAGE = "zh"
+# 支持的语言代码 → 人类可读名称
+SUPPORTED_LANGUAGES = {
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ru": "Русский",
+    "ar": "العربية",
+}
+# 用户输入关键词 → 语言代码（大小写不敏感）
+# 支持用户直接输入 "English"、"日本語"、"한국어" 等来触发切换
+LANGUAGE_KEYWORDS = {
+    # 中文
+    "中文": "zh", "汉语": "zh", "漢語": "zh", "简体中文": "zh",
+    "chinese": "zh", "zh": "zh", "mandarin": "zh",
+    # 英文
+    "english": "en", "en": "en", "英语": "en", "英文": "en",
+    # 日文
+    "日本語": "ja", "japanese": "ja", "ja": "ja", "日语": "ja", "日文": "ja",
+    # 韩文
+    "한국어": "ko", "korean": "ko", "ko": "ko", "韩语": "ko", "韓語": "ko", "한글": "ko",
+    # 西班牙文
+    "español": "es", "spanish": "es", "es": "es", "西班牙语": "es", "西班牙語": "es",
+    # 法文
+    "français": "fr", "french": "fr", "fr": "fr", "法语": "fr",
+    # 德文
+    "deutsch": "de", "german": "de", "de": "de", "德语": "de",
+    # 俄文
+    "русский": "ru", "russian": "ru", "ru": "ru", "俄语": "ru",
+    # 阿拉伯文
+    "العربية": "ar", "arabic": "ar", "ar": "ar", "阿拉伯语": "ar",
+}
+# 各语言的"语言要求"指令（追加到系统提示词末尾，覆盖默认中文指令）
+LANGUAGE_INSTRUCTIONS = {
+    "zh": "**语言要求（最高优先级）**：请始终使用简体中文进行思考和回复。所有面向用户的输出必须为中文。",
+    "en": "**Language Requirement (highest priority)**: Always think and respond in English. All user-facing output MUST be in English.",
+    "ja": "**言語要件（最優先）**：常に日本語で思考し、応答してください。ユーザー向けの出力はすべて日本語で行ってください。",
+    "ko": "**언어 요구사항 (최우선)**: 항상 한국어로 사고하고 응답하세요. 모든 사용자 대상 출력은 한국어로 작성해야 합니다.",
+    "es": "**Requisito de idioma (prioridad máxima)**: Piensa y responde siempre en español. Toda salida dirigida al usuario DEBE estar en español.",
+    "fr": "**Exigence linguistique (priorité absolue)** : Pensez et répondez toujours en français. Toute sortie destinée à l'utilisateur DOIT être en français.",
+    "de": "**Sprachanforderung (höchste Priorität)**: Denken und antworten Sie immer auf Deutsch. Alle benutzerorientierten Ausgaben MÜSSEN auf Deutsch sein.",
+    "ru": "**Языковое требование (высший приоритет)**: Всегда думайте и отвечайте на русском языке. Весь вывод для пользователя ДОЛЖЕН быть на русском.",
+    "ar": "**متطلب اللغة (أولوية قصوى)**: فكّر وأجب دائمًا باللغة العربية. يجب أن يكون كل الإخراج الموجّه للمستخدم باللغة العربية.",
+}
+
+def detect_language(text: str) -> Optional[str]:
+    """
+    基于字符特征检测用户输入的语言，返回语言代码或 None（无法判定）。
+
+    判定优先级：
+      1. 精确关键词匹配（用户只输入 "English"/"日本語" 等语言名）
+      2. 特有字符（假名、谚文、西里尔字母、特殊变音符号等）
+      3. CJK 汉字（无假名/谚文时 → 中文）
+      4. 纯拉丁字母 → 英文
+    """
+    text = text.strip()
+    if not text:
+        return None
+
+    # 1. 精确关键词匹配（整句就是语言名的情况）
+    lowered = text.lower()
+    if lowered in LANGUAGE_KEYWORDS:
+        return LANGUAGE_KEYWORDS[lowered]
+
+    # 2. 特有字符检测（按特异性从高到低）
+    # 日文假名（片假名 + 平假名）
+    if re.search(r'[\u3040-\u309f\u30a0-\u30ff]', text):
+        return "ja"
+    # 韩文谚文
+    if re.search(r'[\uac00-\ud7af\u1100-\u11ff]', text):
+        return "ko"
+    # 西里尔字母（俄语等）
+    if re.search(r'[\u0400-\u04ff]', text):
+        return "ru"
+    # 阿拉伯字母
+    if re.search(r'[\u0600-\u06ff]', text):
+        return "ar"
+    # 西班牙语特有字符
+    if re.search(r'[ñáéíóúü¿¡]', text, re.IGNORECASE):
+        return "es"
+    # 德语特有字符
+    if re.search(r'[äöüß]', text, re.IGNORECASE):
+        return "de"
+    # 法语特有字符（不与西/德重叠）
+    if re.search(r'[àâçéèêëîïôùûÿœæ]', text, re.IGNORECASE):
+        return "fr"
+    # CJK 汉字（无假名/谚文时算中文）
+    if re.search(r'[\u4e00-\u9fff]', text):
+        return "zh"
+    # 纯拉丁字母 → 默认英文
+    if re.search(r'[a-zA-Z]', text):
+        return "en"
+
+    return None
+
+def set_language(code: str) -> bool:
+    """
+    切换全局语言并刷新系统消息。返回是否切换成功。
+    """
+    global CURRENT_LANGUAGE
+    if code not in SUPPORTED_LANGUAGES:
+        return False
+    if code == CURRENT_LANGUAGE:
+        return True
+    CURRENT_LANGUAGE = code
+    # 刷新 SESSION_HISTORY 里的系统消息
+    if SESSION_HISTORY and SESSION_HISTORY[0].get("role") == "system":
+        SESSION_HISTORY[0]["content"] = build_system_prompt()
+    return True
+
 
 
 #LLM API接入
@@ -134,6 +251,8 @@ def _log_retry(retry_state):
     # 重试前执行的回调（打印提示）
     before_sleep=_log_retry,
 )
+
+
 
 #是整个代理系统的核心通信函数，它封装了与 LLM（大语言模型）API 的交互逻辑，负责将对话历史和可用工具列表发送给模型，并返回模型的响应
 def send_messages(messages, tools,*, sanitize: bool = True):
@@ -605,7 +724,7 @@ def build_system_prompt() -> str:
 
 **你的守护**：危险命令拦截、敏感文件保护、测试门控——为每一次Vibe Coding保驾护航，辟除代码之“邪气”。
 
-**你的语言**：始终使用中文进行思考和回复。同时，需要时可生成英文注释或文档，但核心交流与指令必须为中文。另外，日常语言你喜欢用古文风格表达，偶尔引用古诗词以增添趣味。
+**你的语言**：默认使用中文进行思考和回复。同时，需要时可生成英文注释或文档。另外，日常语言你喜欢用中国古文风格表达，偶尔引用古诗词以增添趣味。如果，用户非中文母语，你会在提供英文翻译或解释。
 
 **你的性格**：智慧、幽默、耐心、善于引导。你会主动提出问题以澄清需求，确保理解开发者意图。
 
@@ -645,6 +764,12 @@ def build_system_prompt() -> str:
             base += f"\n\n## 当前激活的技能：{ACTIVE_SKILL}\n{skill_content}"
         else:
             print(f"[警告] 获取技能 '{ACTIVE_SKILL}' 内容失败：{skill_content}")
+            # ===== 新增：动态注入当前语言指令 =====
+    lang_instruction = LANGUAGE_INSTRUCTIONS.get(
+        CURRENT_LANGUAGE,
+        LANGUAGE_INSTRUCTIONS["zh"]
+    )
+    base += f"\n\n{lang_instruction}"
     return base
 
 #TaskManager
@@ -1096,9 +1221,9 @@ class InteractionManager:
         if request_id in self._pending_requests:
             self._pending_requests[request_id]["response"] = response
             self._pending_requests[request_id]["event"].set()
-
 # 创建全局交互管理器实例
 INTERACTION = InteractionManager()
+
 
 
 # 工具调用与功能定义
@@ -2202,8 +2327,6 @@ def _are_todos_completed() -> bool:
 
 
 
-
-
 # Agent Loop --- 支持输出回调
 def agent_loop(messages, output_callback=None):
     """
@@ -2634,7 +2757,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v1.0.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v1.4.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2694,7 +2817,7 @@ def main():
             left_pad = max(0, (term_width - width) // 2)
             print(" " * left_pad + line)
         # 在 Logo 下方添加副标题
-        subtitle = f"{GOLD}{BOLD}白泽--Coding Agent{RESET}"
+        subtitle = f"{GOLD}{BOLD}◈ 白泽--Coding Agent{RESET}"
         width = display_width(subtitle)
         left_pad = max(0, (term_width - width) // 2)
         print(" " * left_pad + subtitle)
@@ -2714,9 +2837,10 @@ def main():
         "",
         f"{GOLD}{BOLD}◈ 初问白泽{RESET}",
         f"{GRAY}  询问 Baize 创建一个新应用或开发一个软件{RESET}",
+        f"{GRAY}  多语言：直接说 English/日本語/한국어/Español 即可自动切换，或用 /lang 命令{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
-        f"{GRAY}  错误修复和可靠性改进{RESET}",
+        f"{GRAY}  提升性能，提供多语言交互方式{RESET}",
         f"{GRAY}  沙箱路径漏洞已修复{RESET}"
     ]
     for line in welcome_lines:
@@ -2751,7 +2875,15 @@ def main():
 
         if not user_input:
             continue
-        # 处理管理命令
+        # ===== 自动检测用户输入语言并切换 =====
+        # 只在"非命令"输入时检测（避免 /show 之类的命令被误判）
+        if not user_input.startswith("/"):
+            detected = detect_language(user_input)
+            if detected and detected != CURRENT_LANGUAGE:
+                if set_language(detected):
+                    lang_name = SUPPORTED_LANGUAGES.get(detected, detected)
+                    print(f"\033[90m[系统] 已检测到输入语言为 {lang_name}，白泽已切换为 {lang_name} 交互。\033[0m")
+        # 处理管理命令（原有的斜杠命令分支，紧跟其后）
         if user_input.startswith("/"):
             cmd = user_input.lower()  # 用于匹配内置命令
             # ----- 内置命令（固定） -----
@@ -2823,6 +2955,30 @@ def main():
                     ACTIVE_SKILL = None
                 else:
                     print("[系统] 当前没有加载任何技能。")
+                continue
+            #/commend切换语言
+            elif cmd == "/lang" or cmd.startswith("/lang "):
+                parts = user_input.strip().split(maxsplit=1)
+                if len(parts) == 1:
+                    current_name = SUPPORTED_LANGUAGES.get(CURRENT_LANGUAGE, CURRENT_LANGUAGE)
+                    print(f"[系统] 当前语言：{current_name} ({CURRENT_LANGUAGE})")
+                    print(f"[系统] 可用语言：")
+                    for code, name in SUPPORTED_LANGUAGES.items():
+                        marker = " ←" if code == CURRENT_LANGUAGE else ""
+                        print(f"    {code:4s}  {name}{marker}")
+                    print(f"[系统] 用法：/lang <代码> 或 /lang <语言名>，例如 /lang en 或 /lang English")
+                else:
+                    target = parts[1].strip()
+                    code = LANGUAGE_KEYWORDS.get(target.lower())
+                    if not code and target.lower() in SUPPORTED_LANGUAGES:
+                        code = target.lower()
+                    if code:
+                        if set_language(code):
+                            print(f"[系统] 已切换语言为：{SUPPORTED_LANGUAGES.get(code, code)}")
+                        else:
+                            print(f"[系统] 切换失败。")
+                    else:
+                        print(f"[系统] 不支持的语言：{target}。输入 /lang 查看可用列表。")
                 continue
             # --- 未匹配内置命令，尝试作为技能名处理 ---
             # 注意：这里使用原输入（去掉首字符）进行匹配，不使用小写转换（保留原始大小写以供展示）
