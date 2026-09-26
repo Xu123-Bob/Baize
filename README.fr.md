@@ -54,7 +54,7 @@
 
 Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes choses, réincarnée en assistant Vibe Coding.
 
-**Un CLI d'agent de codage IA open source, alternative directe à Claude Code CLI. Prend en charge plusieurs backends (DeepSeek / toute API compatible OpenAI / Zhipu / Qwen / Kimi / Ollama local), avec une chaîne d'outils complète : appels d'outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé. Programmez en binôme avec l'IA directement dans le terminal.**
+**Un CLI d'agent de codage IA open source, alternative directe à Claude Code CLI. Prend en charge plusieurs backends (DeepSeek / toute API compatible OpenAI / GLM / Qwen / Kimi / Ollama local), avec une chaîne d'outils complète : appels d'outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé. Programmez en binôme avec l'IA directement dans le terminal.**
 
 ----------
 
