@@ -44,7 +44,8 @@
   <a href="README.en.md">English</a> |
   <a href="README.ja.md">日本語</a> |
   <a href="README.ko.md">한국어</a> |
-  <a href="README.es.md">Español</a>
+  <a href="README.es.md">Español</a> |
+  <a href="README.fr.md">Français</a>
 </p>
 
 </div>
@@ -59,25 +60,27 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 
 # Features
 
-- Multi-backend support: DeepSeek, any OpenAI-compatible API (GLM / Qwen / Kimi / OpenAI), and local Ollama. Switch with one setting.
+- **Multi-backend support**: DeepSeek, any OpenAI-compatible API (GLM / Qwen / Kimi / OpenAI), and local Ollama. Switch with one setting.
 
-- Zero-config startup: Automatically generates configuration files on first run. Users only need to enter the key once.
+- **Zero-config startup**: Automatically generates configuration files on first run. Users only need to enter the key once.
 
-- Complete toolchain: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
+- **Complete toolchain**: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
 
-- Skills system: Load domain knowledge (SKILL.md) on demand, making the AI more professional in specific scenarios.
+- **Skills system**: Load domain knowledge (SKILL.md) on demand, making the AI more professional in specific scenarios.
 
-- Subagents: Delegate complex tasks to subagents with independent contexts to avoid polluting the main session.
+- **Subagents**: Delegate complex tasks to subagents with independent contexts to avoid polluting the main session.
 
-- Hooks: Python or Shell hooks that support pre/post tool-call interception, audit logging, auto-formatting, and test gating.
+- **Hooks**: Python or Shell hooks that support pre/post tool-call interception, audit logging, auto-formatting, and test gating.
 
-- MCP protocol: Connect external tool servers (GitHub, Filesystem, etc.) via Model Context Protocol.
+- **MCP protocol**: Connect external tool servers (GitHub, Filesystem, etc.) via Model Context Protocol.
 
-- Context compression: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
+- **Context compression**: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
 
-- Secure sandbox: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
+- **Secure sandbox**: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
 
-- Black-gold themed CLI: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
+- **Multilingual interaction**: Freely switch between Chinese / English / Japanese / Korean / Spanish / French — just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
+
+- **Black-gold themed CLI**: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
 
 # Installation
 
@@ -204,6 +207,46 @@ After startup, describe your needs in natural language at the `>>> Decree:` prom
 >>> Decree: Find all places in this repository that use requests and change them to httpx
 ```
 
+## Multilingual Interaction
+
+Baize supports **six languages**: 中文, English, 日本語, 한국어, Español, Français.
+
+Two ways to switch:
+
+### Option 1: Just speak (auto-detect)
+
+Baize automatically detects your input language:
+
+```
+>>> 降旨：Hello, help me write a Python script
+[system] Detected input language: English. Baize switched to English.
+(replies in English)
+
+>>> 降旨：日本語で答えてください
+[system] Detected input language: 日本語. Baize switched to 日本語.
+(replies in Japanese)
+```
+
+### Option 2: Manual command
+
+```
+>>> 降旨：/lang                # Show current language and available list
+[system] Current language: English (en)
+[system] Available:
+    zh    中文
+    en    English ←
+    ja    日本語
+    ko    한국어
+    es    Español
+    fr    Français
+
+>>> 降旨：/lang English        # Switch by language name
+>>> 降旨：/lang ja             # Switch by language code
+>>> 降旨：/lang 西班牙语        # Chinese names work too
+```
+
+Supports **language name / language code / localized name**. To switch to English, any of `English`, `en`, `英语`, `英文` works.
+
 ## Baize CLI Interface
 
 <div align="center">
@@ -228,6 +271,7 @@ Baize CLI running screen
 - `/clear` --> Clear conversation history, todos, thought records, and tool records
 - `/compact` --> Manually compress context (use when the conversation is too long)
 - `/commit` --> Save the current session and commit to Git (if inside a Git repository)
+- `/lang` → Show current language; `/lang en` switches to English (accepts code or name)
 - `/skills` --> List all available skills
 - `/skills reload` --> Reload the user skills directory
 - `/unload` --> Unload the currently active skill

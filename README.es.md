@@ -45,7 +45,8 @@
   <a href="README.en.md">English</a> |
   <a href="README.ja.md">日本語</a> |
   <a href="README.ko.md">한국어</a> |
-  <a href="README.es.md">Español</a>
+  <a href="README.es.md">Español</a> |
+  <a href="README.fr.md">Français</a>
 </p>
 
 </div>
@@ -61,25 +62,27 @@ Baize —— La bestia auspiciosa de la mitología china antigua que conocía to
 
 # Características
 
-- Soporte multi-backend: DeepSeek, cualquier interfaz compatible con OpenAI (GLM / Qwen / Kimi / OpenAI), Ollama local, cambio con un clic.
+- **Soporte multi-backend**: DeepSeek, cualquier interfaz compatible con OpenAI (GLM / Qwen / Kimi / OpenAI), Ollama local, cambio con un clic.
 
-- Inicio sin configuración: la primera ejecución genera automáticamente archivos de configuración; solo necesitas ingresar tu clave una vez.
+- **Inicio sin configuración**: la primera ejecución genera automáticamente archivos de configuración; solo necesitas ingresar tu clave una vez.
 
-- Cadena de herramientas completa: ejecución bash, lectura/escritura/edición de archivos, búsqueda glob/grep, búsqueda y scraping web, tareas en segundo plano, gestión de tareas y pendientes.
+- **Cadena de herramientas completa**: ejecución bash, lectura/escritura/edición de archivos, búsqueda glob/grep, búsqueda y scraping web, tareas en segundo plano, gestión de tareas y pendientes.
 
-- Sistema de Skills: carga conocimiento de dominio (SKILL.md) bajo demanda, haciendo que la IA sea más profesional en escenarios específicos.
+- **Sistema de Skills**: carga conocimiento de dominio (SKILL.md) bajo demanda, haciendo que la IA sea más profesional en escenarios específicos.
 
-- Subagentes (Subagents): delega tareas complejas a subagentes con contexto independiente, evitando contaminar la sesión principal.
+- **Subagentes (Subagents)**: delega tareas complejas a subagentes con contexto independiente, evitando contaminar la sesión principal.
 
-- Hooks: hooks en Python o Shell, soportan intercepción antes/después de llamadas a herramientas, registro de auditoría, formateo automático, control de pruebas.
+- **Hooks**: hooks en Python o Shell, soportan intercepción antes/después de llamadas a herramientas, registro de auditoría, formateo automático, control de pruebas.
 
-- Protocolo MCP: conecta servidores de herramientas externos (GitHub, Filesystem, etc.) a través del Model Context Protocol.
+- **Protocolo MCP**: conecta servidores de herramientas externos (GitHub, Filesystem, etc.) a través del Model Context Protocol.
 
-- Compresión de contexto: compresión en dos niveles (truncado de resultados de herramientas + resumen LLM), soporta conversaciones extremadamente largas.
+- **Compresión de contexto**: compresión en dos niveles (truncado de resultados de herramientas + resumen LLM), soporta conversaciones extremadamente largas.
 
-- Sandbox de seguridad: lista blanca de comandos, detección de escape de rutas, bloqueo de comandos peligrosos, protección de archivos sensibles, bloqueo de inyección de scripts.
+- **Sandbox de seguridad**: lista blanca de comandos, detección de escape de rutas, bloqueo de comandos peligrosos, protección de archivos sensibles, bloqueo de inyección de scripts.
 
-- CLI con tema negro dorado: ancho adaptativo en chino, resaltado de código, coloreado de Diff, plegado de pensamientos.
+- **Interacción multilingüe**: Cambia libremente entre chino / inglés / japonés / coreano / español / francés. Basta con decir `English` o usar `/lang ja` y la IA piensa y responde en ese idioma.
+
+- **CLI con tema negro dorado**: ancho adaptativo en chino, resaltado de código, coloreado de Diff, plegado de pensamientos.
 
 # Instalación
 
@@ -203,6 +206,46 @@ text
 
     >>>降旨：Busca todos los lugares en este repositorio que usan requests y cámbialos a httpx
 
+## Interacción multilingüe
+
+Baize admite **seis idiomas**: 中文, English, 日本語, 한국어, Español, Français.
+
+Dos formas de cambiar:
+
+### Opción 1: habla directamente (detección automática)
+
+Baize detecta el idioma de tu entrada y cambia automáticamente:
+
+```
+>>> 降旨：Hola, ¿puedes escribirme un script en Python?
+[system] Idioma de entrada detectado: Español. Baize cambió a Español.
+(responde en español)
+
+>>> 降旨：Hello, write me a script
+[system] Idioma de entrada detectado: English. Baize cambió a English.
+(responde en inglés)
+```
+
+### Opción 2: comando manual
+
+```
+>>> 降旨：/lang                # Muestra el idioma actual y la lista disponible
+[system] Idioma actual: Español (es)
+[system] Disponibles:
+    zh    中文
+    en    English
+    ja    日本語
+    ko    한국어
+    es    Español ←
+    fr    Français
+
+>>> 降旨：/lang English        # Cambiar por nombre de idioma
+>>> 降旨：/lang ko             # Cambiar por código
+>>> 降旨：/lang 西班牙语        # Nombres en chino también funcionan
+```
+
+Admite **nombre del idioma / código / nombre nativo**. Para cambiar al inglés, cualquiera de `English`, `en`, `英语`, `英文` funciona.
+
 
 ## Interfaz CLI de Baize
 <div align="center">
@@ -227,6 +270,7 @@ Pantalla de ejecución de Baize CLI
 - /clear	--> Limpiar historial de conversación, pendientes, registros de pensamiento y registros de herramientas
 - /compact	--> Compresión manual del contexto (usar cuando la conversación es demasiado larga)
 - /commit	--> Guardar la sesión actual y confirmar en Git (si estás en un repositorio Git)
+- /lang → Muestra el idioma actual; /lang en cambia a inglés (acepta código o nombre)
 - /skills	--> Listar todas las skills disponibles
 - /skills reload	--> Recargar el directorio de skills del usuario
 - /unload	--> Descargar la skill activa actual
