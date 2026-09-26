@@ -28,6 +28,7 @@ import threading
 import queue
 import uuid
 import importlib.util
+import tempfile
 from duckduckgo_search import DDGS
 from datetime import datetime
 import requests
@@ -57,6 +58,12 @@ from typing import Optional
 #获取脚本运行时的当前工作目录
 CURRENT_WORKDIR = Path.cwd()
 workdir_lock = threading.Lock()
+# 系统临时目录（跨平台）：
+#   - Linux/macOS: /tmp
+#   - Windows:     C:\Users\<user>\AppData\Local\Temp
+# 注：不要硬编码 "/tmp"，Windows 下 Path("/tmp") 会解析成当前盘符的 \tmp，
+#     等于放宽到任意盘符的 \tmp，存在安全风险。
+TMP_DIR = Path(tempfile.gettempdir()).resolve()
 #添加动态路径函数：
 def get_skills_user_dir() -> Path:
     return CURRENT_WORKDIR / "skills"
@@ -71,7 +78,7 @@ KEEP_RECENT = 10
 #任务管理模块
 TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 #消息历史（对话上下文）的 Token 数量阈值
-THRESHOLD = 100000
+THRESHOLD = 80000
 # 用于存储历史思考内容和工具调用（供 /show 命令使用）
 HISTORY_THOUGHTS = []
 HISTORY_TOOL_CALLS = []   # 每个元素为 {'name': str, 'args': str, 'result': str}
@@ -129,14 +136,30 @@ def _log_retry(retry_state):
 )
 
 #是整个代理系统的核心通信函数，它封装了与 LLM（大语言模型）API 的交互逻辑，负责将对话历史和可用工具列表发送给模型，并返回模型的响应
-def send_messages(messages, tools):
+def send_messages(messages, tools,*, sanitize: bool = True):
     """
     发送消息给 LLM API，并返回响应。
+
+    ⚠️ 副作用警告：
+        默认 (sanitize=True) 会**就地修改** messages——
+        调用 sanitize_history() 清理悬空的 tool_calls / tool 结果，
+        避免 DeepSeek 返回 400 "Messages with role 'tool' must be a
+        response to a preceding message with 'tool_calls'"。
+
+        如果你持有 messages 的引用，并依赖它**不被修改**，
+        请传 sanitize=False，并自行在调用前处理。
+
+    参数：
+        messages: 对话历史列表（若 sanitize=True，会被就地修改）
+        tools:    工具定义列表
+        sanitize: 是否在发送前清理悬空 tool_calls，默认 True
+
     已接入指数退避重试机制（网络抖动/限流时自动重试）。
     捕获异常并打印详细信息，然后重新抛出，由上层处理。
     """
     HOOK.trigger('before_send_messages', messages, tools)
-    sanitize_history(messages)  # 修复悬空的 tool_calls，避免 DeepSeek 400 错误
+    if sanitize:
+        sanitize_history(messages)
     try:
         # 检查是否有 assistant 消息包含 reasoning_content
         has_reasoning = any(
@@ -375,7 +398,13 @@ class SkillLoader:
         if not self.builtin_dir.exists():
             return
         for f in self.builtin_dir.rglob("SKILL.md"):
-            meta, body = self._parse_frontmatter(f.read_text(encoding='utf-8'))
+            # 单个文件读取/解析失败 → 跳过该文件，不影响其他技能加载
+            try:
+                text = f.read_text(encoding='utf-8')
+                meta, body = self._parse_frontmatter(text)
+            except Exception as e:
+                print(f"[SkillLoader] 跳过 {f}: {e}")
+                continue
             name = meta.get("name", f.parent.name)
             if name not in self.skills:   # 内置优先，避免被用户同名覆盖
                 self.skills[name] = {
@@ -494,7 +523,13 @@ class SubagentLoader:
         if not self.builtin_dir.exists():
             return
         for f in self.builtin_dir.rglob("*.md"):
-            meta, body = self._parse_frontmatter(f.read_text(encoding='utf-8'))
+            # 单个文件读取/解析失败 → 跳过该文件，不影响其他子代理加载
+            try:
+                text = f.read_text(encoding='utf-8')
+                meta, body = self._parse_frontmatter(text)
+            except Exception as e:
+                print(f"[SubagentLoader] 跳过 {f}: {e}")
+                continue
             name = meta.get("name", f.parent.name)
             if name not in self.subagents:
                 self.subagents[name] = {
@@ -1078,7 +1113,7 @@ def _is_path_safe(abs_path: str) -> bool:
     """统一的路径安全校验"""
     p = Path(abs_path).resolve()
     try:
-        if not p.is_relative_to(CURRENT_WORKDIR) and not p.is_relative_to(Path("/tmp")):
+        if not p.is_relative_to(CURRENT_WORKDIR) and not p.is_relative_to(TMP_DIR):
             return False
     except ValueError:
         return False
@@ -2090,7 +2125,8 @@ def run_subagent(prompt: str, subagent_name: str = "default") -> str:
                     break
             # ---- 2. 调用 LLM ----
             lined_print(f"SubAgent Calling LLM (round {current_round + 1})")
-            response = send_messages(sub_messages, SUBTOOLS)
+            sanitize_history(sub_messages)
+            response = send_messages(sub_messages, SUBTOOLS, sanitize=False)
             msg = response.choices[0].message
             # ---- 处理推理内容和回答 ----
             reasoning = getattr(msg, 'reasoning_content', None)
@@ -2261,7 +2297,12 @@ def agent_loop(messages, output_callback=None):
             try:
                 # 打印状态信息（不覆盖输入栏）
                 llm_status(current_round, total_tokens_used)
-                response = send_messages(messages, MATERTOOLS)
+                # 显式清理悬空 tool_calls —— 防止上一轮中途失败导致的状态不一致
+                sanitize_history(messages)
+                # send_messages 里也会兜底 sanitize，但这里显式做一次，
+                # 让读者一眼看到 messages 在发送前是干净的。
+                # 同时也可以在这里加日志、断言等。
+                response = send_messages(messages, MATERTOOLS, sanitize=False)
                 # 更新 token 数
                 if hasattr(response, 'usage') and response.usage:
                     usage = response.usage
