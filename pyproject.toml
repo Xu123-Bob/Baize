@@ -4,8 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "baize"
-version = "0.2.0"
-dynamic = ["version"]
+version = "1.0.0"
 description = "白泽 —— Vibe Coding 助手"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -47,7 +46,10 @@ agent = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short -ra"
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 
 [tool.ruff]
 line-length = 130
