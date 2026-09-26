@@ -229,7 +229,7 @@ ASK_USER_TOOL = {
     "type": "function",
     "function": {
         "name": "ask_user_question",
-        "description": "向用户提问，获取必要信息或决策。当需要人类判断、确认或提供额外信息时使用。",
+        "description": "向用户提问，获取必要信息或决策。当需要人类判断、确认或提供额外信息时使用。**调用后代理会无限期等待用户回复，请放心使用；不会因超时自动跳过。**",
         "parameters": {
             "type": "object",
             "properties": {
@@ -1066,7 +1066,12 @@ class InteractionManager:
             self._next_id += 1
             return self._next_id
 
-    def ask_user(self, question, options=None, context=None, timeout=60):
+    def ask_user(self, question, options=None, context=None, timeout=None):
+        """
+        等待用户回复。
+        timeout=None：无限期等待（默认，推荐）。
+        timeout=N   ：N 秒后超时返回 "(timeout)"。
+        """
         req_id = self._get_id()
         event = threading.Event()
         self._pending_requests[req_id] = {"event": event, "response": None}
@@ -1078,6 +1083,7 @@ class InteractionManager:
                 "options": options,
                 "context": context
             })
+        # event.wait(None) → 无限期阻塞；event.wait(N) → 最多等 N 秒
         if not event.wait(timeout):
             # 超时，清理并返回
             self._pending_requests.pop(req_id, None)
@@ -1495,14 +1501,15 @@ def run_webfetch(url: str, max_length: int = 10000) -> str:
     return text
 
 # AskUserQuestion
-def ask_user_question(question: str, options: list = None, context: str = None, timeout: int = 60) -> str:
+def ask_user_question(question: str, options: list = None, context: str = None, timeout: int = None) -> str:
     """
-    向用户提问并等待输入，支持超时。
+    向用户提问并等待输入。
+    - 默认 timeout=None：无限期等待用户回复（推荐，符合交互习惯）。
+    - 若显式传入 timeout（秒），超时后返回 "(timeout)"。
     - 如果设置了交互回调（WebSocket模式），则通过回调发送请求并异步等待响应。
-    - 否则回退到命令行模式（使用 input()，支持超时）。
+    - 否则回退到命令行模式（使用 input()）。
     - 如果提供了 options，则显示选项编号，用户可输入数字选择或自由输入文本。
     - 如果未提供 options，用户直接输入任意文本。
-    - 超时返回 "(timeout)"。
     """
     # 如果有交互管理器且设置了回调，则使用异步方式
     if INTERACTION.callback:
@@ -1531,9 +1538,13 @@ def ask_user_question(question: str, options: list = None, context: str = None, 
 
     t = threading.Thread(target=get_input, daemon=True)
     t.start()
-
+    # timeout=None → 无限期阻塞，直到用户真正输入
+    # timeout=N    → N 秒后超时，返回 "(timeout)"
     try:
-        user_input = q.get(timeout=timeout)
+        if timeout is None:
+            user_input = q.get()          # 无限等待
+        else:
+            user_input = q.get(timeout=timeout)
     except queue.Empty:
         print("\n[Timeout] No response within {} seconds.".format(timeout))
         return "(timeout)"
@@ -2535,6 +2546,53 @@ def console_output_callback(level: str, data: dict):
     elif level == 'usage':
         # 不再打印，因为 token 信息已合并到 Calling LLM 行
         pass
+# ==================== 用户输入（支持多行 + 粘贴） ====================
+def read_user_input() -> str:
+    """
+    读取用户输入，优先使用 prompt_toolkit：
+        - Enter        → 提交
+        - Alt+Enter    → 换行（部分终端可能失效）
+        - Ctrl+J       → 换行（兜底）
+        - 多行粘贴     → 自动整体接收，不会中途截断
+        - Ctrl+C       → 抛 KeyboardInterrupt（由主循环处理）
+        - Ctrl+D       → 抛 EOFError（由主循环处理）
+
+    未安装 prompt_toolkit 时自动回退到单行 input()，
+    行为与原来一致（换行需手打反斜杠，但至少不会报错）。
+    """
+    try:
+        from prompt_toolkit import prompt as pt_prompt
+        from prompt_toolkit.key_binding import KeyBindings
+        from prompt_toolkit.formatted_text import HTML
+    except ImportError:
+        # ---------- 回退：朴素单行输入 ----------
+        return input("\n\033[96m>>> 降旨：\033[0m").strip()
+
+    kb = KeyBindings()
+
+    @kb.add("enter")
+    def _(event):
+        """Enter：提交"""
+        event.current_buffer.validate_and_handle()
+
+    @kb.add("escape", "enter")
+    def _(event):
+        """Alt+Enter：插入换行"""
+        event.current_buffer.insert_text("\n")
+
+    @kb.add("c-j")
+    def _(event):
+        """Ctrl+J：插入换行（某些终端 Alt+Enter 不生效时的兜底）"""
+        event.current_buffer.insert_text("\n")
+
+    text = pt_prompt(
+        HTML("\n<ansicyan><b>&gt;&gt;&gt; 降旨：</b></ansicyan>"),
+        multiline=True,
+        key_bindings=kb,
+        # 续行时缩进对齐（和 ">>> 降旨：" 视觉宽度差不多）
+        prompt_continuation=lambda width, line_number, is_soft_wrap: " " * 8,
+    )
+    return text.strip()
 
 
 
@@ -2576,7 +2634,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v0.5.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v1.0.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2652,13 +2710,14 @@ def main():
         f"{GOLD}{BOLD}  ◈ 灵兽归位！{RESET}",
         f"{GRAY}  LLM · API 计费信息{RESET}",
         f"{GRAY}  工作目录：{CURRENT_WORKDIR}{RESET}",
+        f"{GRAY}  输入技巧：Enter 提交 · Alt+Enter或Ctrl+J换行 · 支持整段粘贴{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 初问白泽{RESET}",
         f"{GRAY}  询问 Baize 创建一个新应用或开发一个软件{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
         f"{GRAY}  错误修复和可靠性改进{RESET}",
-        f"{GRAY}  工具调用能力大幅增强{RESET}"
+        f"{GRAY}  沙箱路径漏洞已修复{RESET}"
     ]
     for line in welcome_lines:
         if line == "":
@@ -2681,8 +2740,12 @@ def main():
         # 打印一条分隔线（灰色横线，占满终端宽度）
         print("\033[90m" + "─" * shutil.get_terminal_size().columns + "\033[0m")
         try:
-            user_input = input("\n\033[96m>>> 降旨：\033[0m").strip() #input("\n\033[1;33m> \033[0m").strip()
-        except (EOFError, KeyboardInterrupt):
+            user_input = read_user_input() 
+        except KeyboardInterrupt:
+            # Ctrl+C：仅取消本次输入，不退出程序
+            print("\n\033[90m[已取消本次输入]\033[0m")
+            continue
+        except EOFError:
             print("\n退出。")
             break
 
