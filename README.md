@@ -45,7 +45,8 @@
   <a href="README.ja.md">日本語</a> |
   <a href="README.ko.md">한국어</a> |
   <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a>
+  <a href="README.fr.md">Français</a> |
+  <a href="README.ru.md">Русский</a>
 </p>
 
 </div>
@@ -54,7 +55,7 @@
 
 Baize — an auspicious beast in ancient Chinese mythology that knows all things, now reincarnated as a Vibe Coding assistant.
 
-**An open-source AI Coding Agent CLI, a substitute product for Claude Code CLI, supports multiple backends (DeepSeek / OpenAI compatible / GLM / Qwen / Kimi / Ollama local), and possesses complete capabilities such as tool invocation, skill loading, sub-agent delegation, context compression, and security sandbox. It enables pair programming with AI directly from the terminal.**
+**An open-source AI Coding Agent CLI and a drop-in alternative to Claude Code CLI. Supports multiple backends (DeepSeek / OpenAI-compatible / GLM / Qwen / Kimi / local Ollama), privacy sanitization, and multilingual interaction, with a complete toolkit: tool invocation, skill loading, subagent delegation, context compression, and secure sandbox.**
 
 ----------
 
@@ -77,6 +78,8 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 - **Context compression**: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
 
 - **Secure sandbox**: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
+
+- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Two levels (standard / strict), switchable via natural language or `/privacy`.
 
 - **Multilingual interaction**: Freely switch between Chinese / English / Japanese / Korean / Spanish / French — just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
 
@@ -200,11 +203,11 @@ If you see the black-gold logo and welcome message, startup succeeded.
 After startup, describe your needs in natural language at the `>>> Decree:` prompt:
 
 ```text
->>> Decree: Write a Python script to scrape Douban Top250 and save it as CSV
+>>> 降旨： Write a Python script to scrape Douban Top250 and save it as CSV
 
->>> Decree: Help me check type errors in all Python files under src/
+>>> 降旨： Help me check type errors in all Python files under src/
 
->>> Decree: Find all places in this repository that use requests and change them to httpx
+>>> 降旨： Find all places in this repository that use requests and change them to httpx
 ```
 
 ## Multilingual Interaction
@@ -279,6 +282,7 @@ Baize CLI running screen
 - `/show tool` --> View tool call records
 - `/show all` --> View all session history
 - `/skill-name` --> Load the specified skill (supports fuzzy matching)
+- `/privacy` --> Privacy sanitization control (see "Privacy Sanitization" below)
 
 # Ollama Local Models (Zero Cost)
 
@@ -402,6 +406,75 @@ Baize enables the following security mechanisms by default:
 
 If you need to relax restrictions in a trusted project, modify `ALLOWED_COMMANDS` and `FORBIDDEN_PATH_PATTERNS` in `Baize.py`.
 
+# Privacy Sanitization
+
+Baize ships with a **bidirectional, reversible** privacy sanitization mechanism. Sensitive information is replaced with placeholders before being sent to the LLM, and restored automatically in the response — completely transparent to you. What you see (history, tool arguments, final answer) is always the original text; what the LLM sees is always `[[PHONE_1]]`, `[[EMAIL_1]]`, etc.
+
+**Off by default.** Enable when needed.
+
+## Two ways to enable
+
+### Option 1: Natural language
+```
+>>> 降旨：enable privacy sanitization
+[system] Privacy sanitization enabled (standard mode).
+
+>>> 降旨：enable strict sanitization
+[system] Privacy sanitization enabled (strict mode).
+
+>>> 降旨：disable privacy protection
+[system] Privacy sanitization disabled.
+```
+
+### Option 2: Slash commands
+- /privacy on Enable standard mode
+- /privacy strict Enable strict mode (adds names, license plates, QQ, WeChat)
+- /privacy off Disable
+- /privacy status Show current state and statistics
+- /privacy rules List all rules
+- /privacy test <text> Test sanitization
+- /privacy clear Clear the placeholder map
+
+## Two levels
+**Standard** ：Mainland China phone numbers, ID cards, bank cards (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials
+
+**Strict**：All of standard + Chinese names, QQ numbers, WeChat IDs, Mainland China license plates
+
+## How it works
+User input (with real PII) → messages store original text
+
+↓ sanitize_messages()
+
+What the LLM sees: [[PHONE_1]], [[EMAIL_1]]
+
+↓ LLM response
+
+Placeholders → restore_message()
+
+Restored to original → stored / displayed / executed
+
+**Same original text reuses the same placeholder**, so one phone number stays as `[[PHONE_1]]` throughout a session.
+
+**Tool arguments are graded by sensitivity**: text-only tools like `todo`, `ask_user_question`, `task_*` have their arguments sanitized; path/command/URL tools like `run_read`, `run_bash`, `run_webfetch` are left alone (otherwise they would fail because the path was replaced).
+
+**Subagents are protected too**: tasks delegated from the main agent go through the same sanitize/restore pipeline.
+
+## Example
+```
+>>> 降旨：/privacy test My phone is 13812345678, email a@b.com
+Original: My phone is 13812345678, email a@b.com
+Masked : My phone is [[PHONE_1]], email [[EMAIL_1]]
+Restored: My phone is 13812345678, email a@b.com
+
+>>> 降旨： /privacy status
+[Privacy Sanitization]
+Current mode : standard
+Active rules : 15 / 19
+Placeholders : 2
+Sanitize calls: 3
+Restore calls : 3
+```
+
 # Directory Structure
 
 ```text
@@ -425,7 +498,8 @@ baize-agent/
     ├── subagent/               # Built-in subagents
     ├── core/                   # Core logic (side-effect free, unit-testable)
     |   ├── __init__.py
-    |   └── history.py          # Session history cleaning / token estimation / compression
+    |   ├── history.py          # Session history cleaning / token estimation / compression
+    |   └── privacy.py          # Privacy sanitization
     ├── hooks/                  # Built-in hooks
     └── MCP/                    # MCP client and configuration
         ├── __init__.py

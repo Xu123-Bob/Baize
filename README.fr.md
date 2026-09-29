@@ -45,7 +45,8 @@
   <a href="README.ja.md">日本語</a> |
   <a href="README.ko.md">한국어</a> |
   <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a>
+  <a href="README.fr.md">Français</a> |
+  <a href="README.ru.md">Русский</a>
 </p>
 
 </div>
@@ -54,7 +55,7 @@
 
 Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes choses, réincarnée en assistant Vibe Coding.
 
-**Un CLI d'agent de codage IA open source, alternative directe à Claude Code CLI. Prend en charge plusieurs backends (DeepSeek / toute API compatible OpenAI / GLM / Qwen / Kimi / Ollama local), avec une chaîne d'outils complète : appels d'outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé. Programmez en binôme avec l'IA directement dans le terminal.**
+**Un CLI d'agent de codage IA open source, alternative directe à Claude Code CLI. Prend en charge plusieurs backends (DeepSeek / compatible OpenAI / GLM / Qwen / Kimi / Ollama local), le masquage de la vie privée et l'interaction multilingue, avec une chaîne d'outils complète : appels d'outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé.**
 
 ----------
 
@@ -69,6 +70,7 @@ Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes 
 - **Protocole MCP** : Connectez des serveurs d'outils externes (GitHub, Filesystem, etc.) via Model Context Protocol.
 - **Compression de contexte** : Compression à deux niveaux (troncature des anciens résultats + résumé par LLM) pour de très longues conversations.
 - **Sandbox sécurisé** : Liste blanche de commandes, détection d'évasion de chemin, blocage de commandes dangereuses, protection des fichiers sensibles, blocage d'injection de scripts.
+- **Masquage de la vie privée** : détecte et remplace automatiquement les téléphones, e-mails, pièces d'identité, cartes bancaires, clés API et autres données personnelles avant l'envoi au LLM, puis les restaure dans la réponse. Deux niveaux (standard / strict), commutables par langage naturel ou `/privacy`.
 - **Interaction multilingue** : Basculez librement entre chinois / anglais / japonais / coréen / espagnol / français. Dites simplement `English` ou utilisez `/lang ja`, et l'IA pense et répond dans cette langue.
 - **CLI thème noir-or** : Largeur CJK adaptative, coloration syntaxique, coloration des diffs, repli de la réflexion.
 
@@ -256,6 +258,7 @@ Baize CLI — exécution
 - `/show tool` → Affiche le journal des appels d'outils
 - `/show all` → Affiche tout l'historique de session
 - `/<nom-skill>` → Charge une skill (correspondance floue)
+- `/privacy` → Contrôle du masquage de la vie privée (voir « Masquage de la vie privée » ci-dessous)
 
 # Ollama local (coût zéro)
 
@@ -366,6 +369,75 @@ Les mécanismes suivants sont activés par défaut :
 
 Pour assouplir les restrictions dans un projet de confiance, modifiez `ALLOWED_COMMANDS` et `FORBIDDEN_PATH_PATTERNS` dans `Baize.py`.
 
+# Masquage de la vie privée
+
+Baize intègre un mécanisme de masquage **bidirectionnel et réversible**. Les informations sensibles sont remplacées par des jetons avant l'envoi au LLM, puis restaurées automatiquement dans la réponse — totalement transparent pour vous. Ce que vous voyez (historique, arguments d'outils, réponse finale) est toujours le texte original ; ce que voit le LLM, ce sont toujours des jetons tels que `[[PHONE_1]]`, `[[EMAIL_1]]`.
+
+**Désactivé par défaut.** Activez-le si nécessaire.
+
+## Deux façons de l'activer
+
+### Option 1 : Langage naturel
+```
+>>> 降旨：active le masquage de la vie privée
+[system] Masquage de la vie privée activé (mode standard).
+
+>>> 降旨：active le masquage strict
+[system] Masquage de la vie privée activé (mode strict).
+
+>>> 降旨：désactive la protection de la vie privée
+[system] Masquage de la vie privée désactivé.
+```
+
+### Option 2 : Commandes slash
+- /privacy on Activer le mode standard
+- /privacy strict Activer le mode strict (ajoute noms, plaques, QQ, WeChat)
+- /privacy off Désactiver
+- /privacy status Voir l'état et les statistiques
+- /privacy rules Lister toutes les règles
+- /privacy test <texte> Tester le masquage
+- /privacy clear Effacer la table des jetons
+
+## Deux niveaux
+**Standard**：Téléphones de Chine continentale, pièces d'identité, cartes bancaires (validation Luhn), e-mails, IPv4/IPv6, clés API OpenAI/Anthropic/GitHub/AWS, jetons Bearer, blocs de clé privée, champs de mot de passe, identifiants dans les URL 
+
+**Strict**：Tout le standard + noms chinois, numéros QQ, identifiants WeChat, plaques de Chine continentale
+
+## Fonctionnement
+Entrée utilisateur (avec PII réelle) → messages stocke l'original
+
+↓ sanitize_messages()
+
+Ce que voit le LLM : [[PHONE_1]], [[EMAIL_1]]
+
+↓ Réponse du LLM
+
+Jetons → restore_message()
+
+Restauré à l'original → stockage / affichage / exécution
+
+**Le même original réutilise le même jeton**, donc un numéro de téléphone reste `[[PHONE_1]]` pendant toute la session.
+
+**Les arguments d'outils sont classés par sensibilité** : les outils purement textuels comme `todo`, `ask_user_question`, `task_*` voient leurs arguments masqués ; les outils de chemin/commande/URL comme `run_read`, `run_bash`, `run_webfetch` ne le sont pas (sinon ils échoueraient à cause du chemin remplacé).
+
+**Les sous-agents sont aussi protégés** : les tâches déléguées passent par le même pipeline masquer/restaurer.
+
+## Exemple
+```
+>>> 降旨：/privacy test Mon téléphone est 13812345678, email a@b.com
+Original : Mon téléphone est 13812345678, email a@b.com
+Masqué : Mon téléphone est [[PHONE_1]], email [[EMAIL_1]]
+Restauré : Mon téléphone est 13812345678, email a@b.com
+
+>>> 降旨：/privacy status
+[Masquage de la vie privée]
+Mode actuel : standard
+Règles actives : 15 / 19
+Jetons : 2
+Masquages : 3
+Restaurations : 3
+```
+
 # Structure du projet
 
 ```
@@ -389,7 +461,8 @@ baize-agent/
     ├── subagent/               # sous-agents intégrés
     ├── core/                   # logique pure (sans effet de bord, testable)
     │   ├── __init__.py
-    │   └── history.py          # nettoyage / estimation de tokens / compression
+    │   ├── history.py          # nettoyage / estimation de tokens / compression
+    │   └── privacy.py          # masquage de la vie privée
     ├── hooks/                  # hooks intégrés
     └── MCP/                    # client MCP et configuration
         ├── __init__.py

@@ -46,7 +46,8 @@
   <a href="README.ja.md">日本語</a> |
   <a href="README.ko.md">한국어</a> |
   <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a>
+  <a href="README.fr.md">Français</a> |
+  <a href="README.ru.md">Русский</a>
 </p>
 
 </div>
@@ -55,7 +56,7 @@
 
 Baize —— La bestia auspiciosa de la mitología china antigua que conocía todas las cosas, ahora reencarnada como asistente de Vibe Coding.
 
-**Un CLI de Agente de Programación con IA de código abierto, alternativa a Claude Code CLI. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / GLM / Qwen / Kimi / Ollama local), con capacidades completas de llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad. Programa en pareja con IA directamente desde la terminal.**
+**Un CLI de Agente de Programación con IA de código abierto y una alternativa directa a Claude Code CLI. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / GLM / Qwen / Kimi / Ollama local), con enmascaramiento de privacidad e interacción multilingüe, y una cadena de herramientas completa: llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad.**
 
 ----------
 
@@ -79,6 +80,8 @@ Baize —— La bestia auspiciosa de la mitología china antigua que conocía to
 - **Compresión de contexto**: compresión en dos niveles (truncado de resultados de herramientas + resumen LLM), soporta conversaciones extremadamente largas.
 
 - **Sandbox de seguridad**: lista blanca de comandos, detección de escape de rutas, bloqueo de comandos peligrosos, protección de archivos sensibles, bloqueo de inyección de scripts.
+
+- **Enmascaramiento de privacidad**：detecta y sustituye automáticamente teléfonos, correos, documentos de identidad, tarjetas bancarias, claves API y otra información personal antes de enviarla al LLM, restaurándola automáticamente en la respuesta. Dos niveles (estándar / estricto), conmutable por lenguaje natural o `/privacy`.
 
 - **Interacción multilingüe**: Cambia libremente entre chino / inglés / japonés / coreano / español / francés. Basta con decir `English` o usar `/lang ja` y la IA piensa y responde en ese idioma.
 
@@ -278,6 +281,7 @@ Pantalla de ejecución de Baize CLI
 - /show tool	--> Ver el registro de llamadas a herramientas
 - /show all	--> Ver todo el historial de la sesión
 - /nombre_skill	--> Cargar la skill especificada (soporta coincidencia difusa)
+- /privacy	--> Control de enmascaramiento de privacidad (ver "Enmascaramiento de privacidad" abajo)
 
 
 # Modelo local Ollama (coste cero)
@@ -419,6 +423,74 @@ Baize activa por defecto los siguientes mecanismos de seguridad:
 
 Si necesitas relajar las restricciones en proyectos de confianza, modifica ALLOWED_COMMANDS y FORBIDDEN_PATH_PATTERNS en Baize.py.
 
+# Enmascaramiento de privacidad
+
+Baize incluye un mecanismo de enmascaramiento **bidireccional y reversible**. La información sensible se sustituye por marcadores de posición antes de enviarla al LLM y se restaura automáticamente en la respuesta — totalmente transparente para ti. Lo que ves (historial, argumentos de herramientas, respuesta final) siempre es el texto original; lo que ve el LLM son siempre marcadores como `[[PHONE_1]]`, `[[EMAIL_1]]`.
+
+**Desactivado por defecto.** Actívalo cuando lo necesites.
+
+## Dos formas de activarlo
+
+### Opción 1: Lenguaje natural
+```
+>>> 降旨：activa el enmascaramiento de privacidad
+[system] Enmascaramiento de privacidad activado (modo estándar).
+
+>>> 降旨：activa el enmascaramiento estricto
+[system] Enmascaramiento de privacidad activado (modo estricto).
+
+>>> 降旨：desactiva la protección de privacidad
+[system] Enmascaramiento de privacidad desactivado.
+```
+
+### Opción 2: Comandos slash
+- /privacy on Activar modo estándar
+- /privacy strict Activar modo estricto (añade nombres, matrículas, QQ, WeChat)
+- /privacy off Desactivar
+- /privacy status Ver el estado actual y estadísticas
+- /privacy rules Listar todas las reglas
+- /privacy test <texto> Probar el enmascaramiento
+- /privacy clear Limpiar el mapa de marcadores
+
+## Dos niveles
+**Estándar**：Teléfonos de China continental, documentos de identidad, tarjetas bancarias (validación Luhn), correos, IPv4/IPv6, claves API de OpenAI/Anthropic/GitHub/AWS, tokens Bearer, bloques de clave privada, campos de contraseña, credenciales en URL
+
+**Estricto**：Todo lo de estándar + nombres chinos, números QQ, IDs de WeChat, matrículas de China continental
+
+## Cómo funciona
+Entrada del usuario (con PII real) → messages guarda el original
+
+↓ sanitize_messages()
+
+Lo que ve el LLM: [[PHONE_1]], [[EMAIL_1]]
+
+↓ Respuesta del LLM
+
+Marcadores → restore_message()
+
+Restaurado al original → guardar / mostrar / ejecutar
+
+**El mismo original reutiliza el mismo marcador**, por lo que un teléfono permanece como `[[PHONE_1]]` durante toda la sesión.
+
+**Los argumentos de herramientas se clasifican por sensibilidad**: herramientas de solo texto como `todo`, `ask_user_question`, `task_*` sí enmascaran sus argumentos; herramientas de ruta/comando/URL como `run_read`, `run_bash`, `run_webfetch` no (de lo contrario fallarían al sustituirse la ruta).
+
+**Los subagentes también están protegidos**: las tareas delegadas pasan por el mismo pipeline de enmascarar/restaurar.
+
+## Ejemplo
+```
+>>> 降旨：/privacy test Mi teléfono es 13812345678, correo a@b.com
+Original: Mi teléfono es 13812345678, correo a@b.com
+Enmascarado: Mi teléfono es [[PHONE_1]], correo [[EMAIL_1]]
+Restaurado: Mi teléfono es 13812345678, correo a@b.com
+
+>>> 降旨： /privacy status
+[Enmascaramiento de privacidad]
+Modo actual : estándar
+Reglas activas: 15 / 19
+Marcadores : 2
+Enmascaramientos: 3
+Restauraciones: 3
+```
 
 # Estructura de directorios
 text
@@ -443,7 +515,8 @@ text
         ├── subagent/               # Subagentes integrados
         ├── core/                   # Lógica central (sin efectos secundarios, testeable)
         |   ├── __init__.py
-        |   └── history.py          # Limpieza de historial / estimación de tokens / compresión
+        |   ├── history.py          # Limpieza de historial / estimación de tokens
+        |   └── privacy.py          # Enmascaramiento de privacidad
         ├── hooks/                  # Hooks integrados
         └── MCP/                    # Cliente MCP y configuración
             ├── __init__.py
