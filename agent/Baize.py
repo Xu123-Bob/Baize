@@ -48,6 +48,13 @@ from agent.core.history import (
     micro_compact,
     auto_compact as _auto_compact_impl,
 )
+from agent.core.privacy import (
+    PrivacySanitizer,
+    detect_privacy_intent,
+    MODE_OFF,
+    MODE_STANDARD,
+    MODE_STRICT,
+)
 import wcwidth  # 引入 wcwidth 库用于计算中文显示宽度
 from agent.ui_theme import (llm_status,render_thinking, render_answer, render_tool_call,render_tool_result, render_final, render_system)
 from tenacity import (retry,stop_after_attempt,wait_exponential,retry_if_exception_type,before_sleep_log)
@@ -80,6 +87,8 @@ KEEP_RECENT = 10
 TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 #消息历史（对话上下文）的 Token 数量阈值
 THRESHOLD = 80000
+# 隐私脱敏器（全局单例，默认关闭）
+PRIVACY = PrivacySanitizer(mode=MODE_OFF)
 # 用于存储历史思考内容和工具调用（供 /show 命令使用）
 HISTORY_THOUGHTS = []
 HISTORY_TOOL_CALLS = []   # 每个元素为 {'name': str, 'args': str, 'result': str}
@@ -2262,8 +2271,16 @@ def run_subagent(prompt: str, subagent_name: str = "default") -> str:
             # ---- 2. 调用 LLM ----
             lined_print(f"SubAgent Calling LLM (round {current_round + 1})")
             sanitize_history(sub_messages)
-            response = send_messages(sub_messages, SUBTOOLS, sanitize=False)
+            # ---- 出站脱敏：LLM 只看到占位符 ----
+            if PRIVACY.is_enabled():
+                outbound_sub = PRIVACY.sanitize_messages(sub_messages)
+            else:
+                outbound_sub = sub_messages
+            response = send_messages(outbound_sub, SUBTOOLS, sanitize=False)
             msg = response.choices[0].message
+            # ---- 入站还原：把占位符换回原文，然后才能执行工具 / 落盘 ----
+            if PRIVACY.is_enabled():
+                PRIVACY.restore_message(msg)
             # ---- 处理推理内容和回答 ----
             reasoning = getattr(msg, 'reasoning_content', None)
             if reasoning:
@@ -2433,10 +2450,15 @@ def agent_loop(messages, output_callback=None):
                 llm_status(current_round, total_tokens_used)
                 # 显式清理悬空 tool_calls —— 防止上一轮中途失败导致的状态不一致
                 sanitize_history(messages)
+                # ---- 出站脱敏 ----
+                if PRIVACY.is_enabled():
+                    outbound_messages = PRIVACY.sanitize_messages(messages)
+                else:
+                    outbound_messages = messages
                 # send_messages 里也会兜底 sanitize，但这里显式做一次，
                 # 让读者一眼看到 messages 在发送前是干净的。
                 # 同时也可以在这里加日志、断言等。
-                response = send_messages(messages, MATERTOOLS, sanitize=False)
+                response = send_messages(outbound_messages, MATERTOOLS, sanitize=False)
                 # 更新 token 数
                 if hasattr(response, 'usage') and response.usage:
                     usage = response.usage
@@ -2448,24 +2470,28 @@ def agent_loop(messages, output_callback=None):
                 continue
 
             msg = response.choices[0].message
-            # ===== 打印响应详情 =====
+            # ---- 入站还原：把 LLM 响应中的占位符还原为原文 ----
+            if PRIVACY.is_enabled():
+                if not PRIVACY.restore_message(msg):
+                    print("\033[91m[privacy] 警告：pydantic 对象还原失败，"
+                          "落盘内容可能含占位符。\033[0m")
+            # ===== 到这里，msg 的所有字段已经是原文 =====
             tool_calls = getattr(msg, 'tool_calls', None)
+            content = getattr(msg, 'content', None)
+            reasoning = getattr(msg, 'reasoning_content', None)
+            # ===== 打印响应详情 =====
             if tool_calls:
                 tool_calls_str = str(tool_calls)
                 if len(tool_calls_str) > 100:
                     tool_calls_str = tool_calls_str[:100] + "... (truncated)"
                 print(f"\033[3;90m[AGENT RESPONSE] tool_calls: {tool_calls_str}\033[0m")
                 print("   (输入 /show tool 查看详情)")
-
-            reasoning = getattr(msg, 'reasoning_content', None)
             if reasoning:
                 # 思考内容
                 if output_callback:
                     output_callback('thinking', {'content': reasoning})
                 else:
                     framed_print("Thinking", reasoning, "info")
-
-            content = getattr(msg, 'content', None)
             if content:
                 # ===== 打印内容 =====
                 # 回答内容
@@ -2473,8 +2499,6 @@ def agent_loop(messages, output_callback=None):
                     output_callback('answer', {'content': content})
                 else:
                     framed_print("Answer", content, "info")
-
-            tool_calls = getattr(msg, 'tool_calls', None)
             if tool_calls:
                 # ---------- 1. 落盘 assistant 消息（含 tool_calls） ----------
                 msg_dict = msg.model_dump()
@@ -2757,7 +2781,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v1.4.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.0.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2838,9 +2862,11 @@ def main():
         f"{GOLD}{BOLD}◈ 初问白泽{RESET}",
         f"{GRAY}  询问 Baize 创建一个新应用或开发一个软件{RESET}",
         f"{GRAY}  多语言：直接说 English/日本語/한국어/Español 即可自动切换，或用 /lang 命令{RESET}",
+        f"{GRAY}  隐私脱敏(Privacy desensitization)：说 '开启隐私脱敏' 或输入 /privacy on{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
         f"{GRAY}  提升性能，提供多语言交互方式{RESET}",
+        f"{GRAY}  提供隐私脱敏模式，方便用户使用{RESET}",
         f"{GRAY}  沙箱路径漏洞已修复{RESET}"
     ]
     for line in welcome_lines:
@@ -2875,6 +2901,27 @@ def main():
 
         if not user_input:
             continue
+        # ===== 自然语言隐私控制 =====
+        if not user_input.startswith("/") and len(user_input) <= 30:
+            intent = detect_privacy_intent(user_input)
+            if intent is not None:
+                action, value = intent
+                if action == "set_mode":
+                    if PRIVACY.set_mode(value):
+                        label = {
+                            MODE_OFF: "已关闭",
+                            MODE_STANDARD: "已开启（标准模式）",
+                            MODE_STRICT: "已开启（严格模式）",
+                        }.get(value, value)
+                        print(f"\033[90m[系统] 隐私脱敏{label}。\033[0m")
+                    else:
+                        print("\033[91m[系统] 切换隐私模式失败。\033[0m")
+                elif action == "show_status":
+                    stats = PRIVACY.get_stats()
+                    print(f"\033[90m[系统] 隐私脱敏模式：{stats['mode']}；"
+                        f"启用规则 {stats['active_rules']} 条；"
+                        f"当前映射 {stats['active_placeholders']} 条。\033[0m")
+                continue  # 不把控制指令发给 LLM
         # ===== 自动检测用户输入语言并切换 =====
         # 只在"非命令"输入时检测（避免 /show 之类的命令被误判）
         if not user_input.startswith("/"):
@@ -2980,6 +3027,75 @@ def main():
                     else:
                         print(f"[系统] 不支持的语言：{target}。输入 /lang 查看可用列表。")
                 continue
+            # 切换隐私保护模式
+            elif cmd == "/privacy" or cmd.startswith("/privacy "):
+                parts = user_input.strip().split(maxsplit=2)
+                sub = parts[1].lower() if len(parts) > 1 else "status"
+                if sub in ("status", "show", ""):
+                    s = PRIVACY.get_stats()
+                    mode_label = {
+                        MODE_OFF: "关闭",
+                        MODE_STANDARD: "标准模式",
+                        MODE_STRICT: "严格模式",
+                    }.get(s["mode"], s["mode"])
+                    print(f"\n[隐私脱敏]")
+                    print(f"  当前模式    : {mode_label} ({s['mode']})")
+                    print(f"  启用规则数  : {s['active_rules']} / {s['total_rules']}")
+                    print(f"  活跃占位符  : {s['active_placeholders']}")
+                    print(f"  脱敏调用次数: {s['sanitize_calls']}")
+                    print(f"  还原调用次数: {s['restore_calls']}")
+                    print(f"  用法：")
+                    print(f"    /privacy on        开启标准模式")
+                    print(f"    /privacy strict    开启严格模式（含姓名/车牌/QQ/微信）")
+                    print(f"    /privacy off       关闭")
+                    print(f"    /privacy rules     列出全部规则")
+                    print(f"    /privacy clear     清空当前映射")
+                    print(f"    /privacy test 文本 测试脱敏效果")
+                    continue
+                if sub in ("on", "enable", "standard"):
+                    PRIVACY.set_mode(MODE_STANDARD)
+                    print("[系统] 隐私脱敏已开启（标准模式）。")
+                    continue
+                if sub in ("off", "disable"):
+                    PRIVACY.set_mode(MODE_OFF)
+                    print("[系统] 隐私脱敏已关闭。")
+                    continue
+                if sub == "strict":
+                    PRIVACY.set_mode(MODE_STRICT)
+                    print("[系统] 隐私脱敏已开启（严格模式，可能误伤普通姓名）。")
+                    continue
+                if sub == "rules":
+                    print("\n[隐私脱敏规则清单]")
+                    for r in PRIVACY.list_all_rules():
+                        status = "启用" if r.enabled else "禁用"
+                        modes = ",".join(r.modes)
+                        print(f"  - {r.name:<16s} {r.label:<18s} [{status}] modes={modes}")
+                    continue
+                if sub == "clear":
+                    PRIVACY.clear()
+                    print("[系统] 已清空所有占位符映射。")
+                    continue
+                if sub == "test":
+                    if len(parts) < 3:
+                        print("[系统] 用法：/privacy test <要测试的文本>")
+                        continue
+                    sample = parts[2]
+                    saved_mode = PRIVACY.mode
+                    if saved_mode == MODE_OFF:
+                        PRIVACY.set_mode(MODE_STANDARD)
+                        print("[系统] 测试时临时启用标准模式。")
+                    try:
+                        sanitized = PRIVACY.sanitize_text(sample)
+                        restored = PRIVACY.restore_text(sanitized)
+                        print(f"  原文：{sample}")
+                        print(f"  脱敏：{sanitized}")
+                        print(f"  还原：{restored}")
+                    finally:
+                        PRIVACY.set_mode(saved_mode)
+                    continue
+                print(f"[系统] 未知子命令：{sub}（输入 /privacy 查看用法）")
+                continue
+
             # --- 未匹配内置命令，尝试作为技能名处理 ---
             # 注意：这里使用原输入（去掉首字符）进行匹配，不使用小写转换（保留原始大小写以供展示）
             skill_name_raw = user_input[1:].strip()   # 去掉第一个斜杠
