@@ -36,6 +36,8 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
   
 </p>
@@ -67,6 +69,10 @@
 
 - **零配置启动**：首次运行自动生成配置文件，用户只需填一次密钥。
 
+- **隐私脱敏**：发送给 LLM 前自动识别并脱敏手机号、邮箱、身份证、银行卡、API Key 等敏感信息，收到响应后自动还原；支持标准 / 严格两级模式，可用自然语言或 `/privacy` 命令切换。
+
+- **多语言交互**：中/英/日/韩/西/法/德/俄/阿 九种语言自由切换，说一句 `English` 或 `/lang ja` 即可，AI 全程用对应语言思考与回复。
+
 - **完整工具链**：bash 执行、文件读写编辑、glob/grep 搜索、网页搜索抓取、后台任务、任务与待办管理。
 
 - **技能系统（Skills）**：按需加载领域知识（SKILL.md），让 AI 在特定场景下更专业。
@@ -80,10 +86,6 @@
 - **上下文压缩**：两级压缩（工具结果截断 + LLM 摘要），支持超长对话。
 
 - **安全沙箱**：命令白名单、路径逃逸检测、危险命令拦截、敏感文件保护、脚本注入拦截。
-
-- **隐私脱敏**：发送给 LLM 前自动识别并脱敏手机号、邮箱、身份证、银行卡、API Key 等敏感信息，收到响应后自动还原；支持标准 / 严格两级模式，可用自然语言或 `/privacy` 命令切换。
-
-- **多语言交互**：中/英/日/韩/西/法/德/俄/阿 九种语言自由切换，说一句 `English` 或 `/lang ja` 即可，AI 全程用对应语言思考与回复。
 
 - **黑金主题 CLI**：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
 

@@ -67,6 +67,10 @@ Baize —— La bestia auspiciosa de la mitología china antigua que conocía to
 
 - **Inicio sin configuración**: la primera ejecución genera automáticamente archivos de configuración; solo necesitas ingresar tu clave una vez.
 
+- **Enmascaramiento de privacidad**：detecta y sustituye automáticamente teléfonos, correos, documentos de identidad, tarjetas bancarias, claves API y otra información personal antes de enviarla al LLM, restaurándola automáticamente en la respuesta. Dos niveles (estándar / estricto), conmutable por lenguaje natural o `/privacy`.
+
+- **Interacción multilingüe**: Cambia libremente entre chino / inglés / japonés / coreano / español / francés. Basta con decir `English` o usar `/lang ja` y la IA piensa y responde en ese idioma.
+
 - **Cadena de herramientas completa**: ejecución bash, lectura/escritura/edición de archivos, búsqueda glob/grep, búsqueda y scraping web, tareas en segundo plano, gestión de tareas y pendientes.
 
 - **Sistema de Skills**: carga conocimiento de dominio (SKILL.md) bajo demanda, haciendo que la IA sea más profesional en escenarios específicos.
@@ -80,10 +84,6 @@ Baize —— La bestia auspiciosa de la mitología china antigua que conocía to
 - **Compresión de contexto**: compresión en dos niveles (truncado de resultados de herramientas + resumen LLM), soporta conversaciones extremadamente largas.
 
 - **Sandbox de seguridad**: lista blanca de comandos, detección de escape de rutas, bloqueo de comandos peligrosos, protección de archivos sensibles, bloqueo de inyección de scripts.
-
-- **Enmascaramiento de privacidad**：detecta y sustituye automáticamente teléfonos, correos, documentos de identidad, tarjetas bancarias, claves API y otra información personal antes de enviarla al LLM, restaurándola automáticamente en la respuesta. Dos niveles (estándar / estricto), conmutable por lenguaje natural o `/privacy`.
-
-- **Interacción multilingüe**: Cambia libremente entre chino / inglés / japonés / coreano / español / francés. Basta con decir `English` o usar `/lang ja` y la IA piensa y responde en ese idioma.
 
 - **CLI con tema negro dorado**: ancho adaptativo en chino, resaltado de código, coloreado de Diff, plegado de pensamientos.
 

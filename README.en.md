@@ -65,6 +65,10 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 
 - **Zero-config startup**: Automatically generates configuration files on first run. Users only need to enter the key once.
 
+- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Two levels (standard / strict), switchable via natural language or `/privacy`.
+
+- **Multilingual interaction**: Freely switch between Chinese / English / Japanese / Korean / Spanish / French — just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
+
 - **Complete toolchain**: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
 
 - **Skills system**: Load domain knowledge (SKILL.md) on demand, making the AI more professional in specific scenarios.
@@ -78,10 +82,6 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 - **Context compression**: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
 
 - **Secure sandbox**: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
-
-- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Two levels (standard / strict), switchable via natural language or `/privacy`.
-
-- **Multilingual interaction**: Freely switch between Chinese / English / Japanese / Korean / Spanish / French — just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
 
 - **Black-gold themed CLI**: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
 

@@ -63,6 +63,8 @@ Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes 
 
 - **Multi-backends** : DeepSeek, tout endpoint compatible OpenAI (GLM / Qwen / Kimi / OpenAI) et Ollama local — basculez en une ligne.
 - **Démarrage sans configuration** : Le premier lancement génère automatiquement les fichiers de config ; vous ne saisissez votre clé qu'une fois.
+- **Masquage de la vie privée** : détecte et remplace automatiquement les téléphones, e-mails, pièces d'identité, cartes bancaires, clés API et autres données personnelles avant l'envoi au LLM, puis les restaure dans la réponse. Deux niveaux (standard / strict), commutables par langage naturel ou `/privacy`.
+- **Interaction multilingue** : Basculez librement entre chinois / anglais / japonais / coréen / espagnol / français. Dites simplement `English` ou utilisez `/lang ja`, et l'IA pense et répond dans cette langue.
 - **Chaîne d'outils complète** : exécution bash, lecture/écriture/édition de fichiers, recherche glob/grep, recherche et récupération web, tâches d'arrière-plan, gestion des tâches et des todos.
 - **Système de skills** : Chargement à la demande de connaissances métier (SKILL.md) pour que l'IA se comporte comme une spécialiste.
 - **Sous-agents** : Déléguez les tâches complexes à des sous-agents au contexte isolé, en gardant la session principale propre.
@@ -70,8 +72,6 @@ Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes 
 - **Protocole MCP** : Connectez des serveurs d'outils externes (GitHub, Filesystem, etc.) via Model Context Protocol.
 - **Compression de contexte** : Compression à deux niveaux (troncature des anciens résultats + résumé par LLM) pour de très longues conversations.
 - **Sandbox sécurisé** : Liste blanche de commandes, détection d'évasion de chemin, blocage de commandes dangereuses, protection des fichiers sensibles, blocage d'injection de scripts.
-- **Masquage de la vie privée** : détecte et remplace automatiquement les téléphones, e-mails, pièces d'identité, cartes bancaires, clés API et autres données personnelles avant l'envoi au LLM, puis les restaure dans la réponse. Deux niveaux (standard / strict), commutables par langage naturel ou `/privacy`.
-- **Interaction multilingue** : Basculez librement entre chinois / anglais / japonais / coréen / espagnol / français. Dites simplement `English` ou utilisez `/lang ja`, et l'IA pense et répond dans cette langue.
 - **CLI thème noir-or** : Largeur CJK adaptative, coloration syntaxique, coloration des diffs, repli de la réflexion.
 
 # Installation
