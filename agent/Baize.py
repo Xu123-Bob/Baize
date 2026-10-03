@@ -148,7 +148,6 @@ LANGUAGE_INSTRUCTIONS = {
     "ru": "**Языковое требование (высший приоритет)**: Всегда думайте и отвечайте на русском языке. Весь вывод для пользователя ДОЛЖЕН быть на русском.",
     "ar": "**متطلب اللغة (أولوية قصوى)**: فكّر وأجب دائمًا باللغة العربية. يجب أن يكون كل الإخراج الموجّه للمستخدم باللغة العربية.",
 }
-
 def detect_language(text: str) -> Optional[str]:
     """
     基于字符特征检测用户输入的语言，返回语言代码或 None（无法判定）。
@@ -162,12 +161,10 @@ def detect_language(text: str) -> Optional[str]:
     text = text.strip()
     if not text:
         return None
-
     # 1. 精确关键词匹配（整句就是语言名的情况）
     lowered = text.lower()
     if lowered in LANGUAGE_KEYWORDS:
         return LANGUAGE_KEYWORDS[lowered]
-
     # 2. 特有字符检测（按特异性从高到低）
     # 日文假名（片假名 + 平假名）
     if re.search(r'[\u3040-\u309f\u30a0-\u30ff]', text):
@@ -196,9 +193,7 @@ def detect_language(text: str) -> Optional[str]:
     # 纯拉丁字母 → 默认英文
     if re.search(r'[a-zA-Z]', text):
         return "en"
-
     return None
-
 def set_language(code: str) -> bool:
     """
     切换全局语言并刷新系统消息。返回是否切换成功。
@@ -219,7 +214,6 @@ def set_language(code: str) -> bool:
 #LLM API接入
 client, DEFAULT_MODEL, ACTIVE_PROVIDER = build_client_and_model()
 print(f"\033[90m[LLM] 使用后端: {ACTIVE_PROVIDER} | 模型: {DEFAULT_MODEL}\033[0m")
-
 # 通信函数部分
 # 定义一个重试前的回调函数（用于在终端打印提示，让用户知道正在重试）
 def _log_retry(retry_state):
@@ -351,6 +345,45 @@ BASE_TOOLS = [
 PARALLEL_SAFE_TOOLS = {
     "run_read", "run_glob", "run_grep", "web_search", "run_webfetch", "load_skills", "task_list", "check_background"
 }
+
+# ==================== 长耗时工具提示 ====================
+# 这些工具在执行期间不会向 UI 输出任何新内容，
+# 用户容易误以为程序卡死。提前告知可显著改善交互体验。
+LONG_RUNNING_TOOLS = {
+    "agent",         # 子代理任务，可能要跑数分钟甚至更久
+    "run_bash",      # 编译/测试/大文件处理等命令可能耗时较久
+    "web_search",    # 网络搜索受限于第三方响应速度
+    "run_webfetch",  # 网页抓取受限于目标站点
+}
+# 各工具的提示语（贴合白泽角色设定，文言风）
+LONG_RUNNING_HINTS = {
+    "agent":       "✦ 子代理已奉命远行，跋涉归来尚需时日，请道友耐心等候……",
+    "run_bash":    "✦ 正在施展 bash 灵咒，若命令繁复，恐需稍候片刻……",
+    "web_search":  "✦ 正在四海八荒搜寻讯息，请稍候……",
+    "run_webfetch":"✦ 正在远赴目标之地取经（抓取网页），请稍候……",
+}
+def _notify_long_running_tools(tool_calls, output_callback=None):
+    """
+    在工具执行前，对耗时较长的工具向用户发出提示，
+    避免界面长时间无回应被误认为卡死。
+    同一批调用中相同工具只提示一次。
+    """
+    if not tool_calls:
+        return
+    seen: set = set()
+    for tc in tool_calls:
+        fn = getattr(tc, "function", None)
+        name = getattr(fn, "name", None) if fn else None
+        if not name or name not in LONG_RUNNING_TOOLS or name in seen:
+            continue
+        seen.add(name)
+        msg = LONG_RUNNING_HINTS.get(
+            name, f"✦ 灵术『{name}』正在施展中，请耐心等待……"
+        )
+        if output_callback:
+            output_callback('system', {'content': msg})
+        else:
+            print(msg)
 
 # 新增 AskUserQuestion 工具定义
 ASK_USER_TOOL = {
@@ -2516,6 +2549,10 @@ def agent_loop(messages, output_callback=None):
                         serial_indices.append(i)
                 # 结果槽：按 index 存放，最后按原顺序取用
                 results: list[Optional[str]] = [None] * len(tool_calls)
+                # ---------- 2.5 长耗时工具提示（新增） ----------
+                # 在执行任何工具前，先向用户发出"请耐心等待"的提示，
+                # 避免界面长时间静默被误认为卡死。
+                _notify_long_running_tools(tool_calls, output_callback)
                 # ---------- 3. 并行执行安全工具 ----------
                 if parallel_indices:
                     future_to_idx: dict = {}
@@ -2544,7 +2581,6 @@ def agent_loop(messages, output_callback=None):
                 # 关键：用 call_ids[i] 而不是 tc.id，确保 id 非空且与 assistant 消息中的一致
                 for i, tc in enumerate(tool_calls):
                     result = results[i] if results[i] is not None else "Error: Result not found"
-                
                     if output_callback:
                         output_callback('tool_call', {
                             'name': tc.function.name,
@@ -2781,7 +2817,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.0.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.1.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
