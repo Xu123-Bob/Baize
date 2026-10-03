@@ -4,7 +4,7 @@
 
 # Baize
 
-**Know all things, and code with you by intuition.**
+**Know all things, and code with you safely.**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -36,7 +36,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="Douyin">
   </a>
+  
 </p>
 
 <p align="center">
@@ -53,11 +56,24 @@
 
 ----------
 
-Baize — an auspicious beast in ancient Chinese mythology that knows all things, now reincarnated as a Vibe Coding assistant.
+An ancient Chinese divine beast, now reincarnated as an enterprise-grade data analysis and VibeCoding assistant.
 
-**An open-source AI Coding Agent CLI and a drop-in alternative to Claude Code CLI. Supports multiple backends (DeepSeek / OpenAI-compatible / GLM / Qwen / Kimi / local Ollama), privacy sanitization, and multilingual interaction, with a complete toolkit: tool invocation, skill loading, subagent delegation, context compression, and secure sandbox.**
+**An open-source Coding Agent CLI with powerful privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / GLM / Qwen / Kimi / local Ollama) and provides a complete toolkit: tool invocation, skill loading, subagent delegation, context compression, secure sandbox, and more.**
 
 ----------
+
+# Core Advantages
+
+## Privacy Protection
+
+- **Bidirectional reversible privacy protection**: Before your sensitive information is sent to the LLM, it is replaced with placeholders; after the response is received, it is automatically restored. The whole process is transparent to you — the history, tool arguments, and final answers you see are always the original text, while what the LLM sees is always placeholders such as `[[PHONE_1]]` and `[[EMAIL_1]]`.
+- **Multiple ways to enable privacy protection**: You can enable it via natural language in the conversation, or use the more precise `/privacy` command.
+- **Localized agent**: This product has no remote database and runs completely locally. It does not collect user information.
+
+## Multilingual Interaction
+
+- **Supports nine languages**: 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
+- **Multiple ways to switch languages**: You can directly speak a language, for example `please speak with english`, to switch to English, or use `/lang ja` to switch to Japanese.
 
 # Features
 
@@ -65,9 +81,9 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 
 - **Zero-config startup**: Automatically generates configuration files on first run. Users only need to enter the key once.
 
-- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Two levels (standard / strict), switchable via natural language or `/privacy`.
+- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Supports standard / strict levels, switchable via natural language or `/privacy`.
 
-- **Multilingual interaction**: Freely switch between Chinese / English / Japanese / Korean / Spanish / French — just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
+- **Multilingual interaction**: Freely switch among Chinese / English / Japanese / Korean / Spanish / French / German / Russian / Arabic. Just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
 
 - **Complete toolchain**: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
 
@@ -94,28 +110,26 @@ Baize — an auspicious beast in ancient Chinese mythology that knows all things
 - pip
 
 ## Install from Source
+
 ### Two download methods
-1. pip install https://github.com/Xu123-Bob/Baize.git
 
-bash -- Press Win+R and enter cmd
+1. `pip install https://github.com/Xu123-Bob/Baize.git`
 
-```bash
-baize
-```
+bash -- Press Win+R and enter cmd, then type:
 
-2. <>Code --> Download ZIP
+    baize
+
+2. On the repository page, click `<>Code` --> Download ZIP
 
 (1) After unzipping, enter this file directory:
 
 bash -- Press Win+R and enter cmd
 
-```bash
-cd path/to/extracted/directory # If you are already in this file directory and press Win+R then cmd, skip this step
+    cd path/to/extracted/directory
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
-python -m Baize
-```
+    python -m Baize
 
 After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
 
@@ -123,9 +137,7 @@ After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run 
 
 bash -- Press Win+R and enter cmd
 
-```bash
-pip install .
-```
+    pip install .
 
 After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
 
@@ -133,16 +145,16 @@ After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run 
 
 1. First run
 
-```bash
-baize
-```
+bash
+
+    baize
 
 On first run, Baize automatically generates two configuration files:
 
-```text
+```
 ~/.baize/config.toml   # Backend configuration (choose DeepSeek / OpenAI / Ollama)
 
-~/.baize/.env          # Key file
+~/.baize/.env          # Key file>
 ```
 
 Windows path: `C:\Users\your-username\.baize\`.
@@ -151,7 +163,8 @@ Windows path: `C:\Users\your-username\.baize\`.
 
 Open `~/.baize/config.toml` and modify `active_provider`:
 
-```toml
+toml
+```
 active_provider = "deepseek"    # or "openai" / "ollama"
 
 [model_providers.deepseek]
@@ -170,14 +183,15 @@ model = "gpt-4o-mini"
 name = "Ollama (local)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b"
+model = "qwen2.5:7b">
 ```
 
 3. Fill in the key
 
 Edit `~/.baize/.env`:
 
-```env
+env
+```
 # Required for DeepSeek backend
 
 DEEPSEEK_API_KEY=sk-your-key
@@ -192,33 +206,33 @@ DEEPSEEK_API_KEY=sk-your-key
 
 4. Restart
 
-```bash
-baize
-```
+bash
+
+    baize
 
 If you see the black-gold logo and welcome message, startup succeeded.
 
 # Usage Examples
 
-After startup, describe your needs in natural language at the `>>> Decree:` prompt:
+After startup, describe your needs in natural language at the `>>> 降旨：` prompt:
 
-```text
->>> 降旨： Write a Python script to scrape Douban Top250 and save it as CSV
+```
+>>>降旨：Write a Python script to scrape Douban Top250 and save it as CSV
 
->>> 降旨： Help me check type errors in all Python files under src/
+>>>降旨：Help me check type errors in all Python files under src/
 
->>> 降旨： Find all places in this repository that use requests and change them to httpx
+>>>降旨：Find all places in this repository that use requests and change them to httpx
 ```
 
 ## Multilingual Interaction
 
-Baize supports **six languages**: 中文, English, 日本語, 한국어, Español, Français.
+Baize supports **nine languages**: 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
 
 Two ways to switch:
 
 ### Option 1: Just speak (auto-detect)
 
-Baize automatically detects your input language:
+Baize automatically detects your input language and switches:
 
 ```
 >>> 降旨：Hello, help me write a Python script
@@ -234,21 +248,24 @@ Baize automatically detects your input language:
 
 ```
 >>> 降旨：/lang                # Show current language and available list
-[system] Current language: English (en)
+[system] Current language: 中文 (zh)
 [system] Available:
-    zh    中文
-    en    English ←
+    zh    中文 ←
+    en    English
     ja    日本語
     ko    한국어
     es    Español
     fr    Français
+    de    Deutsch
+    ru    Русский
+    ar    العربية
 
 >>> 降旨：/lang English        # Switch by language name
 >>> 降旨：/lang ja             # Switch by language code
 >>> 降旨：/lang 西班牙语        # Chinese names work too
 ```
 
-Supports **language name / language code / localized name**. To switch to English, any of `English`, `en`, `英语`, `英文` works.
+Supports **language name / language code / Chinese name / native name**. To switch to English, any of `English`, `en`, `英语`, `英文` works.
 
 ## Baize CLI Interface
 
@@ -288,20 +305,20 @@ Baize CLI running screen
 
 Don't want to use a cloud API? Use local Ollama:
 
-```bash
-#1. Install Ollama: https://ollama.com/download
-#2. Pull a model
-ollama pull qwen2.5:7b
+bash
 
-#3. Start the Ollama service
-ollama serve
+    #1. Install Ollama: https://ollama.com/download
+    #2. Pull a model
+    ollama pull qwen2.5:7b
 
-#4. Modify ~/.baize/config.toml
-active_provider = "ollama"
+    #3. Start the Ollama service
+    ollama serve
 
-#5. Start Baize
-baize
-```
+    #4. Modify ~/.baize/config.toml
+    active_provider = "ollama"
+
+    #5. Start Baize
+    baize
 
 Recommended models: `qwen2.5:7b` (strong Chinese), `llama3.1:8b`, `deepseek-r1:7b`.
 
@@ -313,22 +330,22 @@ Baize supports four extension methods. Place them in the current working directo
 
 Write domain knowledge in `./skills/skill-name/SKILL.md`. The AI will proactively load it when encountering complex tasks.
 
-```markdown
----
-name: pandas-eda
+markdown
 
-description: Best practices for exploratory data analysis with pandas
+    ---
+    name: pandas-eda
 
-tags: data,python
----
+    description: Best practices for exploratory data analysis with pandas
 
-# Pandas EDA Guide
+    tags: data,python
+    ---
 
-## Core Steps
-1. Use df.info() to inspect field types and missing values
-2. Use df.describe() for statistical description
-...
-```
+    # Pandas EDA Guide
+
+    ## Core Steps
+    1. Use df.info() to inspect field types and missing values
+    2. Use df.describe() for statistical description
+    ...
 
 You can also manually load it in conversation with `/pandas-eda`.
 
@@ -336,42 +353,43 @@ You can also manually load it in conversation with `/pandas-eda`.
 
 Define specialized subagents in `./subagent/role-name/AGENT.md`. The main agent can delegate tasks through the `agent` tool.
 
-```markdown
----
-name: code-reviewer
+markdown
 
-description: A strict code reviewer
----
+    ---
+    name: code-reviewer
 
-You are a senior code reviewer. During review, prioritize:
-1. Boundary conditions and exception handling
-2. Resource leaks
-3. Concurrency safety
-...
-```
+    description: A strict code reviewer
+    ---
+
+    You are a senior code reviewer. During review, prioritize:
+    1. Boundary conditions and exception handling
+    2. Resource leaks
+    3. Concurrency safety
+    ...
 
 ## Hooks
 
 Place the following under `./hooks/`:
+
 - `PreToolUse-*.sh`
 - `PostToolUse-*.sh`
 - `Stop-*.sh`
 
 They receive JSON input and return a decision:
 
-```bash
-#!/bin/bash
+bash
 
-#PreToolUse-guard.sh
+    #!/bin/bash
 
-read -r input
+    #PreToolUse-guard.sh
 
-if echo "$input" | grep -q "rm -rf"; then
+    read -r input
 
-echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
+    if echo "$input" | grep -q "rm -rf"; then
 
-fi
-```
+    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
+
+    fi
 
 Python hooks can directly call built-in APIs (see the `hook_*` functions in `Baize.py`).
 
@@ -379,19 +397,19 @@ Python hooks can directly call built-in APIs (see the `hook_*` functions in `Bai
 
 Configure external tool servers in `./MCP/mcp_config.json`:
 
-```json
-{
-  "mcpServers": [
+json
+
     {
-      "name": "filesystem",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-      "env": {},
-      "enabled": true
+      "mcpServers": [
+        {
+          "name": "filesystem",
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+          "env": {},
+          "enabled": true
+        }
+      ]
     }
-  ]
-}
-```
 
 # Security Design
 
@@ -415,32 +433,36 @@ Baize ships with a **bidirectional, reversible** privacy sanitization mechanism.
 ## Two ways to enable
 
 ### Option 1: Natural language
+
 ```
->>> 降旨：enable privacy sanitization
+>>>降旨：enable privacy sanitization
 [system] Privacy sanitization enabled (standard mode).
 
->>> 降旨：enable strict sanitization
+>>>降旨：enable strict sanitization
 [system] Privacy sanitization enabled (strict mode).
 
->>> 降旨：disable privacy protection
+>>>降旨：disable privacy protection
 [system] Privacy sanitization disabled.
 ```
 
 ### Option 2: Slash commands
-- /privacy on Enable standard mode
-- /privacy strict Enable strict mode (adds names, license plates, QQ, WeChat)
-- /privacy off Disable
-- /privacy status Show current state and statistics
-- /privacy rules List all rules
-- /privacy test <text> Test sanitization
-- /privacy clear Clear the placeholder map
+
+- `/privacy on` Enable standard mode
+- `/privacy strict` Enable strict mode (adds names, license plates, QQ, WeChat)
+- `/privacy off` Disable
+- `/privacy status` Show current state and statistics
+- `/privacy rules` List all rules
+- `/privacy test` <text> Test sanitization
+- `/privacy clear` Clear the placeholder map
 
 ## Two levels
-**Standard** ：Mainland China phone numbers, ID cards, bank cards (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials
 
-**Strict**：All of standard + Chinese names, QQ numbers, WeChat IDs, Mainland China license plates
+**Standard**: Mainland China phone numbers, ID cards, bank cards (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials
+
+**Strict**: All of standard + Chinese names, QQ numbers, WeChat IDs, Mainland China license plates
 
 ## How it works
+
 User input (with real PII) → messages store original text
 
 ↓ sanitize_messages()
@@ -460,13 +482,14 @@ Restored to original → stored / displayed / executed
 **Subagents are protected too**: tasks delegated from the main agent go through the same sanitize/restore pipeline.
 
 ## Example
+
 ```
->>> 降旨：/privacy test My phone is 13812345678, email a@b.com
+>>>降旨：/privacy test My phone is 13812345678, email a@b.com
 Original: My phone is 13812345678, email a@b.com
 Masked : My phone is [[PHONE_1]], email [[EMAIL_1]]
 Restored: My phone is 13812345678, email a@b.com
 
->>> 降旨： /privacy status
+>>>降旨：/privacy status
 [Privacy Sanitization]
 Current mode : standard
 Active rules : 15 / 19
@@ -477,7 +500,7 @@ Restore calls : 3
 
 # Directory Structure
 
-```text
+```
 baize-agent/
 ├── pyproject.toml              # Packaging configuration
 ├── README.md
@@ -499,7 +522,7 @@ baize-agent/
     ├── core/                   # Core logic (side-effect free, unit-testable)
     |   ├── __init__.py
     |   ├── history.py          # Session history cleaning / token estimation / compression
-    |   └── privacy.py          # Privacy sanitization
+    |   └── privacy.py          # Privacy sanitization: PII detection / placeholder 
     ├── hooks/                  # Built-in hooks
     └── MCP/                    # MCP client and configuration
         ├── __init__.py
@@ -523,21 +546,15 @@ Write variables to `~/.baize/.env`; there is no need to modify shell config file
 
 This project uses pytest. Before development, install the package in editable mode with dev dependencies:
 
-```bash
-pip install -e ".[dev]"
-```
+    pip install -e ".[dev]"
 
 Run all tests:
 
-```bash
-python -m pytest tests/ -v
-```
+    python -m pytest tests/ -v
 
 Run a single file:
 
-```bash
-python -m pytest tests/test_history.py -v
-```
+    python -m pytest tests/test_history.py -v
 
 ## Code Structure Conventions
 
@@ -572,18 +589,21 @@ A: Baize automatically performs two-level compression: first truncating old tool
 
 A: The default command whitelist blocks dangerous operations such as `rm -rf /`; before writing files, it shows a Diff and asks for confirmation.
 
+- Q: How can I make Baize reply in English or Japanese?
+
+A: Just say `English` or `日本語`, and it will switch automatically. You can also use `/lang en` (or `/lang ja`). All subsequent thinking and replies will use that language. To switch back to Chinese, say `中文` or type `/lang zh`.
+
 # 🤝 Contributing
 
 Issues and PRs are welcome. It is recommended to first read the `agent_loop` function in `Baize.py` to understand the Agent main loop before extending it.
 
 ### Thank you for every Contributor to Submit PR
 
-- GitHub Contributor: 
+- GitHub Contributor:
 [@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
-
 
 # License
 
@@ -606,7 +626,9 @@ MIT License
 - Developers focus on ideas and decisions; Baize handles the trivial and execution. Let programming return to intuition, and let creation flow like myth.
 
 # ☕ Support
+
 If Baize is useful to you, you’re welcome to sponsor or tip. Independent development also takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
+
 <p align="center">
   <img src="image/support.jpg" alt="WeChat QR" width="200" />
 </p>

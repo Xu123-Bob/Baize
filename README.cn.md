@@ -4,7 +4,7 @@
 
 # 白泽 Baize
 
-**通晓万物，陪你直觉编程。**
+**通晓万物，陪你安全编程。**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -56,11 +56,22 @@
 
 ----------
 
-白泽 —— 中国古代神话中通晓万物的瑞兽，如今化身为 Vibe Coding 助手。
+中国古代神兽，如今化身企业级数据分析与VibeCoding助手。
 
-**一个开源的 AI Coding Agent CLI，Claude Code CLI的平替产品，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），支持隐私脱敏和多语种交互，具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。**
+**一个开源的Coding Agent CLI，具有强大的隐私保护与多语种交互的功能，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。**
 
 ----------
+
+# 核心优势
+
+## 隐私保护
+- **双向可逆隐私保护**：保护你的敏感信息在发送给 LLM 之前就被替换为占位符，收到响应后再自动还原。整个过程对用户无感——你看到的历史、工具参数、最终答案始终是原文，而 LLM 看到的永远是 `[[PHONE_1]]`、`[[EMAIL_1]]` 这样的占位符。
+- **多种方式开启隐私保护**：可以通过命令行输入自然语言，同时支持使用更精准的`/privacy`命令开启隐私保护模式
+- **agent本地化**：本产品无远程数据库，完全本地化运行，不会收集用户信息
+
+## 多语种交互
+- **支持九种语言交互**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
+- **多种方式转换语种**：可以直接输入语种，比如`please speak with english`即可切换为英语，也可以通过输入`/lang ja`切换为日语
 
 
 # 特性
@@ -213,7 +224,7 @@ bash
 
 ## 多语言交互
 
-白泽支持**六种语言**：中文、English、日本語、한국어、Español、Français。
+白泽支持**九种语言**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
 
 有两种切换方式：
 
@@ -271,19 +282,19 @@ bash
 
 
 ## 内置命令
-- /exit、/quit --> 退出白泽
-- /clear	--> 清空对话历史、待办、思考记录和工具记录
-- /compact	--> 手动压缩上下文（对话过长时使用）
-- /commit	--> 保存当前会话并提交到 Git（若在 Git 仓库内）
-- /lang → 查看当前语言；/lang en 切换为英文（支持语言代码或语言名）
-- /skills	--> 列出所有可用技能
-- /skills reload	--> 重新加载用户技能目录
-- /unload	--> 卸载当前激活的技能
-- /show thought	--> 查看完整思考记录
-- /show tool	--> 查看工具调用记录
-- /show all	--> 查看全部会话历史
-- /技能名	--> 加载指定技能（支持模糊匹配）
-- /privacy	--> 隐私脱敏控制（详见下方"隐私脱敏"章节）
+- `/exit、/quit` --> 退出白泽
+- `/clear`	--> 清空对话历史、待办、思考记录和工具记录
+- `/compact`	--> 手动压缩上下文（对话过长时使用）
+- `/commit`	--> 保存当前会话并提交到 Git（若在 Git 仓库内）
+- `/lang` → 查看当前语言；/lang en 切换为英文（支持语言代码或语言名）
+- `/skills`	--> 列出所有可用技能
+- `/skills reload`	--> 重新加载用户技能目录
+- `/unload`	--> 卸载当前激活的技能
+- `/show thought`	--> 查看完整思考记录
+- `/show tool`	--> 查看工具调用记录
+- `/show all`	--> 查看全部会话历史
+- `/技能名`	--> 加载指定技能（支持模糊匹配）
+- `/privacy`	--> 隐私脱敏控制（详见下方"隐私脱敏"章节）
 
 
 # Ollama 本地模型（零成本）
@@ -450,13 +461,13 @@ json
 
 ### 方式二：斜杠命令
 
-- /privacy on 开启标准模式
-- /privacy strict 开启严格模式（额外覆盖姓名、车牌、QQ、微信）
-- /privacy off 关闭
-- /privacy status 查看当前状态与统计
-- /privacy rules 列出全部脱敏规则
-- /privacy test <文本> 测试脱敏效果
-- /privacy clear 清空占位符映射
+- `/privacy on` 开启标准模式
+- `/privacy strict` 开启严格模式（额外覆盖姓名、车牌、QQ、微信）
+- `/privacy off` 关闭
+- `/privacy status` 查看当前状态与统计
+- `/privacy rules` 列出全部脱敏规则
+- `/privacy test` <文本> 测试脱敏效果
+- `/privacy clear` 清空占位符映射
 
 ## 两级模式
 **标准** ：中国大陆手机号、身份证号、银行卡号（Luhn 校验）、邮箱、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、私钥块、密码字段、URL 凭证 

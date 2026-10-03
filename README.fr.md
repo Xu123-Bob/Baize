@@ -4,7 +4,7 @@
 
 # Baize
 
-**Connaît toutes choses, code par intuition avec toi.**
+**Connaît toutes choses, code avec toi en toute sécurité.**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -36,7 +36,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
+  
 </p>
 
 <p align="center">
@@ -53,25 +56,49 @@
 
 ----------
 
-Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes choses, réincarnée en assistant Vibe Coding.
+Créature auspcieuse de la mythologie chinoise antique, désormais réincarnée en assistant d’analyse de données et de VibeCoding de niveau entreprise.
 
-**Un CLI d'agent de codage IA open source, alternative directe à Claude Code CLI. Prend en charge plusieurs backends (DeepSeek / compatible OpenAI / GLM / Qwen / Kimi / Ollama local), le masquage de la vie privée et l'interaction multilingue, avec une chaîne d'outils complète : appels d'outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé.**
+**Un CLI de Coding Agent open source, avec une puissante protection de la vie privée et une interaction multilingue. Prend en charge plusieurs backends (DeepSeek / compatible OpenAI / GLM / Qwen / Kimi / Ollama local), avec appels d’outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé.**
 
 ----------
+
+# Avantages principaux
+
+## Protection de la vie privée
+
+- **Protection de la vie privée bidirectionnelle et réversible** : avant l’envoi de vos informations sensibles au LLM, elles sont remplacées par des jetons ; après réception de la réponse, elles sont automatiquement restaurées. Le processus est totalement transparent pour vous : l’historique, les arguments d’outils et la réponse finale que vous voyez sont toujours le texte original, tandis que le LLM ne voit que des jetons tels que `[[PHONE_1]]` et `[[EMAIL_1]]`.
+- **Plusieurs façons d’activer la protection de la vie privée** : vous pouvez l’activer en langage naturel dans la conversation, ou utiliser la commande plus précise `/privacy`.
+- **Agent localisé** : ce produit n’a pas de base de données distante et fonctionne entièrement en local. Il ne collecte aucune information utilisateur.
+
+## Interaction multilingue
+
+- **Prend en charge neuf langues** : 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
+- **Plusieurs façons de changer de langue** : vous pouvez directement parler une langue, par exemple `please speak with english`, pour passer à l’anglais, ou utiliser `/lang ja` pour passer au japonais.
 
 # Fonctionnalités
 
 - **Multi-backends** : DeepSeek, tout endpoint compatible OpenAI (GLM / Qwen / Kimi / OpenAI) et Ollama local — basculez en une ligne.
-- **Démarrage sans configuration** : Le premier lancement génère automatiquement les fichiers de config ; vous ne saisissez votre clé qu'une fois.
-- **Masquage de la vie privée** : détecte et remplace automatiquement les téléphones, e-mails, pièces d'identité, cartes bancaires, clés API et autres données personnelles avant l'envoi au LLM, puis les restaure dans la réponse. Deux niveaux (standard / strict), commutables par langage naturel ou `/privacy`.
-- **Interaction multilingue** : Basculez librement entre chinois / anglais / japonais / coréen / espagnol / français. Dites simplement `English` ou utilisez `/lang ja`, et l'IA pense et répond dans cette langue.
-- **Chaîne d'outils complète** : exécution bash, lecture/écriture/édition de fichiers, recherche glob/grep, recherche et récupération web, tâches d'arrière-plan, gestion des tâches et des todos.
-- **Système de skills** : Chargement à la demande de connaissances métier (SKILL.md) pour que l'IA se comporte comme une spécialiste.
+
+- **Démarrage sans configuration** : Le premier lancement génère automatiquement les fichiers de config ; vous ne saisissez votre clé qu’une fois.
+
+- **Masquage de la vie privée** : détecte et remplace automatiquement les téléphones, e-mails, pièces d’identité, cartes bancaires, clés API et autres données personnelles avant l’envoi au LLM, puis les restaure dans la réponse. Deux niveaux (standard / strict), commutables par langage naturel ou `/privacy`.
+
+- **Interaction multilingue** : Basculez librement entre chinois / anglais / japonais / coréen / espagnol / français / allemand / russe / arabe. Dites simplement `English` ou utilisez `/lang ja`, et l’IA pense et répond dans cette langue.
+
+- **Chaîne d’outils complète** : exécution bash, lecture/écriture/édition de fichiers, recherche glob/grep, recherche et récupération web, tâches d’arrière-plan, gestion des tâches et des todos.
+
+- **Système de skills** : Chargement à la demande de connaissances métier (SKILL.md) pour que l’IA se comporte comme une spécialiste.
+
 - **Sous-agents** : Déléguez les tâches complexes à des sous-agents au contexte isolé, en gardant la session principale propre.
-- **Hooks** : Hooks Python ou Shell pour intercepter avant/après les appels d'outils, journaliser, formater automatiquement et bloquer sur échec de tests.
-- **Protocole MCP** : Connectez des serveurs d'outils externes (GitHub, Filesystem, etc.) via Model Context Protocol.
+
+- **Hooks** : Hooks Python ou Shell pour intercepter avant/après les appels d’outils, journaliser, formater automatiquement et bloquer sur échec de tests.
+
+- **Protocole MCP** : Connectez des serveurs d’outils externes (GitHub, Filesystem, etc.) via Model Context Protocol.
+
 - **Compression de contexte** : Compression à deux niveaux (troncature des anciens résultats + résumé par LLM) pour de très longues conversations.
-- **Sandbox sécurisé** : Liste blanche de commandes, détection d'évasion de chemin, blocage de commandes dangereuses, protection des fichiers sensibles, blocage d'injection de scripts.
+
+- **Sandbox sécurisé** : Liste blanche de commandes, détection d’évasion de chemin, blocage de commandes dangereuses, protection des fichiers sensibles, blocage d’injection de scripts.
+
 - **CLI thème noir-or** : Largeur CJK adaptative, coloration syntaxique, coloration des diffs, repli de la réflexion.
 
 # Installation
@@ -87,108 +114,115 @@ Baize — la créature auspcieuse de la mythologie chinoise qui connaît toutes 
 
 1. `pip install https://github.com/Xu123-Bob/Baize.git`
 
-   Ensuite, ouvrez cmd et lancez :
+bash -- Appuyez sur Win+R, entrez cmd, puis tapez :
 
-   ```
-   baize
-   ```
+    baize
 
-2. Sur la page du dépôt, cliquez sur `<> Code` → `Download ZIP`.
+2. Sur la page du dépôt, cliquez sur `<> Code` → `Download ZIP`
 
-   (1) Décompressez et entrez dans le dossier :
+(1) Après décompression, entrez dans le dossier :
 
-   ```
-   cd <dossier-décompressé>
-   pip install -r requirements.txt
-   python -m Baize
-   ```
+bash -- Appuyez sur Win+R, entrez cmd
 
-   (2) Installation locale :
+    cd <dossier-décompressé>
 
-   ```
-   pip install .
-   ```
+    pip install -r requirements.txt
 
-   Après installation, ouvrez cmd et tapez `baize` pour lancer.
+    python -m Baize
+
+Après installation, ouvrez cmd et tapez `baize` pour lancer.
+
+(2) Installation locale :
+
+bash -- Appuyez sur Win+R, entrez cmd
+
+    pip install .
+
+Après installation, ouvrez cmd et tapez `baize` pour lancer.
 
 # Démarrage rapide
 
 1. Premier lancement
 
-   ```
-   baize
-   ```
+bash
 
-   Baize génère automatiquement deux fichiers de configuration :
+    baize
 
-   ```
-   ~/.baize/config.toml   # configuration des backends
-   ~/.baize/.env          # clés d'API
-   ```
+Baize génère automatiquement deux fichiers de configuration :
 
-   Sous Windows : `C:\Users\<utilisateur>\.baize\`.
+```
+~/.baize/config.toml   # configuration des backends
+
+~/.baize/.env          # clés d'API>
+```
+
+Sous Windows : `C:\Users\<utilisateur>\.baize\`.
 
 2. Choisir un backend
 
-   Ouvrez `~/.baize/config.toml` et éditez `active_provider` :
+Ouvrez `~/.baize/config.toml` et éditez `active_provider` :
 
-   ```toml
-   active_provider = "deepseek"    # ou "openai" / "ollama"
+toml
+```
+active_provider = "deepseek"    # ou "openai" / "ollama"
 
-   [model_providers.deepseek]
-   name = "DeepSeek"
-   base_url = "https://api.deepseek.com"
-   env_key = "DEEPSEEK_API_KEY"
-   model = "deepseek-v4-pro"
+[model_providers.deepseek]
+name = "DeepSeek"
+base_url = "https://api.deepseek.com"
+env_key = "DEEPSEEK_API_KEY"
+model = "deepseek-v4-pro"
 
-   [model_providers.openai]
-   name = "OpenAI"
-   base_url = "https://api.openai.com/v1"
-   env_key = "OPENAI_API_KEY"
-   model = "gpt-4o-mini"
+[model_providers.openai]
+name = "OpenAI"
+base_url = "https://api.openai.com/v1"
+env_key = "OPENAI_API_KEY"
+model = "gpt-4o-mini"
 
-   [model_providers.ollama]
-   name = "Ollama (local)"
-   base_url = "http://localhost:11434/v1"
-   env_key = ""
-   model = "qwen2.5:7b"
-   ```
+[model_providers.ollama]
+name = "Ollama (local)"
+base_url = "http://localhost:11434/v1"
+env_key = ""
+model = "qwen2.5:7b">
+```
 
 3. Saisir la clé
 
-   Éditez `~/.baize/.env` :
+Éditez `~/.baize/.env` :
 
-   ```
-   # Obligatoire pour le backend DeepSeek
-   DEEPSEEK_API_KEY=sk-votre-clé-ici
+env
+```
+# Obligatoire pour le backend DeepSeek
+DEEPSEEK_API_KEY=sk-votre-clé-ici
 
-   # Obligatoire pour un endpoint compatible OpenAI (GLM / Qwen / Kimi / OpenAI)
-   # OPENAI_API_KEY=votre-clé-ici
+# Obligatoire pour un endpoint compatible OpenAI (GLM / Qwen / Kimi / OpenAI)
+# OPENAI_API_KEY=votre-clé-ici
 
-   # Ollama n'a pas besoin de clé
-   ```
+# Ollama n'a pas besoin de clé
+```
 
 4. Redémarrer
 
-   ```
-   baize
-   ```
+bash
 
-   Si vous voyez le logo noir-or et le message d'accueil, c'est lancé.
+    baize
 
-# Exemples d'utilisation
+Si vous voyez le logo noir-or et le message d’accueil, c’est lancé.
+
+# Exemples d’utilisation
 
 Écrivez en langage naturel au prompt `>>> 降旨：` :
 
 ```
->>> 降旨：Écris un script Python qui scrape le Top250 de Douban et l'enregistre en CSV
->>> 降旨：Vérifie les erreurs de type dans tous les fichiers Python sous src/
->>> 降旨：Trouve toutes les utilisations de `requests` dans ce dépôt et remplace-les par `httpx`
+>>>降旨：Écris un script Python qui scrape le Top250 de Douban et l'enregistre en CSV
+
+>>>降旨：Vérifie les erreurs de type dans tous les fichiers Python sous src/
+
+>>>降旨：Trouve toutes les utilisations de `requests` dans ce dépôt et remplace-les par `httpx`
 ```
 
 ## Interaction multilingue
 
-Baize prend en charge **six langues** : 中文, English, 日本語, 한국어, Español, Français.
+Baize prend en charge **neuf langues** : 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
 
 Deux façons de basculer :
 
@@ -210,21 +244,24 @@ Baize détecte la langue de votre saisie et bascule automatiquement :
 
 ```
 >>> 降旨：/lang                # Affiche la langue courante et la liste disponible
-[system] Langue actuelle : Français (fr)
+[system] Langue actuelle : 中文 (zh)
 [system] Langues disponibles :
-    zh    中文
+    zh    中文 ←
     en    English
     ja    日本語
     ko    한국어
     es    Español
-    fr    Français ←
+    fr    Français
+    de    Deutsch
+    ru    Русский
+    ar    العربية
 
 >>> 降旨：/lang English        # Changer par nom de langue
 >>> 降旨：/lang ja             # Changer par code de langue
 >>> 降旨：/lang 西班牙语        # Noms chinois également acceptés
 ```
 
-Accepte **nom de langue / code / nom natif**. Pour basculer en anglais, `English`, `en`, `英语` ou `英文` fonctionnent indifféremment.
+Accepte **nom de langue / code / nom chinois / nom natif**. Pour basculer en anglais, `English`, `en`, `英语` ou `英文` fonctionnent indifféremment.
 
 ## CLI Baize
 
@@ -264,20 +301,20 @@ Baize CLI — exécution
 
 Vous ne voulez pas d'API cloud ? Utilisez Ollama local :
 
-```bash
-# 1. Installez Ollama : https://ollama.com/download
-# 2. Récupérez un modèle
-ollama pull qwen2.5:7b
+bash
 
-# 3. Démarrez Ollama
-ollama serve
+    # 1. Installez Ollama : https://ollama.com/download
+    # 2. Récupérez un modèle
+    ollama pull qwen2.5:7b
 
-# 4. Éditez ~/.baize/config.toml
-active_provider = "ollama"
+    # 3. Démarrez Ollama
+    ollama serve
 
-# 5. Lancez Baize
-baize
-```
+    # 4. Éditez ~/.baize/config.toml
+    active_provider = "ollama"
+
+    # 5. Lancez Baize
+    baize
 
 Modèles recommandés : `qwen2.5:7b` (fort en chinois), `llama3.1:8b`, `deepseek-r1:7b`.
 
@@ -289,20 +326,20 @@ Baize prend en charge quatre mécanismes d'extension, tous placés dans le répe
 
 Écrivez des connaissances métier dans `./skills/<nom>/SKILL.md`. L'IA les charge à la demande.
 
-```markdown
----
-name: pandas-eda
-description: Bonnes pratiques d'analyse exploratoire avec pandas
-tags: data,python
----
+markdown
 
-# Guide Pandas EDA
+    ---
+    name: pandas-eda
+    description: Bonnes pratiques d'analyse exploratoire avec pandas
+    tags: data,python
+    ---
 
-## Étapes clés
-1. df.info() pour inspecter les types et les valeurs manquantes
-2. df.describe() pour les statistiques descriptives
-...
-```
+    # Guide Pandas EDA
+
+    ## Étapes clés
+    1. df.info() pour inspecter les types et les valeurs manquantes
+    2. df.describe() pour les statistiques descriptives
+    ...
 
 Vous pouvez aussi charger une skill manuellement avec `/pandas-eda` dans la conversation.
 
@@ -310,31 +347,31 @@ Vous pouvez aussi charger une skill manuellement avec `/pandas-eda` dans la conv
 
 Définissez des sous-agents spécialisés dans `./subagent/<rôle>/AGENT.md`. L'agent principal peut déléguer via l'outil `agent`.
 
-```markdown
----
-name: code-reviewer
-description: Relecteur de code strict
----
+markdown
 
-Vous êtes un relecteur de code senior. Priorisez :
-1. Cas limites et gestion d'erreurs
-2. Fuites de ressources
-3. Sûreté en concurrence
-...
-```
+    ---
+    name: code-reviewer
+    description: Relecteur de code strict
+    ---
+
+    Vous êtes un relecteur de code senior. Priorisez :
+    1. Cas limites et gestion d'erreurs
+    2. Fuites de ressources
+    3. Sûreté en concurrence
+    ...
 
 ## Hooks
 
 Placez `PreToolUse-*.sh`, `PostToolUse-*.sh`, `Stop-*.sh` dans `./hooks/`. Ils reçoivent du JSON sur stdin et renvoient une décision.
 
-```bash
-#!/bin/bash
-# PreToolUse-guard.sh
-read -r input
-if echo "$input" | grep -q "rm -rf"; then
-  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"rm -rf est interdit"}}'
-fi
-```
+bash
+
+    #!/bin/bash
+    # PreToolUse-guard.sh
+    read -r input
+    if echo "$input" | grep -q "rm -rf"; then
+      echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"rm -rf est interdit"}}'
+    fi
 
 Les hooks Python peuvent appeler directement l'API interne (voir les fonctions `hook_*` dans `Baize.py`).
 
@@ -342,19 +379,19 @@ Les hooks Python peuvent appeler directement l'API interne (voir les fonctions `
 
 Configurez des serveurs d'outils externes dans `./MCP/mcp_config.json` :
 
-```json
-{
-  "mcpServers": [
+json
+
     {
-      "name": "filesystem",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-      "env": {},
-      "enabled": true
+      "mcpServers": [
+        {
+          "name": "filesystem",
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+          "env": {},
+          "enabled": true
+        }
+      ]
     }
-  ]
-}
-```
 
 # Sécurité
 
@@ -378,32 +415,36 @@ Baize intègre un mécanisme de masquage **bidirectionnel et réversible**. Les 
 ## Deux façons de l'activer
 
 ### Option 1 : Langage naturel
+
 ```
->>> 降旨：active le masquage de la vie privée
+>>>降旨：active le masquage de la vie privée
 [system] Masquage de la vie privée activé (mode standard).
 
->>> 降旨：active le masquage strict
+>>>降旨：active le masquage strict
 [system] Masquage de la vie privée activé (mode strict).
 
->>> 降旨：désactive la protection de la vie privée
+>>>降旨：désactive la protection de la vie privée
 [system] Masquage de la vie privée désactivé.
 ```
 
 ### Option 2 : Commandes slash
-- /privacy on Activer le mode standard
-- /privacy strict Activer le mode strict (ajoute noms, plaques, QQ, WeChat)
-- /privacy off Désactiver
-- /privacy status Voir l'état et les statistiques
-- /privacy rules Lister toutes les règles
-- /privacy test <texte> Tester le masquage
-- /privacy clear Effacer la table des jetons
+
+- `/privacy on` Activer le mode standard
+- `/privacy strict` Activer le mode strict (ajoute noms, plaques, QQ, WeChat)
+- `/privacy off` Désactiver
+- `/privacy status` Voir l'état et les statistiques
+- `/privacy rules` Lister toutes les règles
+- `/privacy test` <texte> Tester le masquage
+- `/privacy clear` Effacer la table des jetons
 
 ## Deux niveaux
-**Standard**：Téléphones de Chine continentale, pièces d'identité, cartes bancaires (validation Luhn), e-mails, IPv4/IPv6, clés API OpenAI/Anthropic/GitHub/AWS, jetons Bearer, blocs de clé privée, champs de mot de passe, identifiants dans les URL 
 
-**Strict**：Tout le standard + noms chinois, numéros QQ, identifiants WeChat, plaques de Chine continentale
+**Standard** : Téléphones de Chine continentale, pièces d'identité, cartes bancaires (validation Luhn), e-mails, IPv4/IPv6, clés API OpenAI/Anthropic/GitHub/AWS, jetons Bearer, blocs de clé privée, champs de mot de passe, identifiants dans les URL
+
+**Strict** : Tout le standard + noms chinois, numéros QQ, identifiants WeChat, plaques de Chine continentale
 
 ## Fonctionnement
+
 Entrée utilisateur (avec PII réelle) → messages stocke l'original
 
 ↓ sanitize_messages()
@@ -423,13 +464,14 @@ Restauré à l'original → stockage / affichage / exécution
 **Les sous-agents sont aussi protégés** : les tâches déléguées passent par le même pipeline masquer/restaurer.
 
 ## Exemple
+
 ```
->>> 降旨：/privacy test Mon téléphone est 13812345678, email a@b.com
+>>>降旨：/privacy test Mon téléphone est 13812345678, email a@b.com
 Original : Mon téléphone est 13812345678, email a@b.com
 Masqué : Mon téléphone est [[PHONE_1]], email [[EMAIL_1]]
 Restauré : Mon téléphone est 13812345678, email a@b.com
 
->>> 降旨：/privacy status
+>>>降旨：/privacy status
 [Masquage de la vie privée]
 Mode actuel : standard
 Règles actives : 15 / 19
@@ -462,7 +504,7 @@ baize-agent/
     ├── core/                   # logique pure (sans effet de bord, testable)
     │   ├── __init__.py
     │   ├── history.py          # nettoyage / estimation de tokens / compression
-    │   └── privacy.py          # masquage de la vie privée
+    │   └── privacy.py          # masquage de la vie privée : détection PII / remplacement 
     ├── hooks/                  # hooks intégrés
     └── MCP/                    # client MCP et configuration
         ├── __init__.py
@@ -488,21 +530,15 @@ Il suffit de les mettre dans `~/.baize/.env` — pas besoin de toucher au shell.
 
 Le projet utilise pytest. Installez en mode éditable avec les dépendances de développement :
 
-```
-pip install -e ".[dev]"
-```
+    pip install -e ".[dev]"
 
 Lancer tous les tests :
 
-```
-python -m pytest tests/ -v
-```
+    python -m pytest tests/ -v
 
 Un seul fichier :
 
-```
-python -m pytest tests/test_history.py -v
-```
+    python -m pytest tests/test_history.py -v
 
 ## Conventions de structure
 

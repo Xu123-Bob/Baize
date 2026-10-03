@@ -4,7 +4,7 @@
 
 # 백택 Baize
 
-**만물을 통달하여, 당신의 직관적 프로그래밍을 함께합니다.**
+**만물을 통달하여, 안전하게 프로그래밍을 함께합니다.**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -22,7 +22,7 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
-    <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
+  <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
     <img src="https://img.shields.io/github/issues-pr-closed/Xu123-Bob/Baize?style=flat-square&logo=github&label=Closed%20PRs" alt="GitHub Closed Pull Requests">
   </a>
   <a href="https://github.com/Xu123-Bob/Baize/graphs/contributors">
@@ -36,6 +36,8 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
   
 </p>
@@ -54,12 +56,24 @@
 
 ----------
 
-백택(Baize) —— 고대 중국 신화에서 만물을 통달한 상서로운 짐승이 이제 Vibe Coding 어시스턴트로 환생했습니다.
+고대 중국 신화의 신수로, 이제 엔터프라이즈급 데이터 분석 및 VibeCoding 어시스턴트로 환생했습니다.
 
-**오픈소스 AI Coding Agent CLI이자 Claude Code CLI의 대체품입니다. 다중 백엔드(DeepSeek / OpenAI 호환 / GLM / Qwen / Kimi / 로컬 Ollama)를 지원하며, 프라이버시 마스킹과 다국어 상호작용을 제공합니다. 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다.**
+**오픈소스 Coding Agent CLI로, 강력한 프라이버시 보호와 다국어 상호작용을 제공합니다. 다중 백엔드(DeepSeek / OpenAI 호환 / GLM / Qwen / Kimi / 로컬 Ollama)를 지원하며 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다.**
 
 ----------
 
+# 핵심 장점
+
+## 프라이버시 보호
+
+- **양방향 가역 프라이버시 보호**：민감한 정보는 LLM에 전송되기 전에 자리표시자로 치환되고, 응답을 받은 후 자동으로 복원됩니다. 사용자는 전혀 느낄 수 없으며, 당신이 보는 기록·도구 인수·최종 답변은 항상 원문이고, LLM이 보는 것은 항상 `[[PHONE_1]]`, `[[EMAIL_1]]` 같은 자리표시자입니다.
+- **다양한 활성화 방법**：대화 중 자연어로 활성화할 수 있고, 더 정확한 `/privacy` 명령도 사용할 수 있습니다.
+- **에이전트 로컬화**：이 제품은 원격 데이터베이스가 없고 완전히 로컬에서 실행됩니다. 사용자 정보를 수집하지 않습니다.
+
+## 다국어 상호작용
+
+- **9개 언어 지원**：中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
+- **다양한 언어 전환 방법**：`please speak with english`처럼 직접 언어를 말하면 영어로 전환되고, `/lang ja`로 일본어로 전환할 수 있습니다.
 
 # 주요 기능
 
@@ -69,7 +83,7 @@
 
 - **프라이버시 마스킹**：LLM에 전송하기 전에 휴대폰 번호, 이메일, 신분증, 은행카드, API Key 등 개인정보를 자동으로 감지해 자리표시자로 치환하고, 응답 수신 후 자동으로 복원합니다. 표준 / 엄격 2단계 모드를 지원하며, 자연어 또는 `/privacy` 명령으로 전환할 수 있습니다.
 
-- **다국어 상호작용**: 중국어·영어·일본어·한국어·스페인어·프랑스어 자유 전환. `English`라고 말하거나 `/lang ja`만 입력하면 AI가 해당 언어로 사고하고 응답합니다.
+- **다국어 상호작용**: 중국어·영어·일본어·한국어·스페인어·프랑스어·독일어·러시아어·아랍어 자유 전환. `English`라고 말하거나 `/lang ja`만 입력하면 AI가 해당 언어로 사고하고 응답합니다.
 
 - **완전한 도구 체인**: bash 실행, 파일 읽기/쓰기/편집, glob/grep 검색, 웹 검색 및 크롤링, 백그라운드 작업, 작업 및 할 일 관리.
 
@@ -96,36 +110,39 @@
 - pip
 
 ## 소스에서 설치
-### 다운로드 방법 두 가지
-1. pip install https://github.com/Xu123-Bob/Baize.git
 
-bash --win+R 입력 후 cmd
+### 다운로드 방법 두 가지
+
+1. `pip install https://github.com/Xu123-Bob/Baize.git`
+
+bash -- Win+R 입력 후 cmd, 그다음 입력:
 
     baize
 
-2. <>Code --> Download ZIP
+2. 저장소 페이지에서 `<>Code` --> Download ZIP 클릭
 
 (1) 압축 해제 후 본 파일 디렉토리로 이동:
 
-bash --win+R 입력 후 cmd
+bash -- Win+R 입력 후 cmd
 
-    cd 압축해제한_디렉토리 # 본 파일 디렉토리에서 이미 win+R로 cmd를 열었다면 이 단계는 불필요
+    cd 압축해제한_디렉토리
 
-    pip install -r requirements.txt    
+    pip install -r requirements.txt
 
-    python -m Baize             
+    python -m Baize
 
-다운로드 완료 후 win+R로 cmd를 열고 CLI 인터페이스에서 baize를 입력하면 실행됩니다.
+다운로드 완료 후 Win+R로 cmd를 열고 CLI 인터페이스에서 `baize`를 입력하면 실행됩니다.
 
 (2) ZIP 다운로드 후 로컬 설치, 압축 해제 후 디렉토리로 이동하여 실행:
 
-bash --win+R 입력 후 cmd
+bash -- Win+R 입력 후 cmd
 
     pip install .
 
-다운로드 완료 후 win+R로 cmd를 열고 CLI 인터페이스에서 baize를 입력하면 실행됩니다.
+다운로드 완료 후 Win+R로 cmd를 열고 CLI 인터페이스에서 `baize`를 입력하면 실행됩니다.
 
 # 빠른 시작
+
 1. 첫 실행
 
 bash
@@ -134,59 +151,58 @@ bash
 
 첫 실행 시 백택은 자동으로 두 개의 설정 파일을 생성합니다:
 
-text
+```
+~/.baize/config.toml   # 백엔드 설정 (DeepSeek / OpenAI / Ollama 선택)
 
-    ~/.baize/config.toml   # 백엔드 설정 (DeepSeek / OpenAI / Ollama 선택)
+~/.baize/.env          # 키 파일>
+```
 
-    ~/.baize/.env          # 키 파일>
-
-Windows 사용자 경로는 C:\Users\사용자이름\.baize\ 입니다.
-
+Windows 사용자 경로는 `C:\Users\사용자이름\.baize\` 입니다.
 
 2. 백엔드 선택
 
-~/.baize/config.toml을 열고 active_provider를 수정하세요:
+`~/.baize/config.toml`을 열고 `active_provider`를 수정하세요:
 
 toml
+```
+active_provider = "deepseek"    # 또는 "openai" / "ollama"
 
-    active_provider = "deepseek"    # 또는 "openai" / "ollama"
+[model_providers.deepseek]
+name = "DeepSeek"
+base_url = "https://api.deepseek.com"
+env_key = "DEEPSEEK_API_KEY"
+model = "deepseek-v4-pro"
 
-    [model_providers.deepseek]
-    name = "DeepSeek"
-    base_url = "https://api.deepseek.com"
-    env_key = "DEEPSEEK_API_KEY"
-    model = "deepseek-v4-pro"
+[model_providers.openai]
+name = "OpenAI"
+base_url = "https://api.openai.com/v1"
+env_key = "OPENAI_API_KEY"
+model = "gpt-4o-mini"
 
-    [model_providers.openai]
-    name = "OpenAI"
-    base_url = "https://api.openai.com/v1"
-    env_key = "OPENAI_API_KEY"
-    model = "gpt-4o-mini"
-
-    [model_providers.ollama]
-    name = "Ollama (로컬)"
-    base_url = "http://localhost:11434/v1"
-    env_key = ""
-    model = "qwen2.5:7b">
-
+[model_providers.ollama]
+name = "Ollama (로컬)"
+base_url = "http://localhost:11434/v1"
+env_key = ""
+model = "qwen2.5:7b">
+```
 
 3. 키 입력
 
-~/.baize/.env 편집:
+`~/.baize/.env` 편집:
 
 env
+```
+#DeepSeek 백엔드 필수
 
-    #DeepSeek 백엔드 필수
-
-    DEEPSEEK_API_KEY=sk-당신의_키
+DEEPSEEK_API_KEY=sk-당신의_키
 
 
-    #OpenAI 호환 인터페이스 필수(GLM / Qwen / Kimi / OpenAI)
+#OpenAI 호환 인터페이스 필수(GLM / Qwen / Kimi / OpenAI)
 
-    #OPENAI_API_KEY=당신의_키
+#OPENAI_API_KEY=당신의_키
 
-    #Ollama 로컬은 키 불필요
-
+#Ollama 로컬은 키 불필요
+```
 
 4. 재시작
 
@@ -196,22 +212,21 @@ bash
 
 블랙 골드 로고와 환영 메시지가 보이면 시작 성공입니다.
 
-
 # 사용 예시
 
-시작 후 >>> 降旨: 프롬프트에서 자연어로 요구사항을 설명하면 됩니다:
+시작 후 `>>> 降旨：` 프롬프트에서 자연어로 요구사항을 설명하면 됩니다:
 
-text
+```
+>>>降旨：Python으로 더우반 Top250을 크롤링하는 스크립트를 작성하고 CSV로 저장해줘
 
-    >>>降旨：Python으로 더우반 Top250을 크롤링하는 스크립트를 작성하고 CSV로 저장해줘
+>>>降旨：src/ 아래 모든 Python 파일의 타입 오류를 확인해줘
 
-    >>>降旨：src/ 아래 모든 Python 파일의 타입 오류를 확인해줘
-
-    >>>降旨：이 저장소에서 requests를 사용하는 모든 곳을 찾아 httpx로 바꿔줘
+>>>降旨：이 저장소에서 requests를 사용하는 모든 곳을 찾아 httpx로 바꿔줘
+```
 
 ## 다국어 상호작용
 
-백택은 **6개 언어**를 지원합니다: 中文, English, 日本語, 한국어, Español, Français.
+백택은 **9개 언어**를 지원합니다: 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
 
 전환 방법 두 가지:
 
@@ -233,24 +248,27 @@ text
 
 ```
 >>> 降旨：/lang                # 현재 언어와 목록 확인
-[system] 현재 언어: 한국어 (ko)
+[system] 현재 언어: 中文 (zh)
 [system] 사용 가능한 언어:
-    zh    中文
+    zh    中文 ←
     en    English
     ja    日本語
-    ko    한국어 ←
+    ko    한국어
     es    Español
     fr    Français
+    de    Deutsch
+    ru    Русский
+    ar    العربية
 
 >>> 降旨：/lang English        # 언어명으로 전환
 >>> 降旨：/lang ja             # 언어 코드로 전환
 >>> 降旨：/lang 西班牙语        # 중국어 이름도 가능
 ```
 
-**언어명 / 언어 코드 / 현지 표기 / 중국어 표기** 모두 지원합니다. 예를 들어 영어로 전환하려면 `English`, `en`, `英语`, `英文` 중 아무거나 입력하면 됩니다.
-
+**언어명 / 언어 코드 / 중국어 표기 / 현지 표기** 모두 지원합니다. 예를 들어 영어로 전환하려면 `English`, `en`, `英语`, `英文` 중 아무거나 입력하면 됩니다.
 
 ## 백택 CLI 인터페이스
+
 <div align="center">
 백택 CLI 시작 화면
 </div>
@@ -267,22 +285,21 @@ text
   <img src="image/clipage02.jpg" alt="백택 CLI 실행 화면" width="800" />
 </p>
 
-
 ## 내장 명령어
-- /exit, /quit --> 백택 종료
-- /clear	--> 대화 기록, 할 일, 사고 기록, 도구 기록 지우기
-- /compact	--> 수동 컨텍스트 압축 (대화가 너무 길 때 사용)
-- /commit	--> 현재 세션 저장 및 Git에 커밋 (Git 저장소 내부인 경우)
-- /lang → 현재 언어 표시; /lang en은 영어로 전환 (코드 또는 이름 허용)
-- /skills	--> 사용 가능한 모든 스킬 나열
-- /skills reload	--> 사용자 스킬 디렉토리 다시 로드
-- /unload	--> 현재 활성화된 스킬 언로드
-- /show thought	--> 전체 사고 기록 보기
-- /show tool	--> 도구 호출 기록 보기
-- /show all	--> 전체 세션 기록 보기
-- /스킬명	--> 지정된 스킬 로드 (퍼지 매칭 지원)
-- /privacy	--> 프라이버시 마스킹 제어 (아래 "프라이버시 마스킹" 장 참조)
 
+- `/exit`, `/quit` --> 백택 종료
+- `/clear` --> 대화 기록, 할 일, 사고 기록, 도구 기록 지우기
+- `/compact` --> 수동 컨텍스트 압축 (대화가 너무 길 때 사용)
+- `/commit` --> 현재 세션 저장 및 Git에 커밋 (Git 저장소 내부인 경우)
+- `/lang` → 현재 언어 표시; `/lang en`은 영어로 전환 (코드 또는 이름 허용)
+- `/skills` --> 사용 가능한 모든 스킬 나열
+- `/skills reload` --> 사용자 스킬 디렉토리 다시 로드
+- `/unload` --> 현재 활성화된 스킬 언로드
+- `/show thought` --> 전체 사고 기록 보기
+- `/show tool` --> 도구 호출 기록 보기
+- `/show all` --> 전체 세션 기록 보기
+- `/스킬명` --> 지정된 스킬 로드 (퍼지 매칭 지원)
+- `/privacy` --> 프라이버시 마스킹 제어 (아래 "프라이버시 마스킹" 장 참조)
 
 # Ollama 로컬 모델 (제로 비용)
 
@@ -303,15 +320,15 @@ bash
     #5. 백택 시작
     baize
 
-추천 모델: qwen2.5:7b (중국어 우수), llama3.1:8b, deepseek-r1:7b.
-
+추천 모델: `qwen2.5:7b` (중국어 우수), `llama3.1:8b`, `deepseek-r1:7b`.
 
 # 확장 메커니즘
 
 백택은 네 가지 확장 방식을 지원하며, 모두 현재 작업 디렉토리에 배치하면 적용됩니다.
 
 ## 스킬(Skills)
-./skills/스킬명/SKILL.md에 도메인 지식을 작성하면, AI가 복잡한 작업을 만났을 때 자동으로 로드합니다.
+
+`./skills/스킬명/SKILL.md`에 도메인 지식을 작성하면, AI가 복잡한 작업을 만났을 때 자동으로 로드합니다.
 
 markdown
 
@@ -329,12 +346,12 @@ markdown
     1. df.info()로 필드 타입과 결측 확인
     2. df.describe() 통계 설명
     ...
-    대화 중 /pandas-eda로 수동 로드할 수도 있습니다.
 
+대화 중 `/pandas-eda`로 수동 로드할 수도 있습니다.
 
 ## 서브에이전트(Subagents)
 
-./subagent/역할명/AGENT.md에 전용 서브에이전트를 정의하면, 메인 에이전트가 agent 도구로 작업을 위임할 수 있습니다.
+`./subagent/역할명/AGENT.md`에 전용 서브에이전트를 정의하면, 메인 에이전트가 `agent` 도구로 작업을 위임할 수 있습니다.
 
 markdown
 
@@ -350,14 +367,15 @@ markdown
     3. 동시성 안전
     ...
 
-
 ## 훅(Hooks)
 
-./hooks/ 아래에 
-- PreToolUse-*.sh
-- PostToolUse-*.sh
-- Stop-*.sh
-를 배치하면 JSON 입력을 받아 결정을 반환합니다:
+`./hooks/` 아래에 배치:
+
+- `PreToolUse-*.sh`
+- `PostToolUse-*.sh`
+- `Stop-*.sh`
+
+JSON 입력을 받아 결정을 반환합니다:
 
 bash
 
@@ -373,55 +391,38 @@ bash
 
     fi
 
-Python 훅은 내장 API를 직접 호출할 수 있습니다 (Baize.py의 hook_* 함수 참조).
-
+Python 훅은 내장 API를 직접 호출할 수 있습니다 (`Baize.py`의 `hook_*` 함수 참조).
 
 ## MCP 서버
 
-./MCP/mcp_config.json에 외부 도구 서버를 설정:
+`./MCP/mcp_config.json`에 외부 도구 서버를 설정:
 
 json
 
     {
-
       "mcpServers": [
-
         {
-
           "name": "filesystem",
-
           "command": "npx",
-
           "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-
           "env": {},
-
           "enabled": true
-
         }
-
       ]
-
-     }
-
+    }
 
 # 보안 설계
 
 백택은 기본적으로 다음 보안 메커니즘을 활성화합니다:
 
-- **명령 화이트리스트**: ls, cat, grep, git, python3 등 일반 명령만 허용.
-
-- **경로 이탈 감지**: 모든 파일 작업은 현재 작업 디렉토리와 /tmp 내로 제한.
-
-- **위험 명령 차단**: rm -rf /, fork bomb, curl | sh, git push --force 등 패턴 차단.
-
-- **민감 파일 보호**: .env, .ssh/, id_rsa, *.pem 등 수정 금지.
-
-- **스크립트 주입 차단**: python -c "os.system(...)" 같은 우회 감지.
-
+- **명령 화이트리스트**: `ls`, `cat`, `grep`, `git`, `python3` 등 일반 명령만 허용.
+- **경로 이탈 감지**: 모든 파일 작업은 현재 작업 디렉토리와 `/tmp` 내로 제한.
+- **위험 명령 차단**: `rm -rf /`, fork bomb, `curl | sh`, `git push --force` 등 패턴 차단.
+- **민감 파일 보호**: `.env`, `.ssh/`, `id_rsa`, `*.pem` 등 수정 금지.
+- **스크립트 주입 차단**: `python -c "os.system(...)"` 같은 우회 감지.
 - **프로세스 리소스 제한**: Linux/macOS에서 CPU, 메모리, 프로세스 수 제한.
 
-신뢰할 수 있는 프로젝트에서 제한을 완화하려면 Baize.py의 ALLOWED_COMMANDS와 FORBIDDEN_PATH_PATTERNS를 수정하세요.
+신뢰할 수 있는 프로젝트에서 제한을 완화하려면 `Baize.py`의 `ALLOWED_COMMANDS`와 `FORBIDDEN_PATH_PATTERNS`를 수정하세요.
 
 # 프라이버시 마스킹
 
@@ -432,31 +433,36 @@ json
 ## 활성화 방법 2가지
 
 ### 방법 1: 자연어
+
 ```
->>> 降旨：프라이버시 마스킹 켜줘
+>>>降旨：프라이버시 마스킹 켜줘
 [시스템] 프라이버시 마스킹이 활성화되었습니다 (표준 모드).
 
->>> 降旨：엄격 마스킹 켜줘
+>>>降旨：엄격 마스킹 켜줘
 [시스템] 프라이버시 마스킹이 활성화되었습니다 (엄격 모드).
 
->>> 降旨：프라이버시 보호 꺼줘
+>>>降旨：프라이버시 보호 꺼줘
 [시스템] 프라이버시 마스킹이 비활성화되었습니다.
 ```
+
 ### 방법 2: 슬래시 명령
-- /privacy on 표준 모드 활성화
-- /privacy strict 엄격 모드 활성화 (이름·차량번호·QQ·위챗 포함)
-- /privacy off 비활성화
-- /privacy status 현재 상태와 통계 표시
-- /privacy rules 전체 규칙 표시
-- /privacy test <텍스트> 마스킹 효과 테스트
-- /privacy clear 자리표시자 매핑 초기화
+
+- `/privacy on` 표준 모드 활성화
+- `/privacy strict` 엄격 모드 활성화 (이름·차량번호·QQ·위챗 포함)
+- `/privacy off` 비활성화
+- `/privacy status` 현재 상태와 통계 표시
+- `/privacy rules` 전체 규칙 표시
+- `/privacy test` <텍스트> 마스킹 효과 테스트
+- `/privacy clear` 자리표시자 매핑 초기화
 
 ## 2단계 모드
-**표준** :중국 본토 휴대폰 번호, 신분증 번호, 은행카드 (Luhn 검증), 이메일, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API Key, Bearer Token, 개인키 블록, 패스워드 필드, URL 자격증명 
 
-**엄격** :표준 전체 + 중국어 이름, QQ 번호, 위챗 ID, 중국 본토 차량번호 
+**표준**：중국 본토 휴대폰 번호, 신분증 번호, 은행카드 (Luhn 검증), 이메일, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API Key, Bearer Token, 개인키 블록, 패스워드 필드, URL 자격증명
+
+**엄격**：표준 전체 + 중국어 이름, QQ 번호, 위챗 ID, 중국 본토 차량번호
 
 ## 동작 원리
+
 사용자 입력(실제 PII 포함) → messages는 원문 저장
 
 ↓ sanitize_messages()
@@ -476,13 +482,14 @@ LLM이 보는 것: [[PHONE_1]], [[EMAIL_1]]
 **서브에이전트도 보호 대상**: 메인 에이전트에서 위임된 작업도 동일한 마스킹/복원 파이프라인을 통과합니다.
 
 ## 예시
+
 ```
->>> 降旨：/privacy test 내 전화는 13812345678, 이메일은 a@b.com
+>>>降旨：/privacy test 내 전화는 13812345678, 이메일은 a@b.com
 원문: 내 전화는 13812345678, 이메일은 a@b.com
 마스킹: 내 전화는 [[PHONE_1]], 이메일은 [[EMAIL_1]]
 복원: 내 전화는 13812345678, 이메일은 a@b.com
 
->>> 降旨：/privacy status
+>>>降旨：/privacy status
 [프라이버시 마스킹]
 현재 모드 : 표준 모드 (standard)
 활성 규칙 : 15 / 19
@@ -492,51 +499,46 @@ LLM이 보는 것: [[PHONE_1]], [[EMAIL_1]]
 ```
 
 # 디렉토리 구조
-text
 
-    baize-agent/
-    ├── pyproject.toml              # 패키징 설정
-    ├── README.md
-    ├── tests/                      # 테스트 (패키지에 미포함)
+```
+baize-agent/
+├── pyproject.toml              # 패키징 설정
+├── README.md
+├── tests/                      # 테스트 (패키지에 미포함)
+|   ├── __init__.py
+|   ├── test_history.py
+|   └── test_skill_loader.py
+├── .env.example                # 환경 변수 예시
+├── .gitignore
+└── agent/                      # 메인 패키지
+    ├── __init__.py
+    ├── Baize.py                # 메인 프로그램 및 Agent Loop
+    ├── config.py               # 다중 백엔드 설정 로딩
+    ├── ui_theme.py             # CLI 렌더링 테마
+    ├── utils.py                # 공통 유틸리티
+    ├── logo.txt
+    ├── skills/                 # 내장 스킬
+    ├── subagent/               # 내장 서브에이전트
+    ├── core/                   # 핵심 로직 (부작용 없음, 단위 테스트 가능)
     |   ├── __init__.py
-    |   ├── test_history.py
-    |   └── test_skill_loader.py 
-    ├── .env.example                # 환경 변수 예시
-    ├── .gitignore
-    └── agent/                      # 메인 패키지
+    |   ├── history.py          # 세션 기록 정리 / 토큰 추정 / 압축
+    |   └── privacy.py          # 프라이버시 마스킹: PII 감지 / 자리표시자 치환 / 가역 복원
+    ├── hooks/                  # 내장 훅
+    └── MCP/                    # MCP 클라이언트 및 설정
         ├── __init__.py
-        ├── Baize.py                # 메인 프로그램 및 Agent Loop
-        ├── config.py               # 다중 백엔드 설정 로딩
-        ├── ui_theme.py             # CLI 렌더링 테마
-        ├── utils.py                # 공통 유틸리티
-        ├── logo.txt
-        ├── skills/                 # 내장 스킬
-        ├── subagent/               # 내장 서브에이전트
-        ├── core/                   # 핵심 로직 (부작용 없음, 단위 테스트 가능)
-        |   ├── __init__.py
-        |   ├── history.py          # 세션 기록 정리 / 토큰 추정 / 압축
-        |   └── privacy.py          # 프라이버시 마스킹: PII 감지 / 자리표시자 치환 / 가역 복원
-        ├── hooks/                  # 내장 훅
-        └── MCP/                    # MCP 클라이언트 및 설정
-            ├── __init__.py
-            ├── mcp_client.py
-            └── mcp_config.json
-
+        ├── mcp_client.py
+        └── mcp_config.json
+```
 
 # 환경 변수 참고
-		
-- 변수: DEEPSEEK_API_KEY  설명: DeepSeek API  기본값: 키	—
 
-- 변수: DEEPSEEK_BASE_URL  설명: DeepSeek 인터페이스 주소  기본값: https://api.deepseek.com
+- 변수: `DEEPSEEK_API_KEY`  설명: DeepSeek API  기본값: 키  —
+- 변수: `DEEPSEEK_BASE_URL`  설명: DeepSeek 인터페이스 주소  기본값: `https://api.deepseek.com`
+- 변수: `OPENAI_API_KEY`  설명: OpenAI  기본값: 호환 인터페이스 키  —
+- 변수: `OPENAI_BASE_URL`  설명: OpenAI 호환 인터페이스 주소  기본값: `https://api.openai.com/v1`
+- 변수: `OLLAMA_BASE_URL`  설명: Ollama 서비스 주소  기본값: `http://localhost:11434`
 
-- 변수: OPENAI_API_KEY  설명: OpenAI  기본값: 호환 인터페이스 키	—
-
-- 변수: OPENAI_BASE_URL	 설명: OpenAI 호환 인터페이스 주소	 기본값: https://api.openai.com/v1
-
-- 변수: OLLAMA_BASE_URL	 설명: Ollama 서비스 주소	 기본값: http://localhost:11434
-
-변수는 ~/.baize/.env에 작성하면 되며, shell 설정 파일을 수정할 필요가 없습니다.
-
+변수는 `~/.baize/.env`에 작성하면 되며, shell 설정 파일을 수정할 필요가 없습니다.
 
 # 개발
 
@@ -562,43 +564,53 @@ text
 - 외부 의존성(네트워크, 디스크, 전역 상태)이 있는 함수는 매개변수로 의존성을 주입하여 테스트에서 대체 가능하게 하세요.
 
 # ❓ 자주 묻는 질문
+
 - Q: 키는 어디에 입력하나요?
 
-A: ~/.baize/.env이며, 프로젝트 루트의 .env가 아닙니다.
+A: `~/.baize/.env`이며, 프로젝트 루트의 `.env`가 아닙니다.
 
 - Q: 백엔드를 바꾸려면 재설치해야 하나요?
 
-A: 아닙니다. ~/.baize/config.toml의 active_provider만 변경하면 됩니다.
+A: 아닙니다. `~/.baize/config.toml`의 `active_provider`만 변경하면 됩니다.
 
 - Q: 로컬 Ollama는 키가 필요한가요?
 
-A: 필요 없습니다. active_provider = "ollama"로 설정하고 env_key는 비워두세요.
+A: 필요 없습니다. `active_provider = "ollama"`로 설정하고 `env_key`는 비워두세요.
 
 - Q: 작업 디렉토리를 어떻게 바꾸나요?
 
-A: 대화에서 "switch to /path/to/project"라고 말하면 백택이 set_workspace 도구를 호출합니다.
+A: 대화에서 "switch to /path/to/project"라고 말하면 백택이 `set_workspace` 도구를 호출합니다.
 
 - Q: 컨텍스트가 너무 길어지면 어떻게 되나요?
 
-A: 백택은 자동으로 2단계 압축합니다: 먼저 오래된 도구 결과를 자르고, 그 다음 LLM에 요약을 요청합니다. 수동으로 /compact도 가능합니다.
+A: 백택은 자동으로 2단계 압축합니다: 먼저 오래된 도구 결과를 자르고, 그 다음 LLM에 요약을 요청합니다. 수동으로 `/compact`도 가능합니다.
 
 - Q: 제 파일을 실수로 삭제하나요?
 
-A: 기본 명령 화이트리스트가 rm -rf / 같은 위험 작업을 차단하며, 파일 쓰기 전 Diff를 표시하고 확인을 요청합니다.
+A: 기본 명령 화이트리스트가 `rm -rf /` 같은 위험 작업을 차단하며, 파일 쓰기 전 Diff를 표시하고 확인을 요청합니다.
+
+- Q: 영어나 일본어로 답변하게 하려면?
+
+A: `English` 또는 `日本語`라고 말하면 자동으로 전환됩니다. `/lang en`(또는 `/lang ja`)도 사용할 수 있습니다. 이후의 사고와 답변은 해당 언어로 진행됩니다. 중국어로 돌아가려면 `中文`이라고 말하거나 `/lang zh`를 입력하세요.
 
 # 🤝 기여
-Issue와 PR을 환영합니다. 먼저 Baize.py의 agent_loop 함수를 읽고 Agent 메인 루프를 이해한 후 확장하는 것을 권장합니다.
+
+Issue와 PR을 환영합니다. 먼저 `Baize.py`의 `agent_loop` 함수를 읽고 Agent 메인 루프를 이해한 후 확장하는 것을 권장합니다.
+
 ### PR을 제출해 주신 모든 기여자에게 감사드립니다
-- Github Contributor：
+
+- Github Contributor:
 [@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
 # 라이선스
+
 MIT License
 
 # 감사의 글
+
 - 본 프로젝트는 중국 내 AtomGit에 호스팅되어 있습니다. 프로젝트 링크: https://atomgit.com/Com_Xu/Baize
 
 - AtomGit이 본 프로젝트를 G-star 인큐베이션 프로젝트로 선정해 주신 것에 감사드립니다
@@ -614,12 +626,15 @@ MIT License
 - 개발자는 창의성과 의사결정에 집중하고, 백택은 잡무와 실행을 처리합니다. 프로그래밍을 직관으로 되돌리고, 창조를 신화처럼 유려하게 만드세요.
 
 # ☕ 후원
+
 백택이 유용하다면 후원을 환영합니다. 독립 개발에도 많은 시간이 소요됩니다. 후원은 제품 업데이트 일정을 바꾸지 않습니다. 감사합니다!
+
 <p align="center">
   <img src="image/support.jpg" alt="위챗 QR코드" width="200" />
 </p>
 
 # 연락처
+
 - 백택에 관심이 있거나 오픈소스 협업에 참여하고 싶으시다면 다음 방법으로 연락해 주세요
 - **현재 구직 중입니다. 저는 시장 조사와 사용자 리서치 업무를 수행해 왔으며 Agent에 대해서도 어느 정도 이해하고 있습니다. 제 역량이 귀사의 요구에 부합한다면 함께 일하고 싶습니다 (희망 직무: AI 제품 운영 / 사용자 리서치 / 시장 조사)**
 

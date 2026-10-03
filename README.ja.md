@@ -4,7 +4,7 @@
 
 # 白澤 Baize
 
-**万物に通じ、直感でコーディングを共に。**
+**万物に通じ、安全にコーディングを共に。**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -36,7 +36,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
+  
 </p>
 
 <p align="center">
@@ -53,11 +56,24 @@
 
 ----------
 
-白澤 —— 中国古代神話に登場し、万物に通じる瑞獣。今は Vibe Coding アシスタントへ。
+中国古代神話に登場し、万物に通じる瑞獣。今はエンタープライズ向けデータ分析と VibeCoding アシスタントへ。
 
-**オープンソースの AI Coding Agent CLI で、Claude Code CLI の代替製品です。複数のバックエンド（DeepSeek / OpenAI 互換 / GLM / Qwen / Kimi / ローカル Ollama）に対応し、プライバシー脱敏と多言語インタラクションをサポート。ツール呼び出し、スキル読み込み、サブエージェント委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。**
+**オープンソースの Coding Agent CLI で、強力なプライバシー保護と多言語インタラクションを備えています。複数のバックエンド（DeepSeek / OpenAI 互換 / GLM / Qwen / Kimi / ローカル Ollama）に対応し、ツール呼び出し、スキル読み込み、サブエージェント委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。**
 
 ----------
+
+# 主な強み
+
+## プライバシー保護
+
+- **双方向かつ可逆なプライバシー保護**：機密情報は LLM に送信される前にプレースホルダーに置換され、応答受信後に自動で復元されます。ユーザーには完全に透過的で、あなたが見る履歴・ツール引数・最終回答は常に原文、LLM が見るものは常に `[[PHONE_1]]`、`[[EMAIL_1]]` のようなプレースホルダーです。
+- **複数の有効化方法**：会話中の自然言語で有効化できるほか、より正確な `/privacy` コマンドも使用できます。
+- **エージェントのローカル化**：本製品はリモートデータベースを持たず、完全にローカルで動作します。ユーザー情報を収集しません。
+
+## 多言語インタラクション
+
+- **9 言語に対応**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
+- **複数の言語切替方法**：`please speak with english` のように直接言語を話すと英語に切り替わり、`/lang ja` で日本語に切り替えられます。
 
 # 特徴
 
@@ -67,7 +83,7 @@
 
 - **プライバシー脱敏**：LLM に送信する前に電話番号・メール・身分証番号・銀行カード・API Key などの個人情報を自動検出してプレースホルダーに置換し、応答受信後に自動で元に戻します。標準 / 厳格の 2 段階モードがあり、自然言語または `/privacy` コマンドで切り替え可能。
 
-- **多言語対応**：中国語・英語・日本語・韓国語・スペイン語・フランス語を自由に切替。`English` と入力するか `/lang ja` を実行するだけで、AI はその言語で思考し応答します。
+- **多言語対応**：中国語・英語・日本語・韓国語・スペイン語・フランス語・ドイツ語・ロシア語・アラビア語を自由に切替。`English` と入力するか `/lang ja` を実行するだけで、AI はその言語で思考し応答します。
 
 - **完全なツールチェーン**：bash 実行、ファイル読み書き編集、glob/grep 検索、Web 検索と取得、バックグラウンドタスク、タスクと ToDo 管理。
 
@@ -96,27 +112,23 @@
 
 ### ダウンロード方法は2つ
 
-1. pip install https://github.com/Xu123-Bob/Baize.git
+1. `pip install https://github.com/Xu123-Bob/Baize.git`
 
-bash -- Win+R を押して cmd と入力
+bash -- Win+R を押して cmd と入力し、次を実行：
 
-```bash
-baize
-```
+    baize
 
-2. <>Code --> Download ZIP
+2. リポジトリページで `<>Code` --> Download ZIP をクリック
 
 (1) 解凍後、このファイルのディレクトリへ移動：
 
 bash -- Win+R を押して cmd と入力
 
-```bash
-cd 解凍後のディレクトリ # すでにこのファイルのディレクトリで Win+R から cmd を開いている場合は不要
+    cd 解凍後のディレクトリ
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
-python -m Baize
-```
+    python -m Baize
 
 インストール後、Win+R で cmd を開き、CLI 界面で `baize` と入力すれば実行できる。
 
@@ -124,9 +136,7 @@ python -m Baize
 
 bash -- Win+R を押して cmd と入力
 
-```bash
-pip install .
-```
+    pip install .
 
 インストール後、Win+R で cmd を開き、CLI 界面で `baize` と入力すれば実行できる。
 
@@ -134,16 +144,16 @@ pip install .
 
 1. 初回実行
 
-```bash
-baize
-```
+bash
+
+    baize
 
 初回実行時、白澤は2つの設定ファイルを自動生成する：
 
-```text
+```
 ~/.baize/config.toml   # バックエンド設定（DeepSeek / OpenAI / Ollama を選択）
 
-~/.baize/.env          # キーファイル
+~/.baize/.env          # キーファイル>
 ```
 
 Windows のパスは `C:\Users\ユーザー名\.baize\`。
@@ -152,7 +162,8 @@ Windows のパスは `C:\Users\ユーザー名\.baize\`。
 
 `~/.baize/config.toml` を開き、`active_provider` を変更：
 
-```toml
+toml
+```
 active_provider = "deepseek"    # または "openai" / "ollama"
 
 [model_providers.deepseek]
@@ -171,14 +182,15 @@ model = "gpt-4o-mini"
 name = "Ollama（ローカル）"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b"
+model = "qwen2.5:7b">
 ```
 
 3. キーを入力
 
 `~/.baize/.env` を編集：
 
-```env
+env
+```
 # DeepSeek バックエンドでは必須
 
 DEEPSEEK_API_KEY=sk-あなたのキー
@@ -193,27 +205,27 @@ DEEPSEEK_API_KEY=sk-あなたのキー
 
 4. 再起動
 
-```bash
-baize
-```
+bash
+
+    baize
 
 黒金のロゴとウェルカムメッセージが表示されれば起動成功。
 
 # 使用例
 
-起動後、`>>> 勅令：` プロンプトで自然言語で要件を記述する：
+起動後、`>>> 降旨：` プロンプトで自然言語で要件を記述する：
 
-```text
->>> 降旨：Python で Douban Top250 をスクレイピングし、CSV として保存するスクリプトを書いて
+```
+>>>降旨：Python で Douban Top250 をスクレイピングし、CSV として保存するスクリプトを書いて
 
->>> 降旨：src/ 以下のすべての Python ファイルの型エラーをチェックして
+>>>降旨：src/ 以下のすべての Python ファイルの型エラーをチェックして
 
->>> 降旨：このリポジトリ内で requests を使っている箇所をすべて探し、httpx に変更して
+>>>降旨：このリポジトリ内で requests を使っている箇所をすべて探し、httpx に変更して
 ```
 
 ## 多言語インタラクション
 
-白澤は **6 言語** をサポートします：中文、English、日本語、한국어、Español、Français。
+白澤は **9 言語** をサポートします：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
 
 切り替え方法は二通り：
 
@@ -230,6 +242,29 @@ baize
 [system] 入力言語を English と判定しました。白澤を English に切り替えました。
 （英語で応答）
 ```
+
+### 方法 2：手動コマンド
+
+```
+>>> 降旨：/lang                # 現在の言語と利用可能リストを表示
+[system] 現在の言語：中文 (zh)
+[system] 利用可能：
+    zh    中文 ←
+    en    English
+    ja    日本語
+    ko    한국어
+    es    Español
+    fr    Français
+    de    Deutsch
+    ru    Русский
+    ar    العربية
+
+>>> 降旨：/lang English        # 言語名で切替
+>>> 降旨：/lang ja             # 言語コードで切替
+>>> 降旨：/lang 西班牙语        # 中国語名も可
+```
+
+**言語名 / 言語コード / 中国語名 / 現地語名** をサポート。英語に切り替える場合、`English`、`en`、`英语`、`英文` のいずれでも可。
 
 ## 白澤 CLI 界面
 
@@ -269,20 +304,20 @@ baize
 
 クラウド API を使いたくない？ローカル Ollama を使う：
 
-```bash
-#1. Ollama をインストール：https://ollama.com/download
-#2. モデルを取得
-ollama pull qwen2.5:7b
+bash
 
-#3. Ollama サービスを起動
-ollama serve
+    #1. Ollama をインストール：https://ollama.com/download
+    #2. モデルを取得
+    ollama pull qwen2.5:7b
 
-#4. ~/.baize/config.toml を変更
-active_provider = "ollama"
+    #3. Ollama サービスを起動
+    ollama serve
 
-#5. 白澤を起動
-baize
-```
+    #4. ~/.baize/config.toml を変更
+    active_provider = "ollama"
+
+    #5. 白澤を起動
+    baize
 
 推奨モデル：`qwen2.5:7b`（中国語に強い）、`llama3.1:8b`、`deepseek-r1:7b`。
 
@@ -294,22 +329,22 @@ baize
 
 `./skills/スキル名/SKILL.md` に領域知識を書く。AI は複雑なタスクに遭遇すると主動的に読み込む。
 
-```markdown
----
-name: pandas-eda
+markdown
 
-description: pandas による探索的データ分析のベストプラクティス
+    ---
+    name: pandas-eda
 
-tags: data,python
----
+    description: pandas による探索的データ分析のベストプラクティス
 
-# Pandas EDA ガイド
+    tags: data,python
+    ---
 
-## 核心ステップ
-1. df.info() でフィールド型と欠損を確認
-2. df.describe() で統計記述
-...
-```
+    # Pandas EDA ガイド
+
+    ## 核心ステップ
+    1. df.info() でフィールド型と欠損を確認
+    2. df.describe() で統計記述
+    ...
 
 会話中に `/pandas-eda` で手動読み込みもできる。
 
@@ -317,42 +352,43 @@ tags: data,python
 
 `./subagent/役割名/AGENT.md` に専用サブエージェントを定義。メインエージェントは `agent` ツールでタスクを委任できる。
 
-```markdown
----
-name: code-reviewer
+markdown
 
-description: 厳格なコードレビュアー
----
+    ---
+    name: code-reviewer
 
-あなたはシニアコードレビュアーです。レビューでは以下を優先：
-1. 境界条件と例外処理
-2. リソースリーク
-3. 並行安全性
-...
-```
+    description: 厳格なコードレビュアー
+    ---
+
+    あなたはシニアコードレビュアーです。レビューでは以下を優先：
+    1. 境界条件と例外処理
+    2. リソースリーク
+    3. 並行安全性
+    ...
 
 ## フック（Hooks）
 
 `./hooks/` の下に配置：
+
 - `PreToolUse-*.sh`
 - `PostToolUse-*.sh`
 - `Stop-*.sh`
 
 JSON 入力を受け取り、判断を返す：
 
-```bash
-#!/bin/bash
+bash
 
-#PreToolUse-guard.sh
+    #!/bin/bash
 
-read -r input
+    #PreToolUse-guard.sh
 
-if echo "$input" | grep -q "rm -rf"; then
+    read -r input
 
-echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"削除禁止"}}'
+    if echo "$input" | grep -q "rm -rf"; then
 
-fi
-```
+    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"削除禁止"}}'
+
+    fi
 
 Python フックは組み込み API を直接呼び出せる（`Baize.py` の `hook_*` 関数を参照）。
 
@@ -360,19 +396,19 @@ Python フックは組み込み API を直接呼び出せる（`Baize.py` の `h
 
 `./MCP/mcp_config.json` で外部ツールサーバーを設定：
 
-```json
-{
-  "mcpServers": [
+json
+
     {
-      "name": "filesystem",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-      "env": {},
-      "enabled": true
+      "mcpServers": [
+        {
+          "name": "filesystem",
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+          "env": {},
+          "enabled": true
+        }
+      ]
     }
-  ]
-}
-```
 
 # セキュリティ設計
 
@@ -396,32 +432,36 @@ Python フックは組み込み API を直接呼び出せる（`Baize.py` の `h
 ## 有効化する 2 つの方法
 
 ### 方法 1：自然言語
+
 ```
->>> 降旨：プライバシー脱敏を有効にして
+>>>降旨：プライバシー脱敏を有効にして
 [system] プライバシー脱敏を有効にしました（標準モード）。
 
->>> 降旨：厳格な脱敏を有効にして
+>>>降旨：厳格な脱敏を有効にして
 [system] プライバシー脱敏を有効にしました（厳格モード）。
 
->>> 降旨：プライバシー保護を無効にして
+>>>降旨：プライバシー保護を無効にして
 [system] プライバシー脱敏を無効にしました。
 ```
 
 ### 方法 2：スラッシュコマンド
-- /privacy on 標準モードを有効化
-- /privacy strict 厳格モードを有効化（氏名・ナンバープレート・QQ・WeChat を含む）
-- /privacy off 無効化
-- /privacy status 現在の状態と統計を表示
-- /privacy rules 全ルールを表示
-- /privacy test <テキスト> 脱敏効果をテスト
-- /privacy clear プレースホルダーマップをクリア
+
+- `/privacy on` 標準モードを有効化
+- `/privacy strict` 厳格モードを有効化（氏名・ナンバープレート・QQ・WeChat を含む）
+- `/privacy off` 無効化
+- `/privacy status` 現在の状態と統計を表示
+- `/privacy rules` 全ルールを表示
+- `/privacy test` <テキスト> 脱敏効果をテスト
+- `/privacy clear` プレースホルダーマップをクリア
 
 ## 2 段階モード
-**標準** ：中国本土の携帯番号、身分証番号、銀行カード（Luhn 検証）、メール、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、秘密鍵ブロック、パスワードフィールド、URL 資格情報
 
-**厳格** ：標準のすべて + 中国語氏名、QQ 番号、WeChat ID、中国本土ナンバープレート
+**標準**：中国本土の携帯番号、身分証番号、銀行カード（Luhn 検証）、メール、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、秘密鍵ブロック、パスワードフィールド、URL 資格情報
+
+**厳格**：標準のすべて + 中国語氏名、QQ 番号、WeChat ID、中国本土ナンバープレート
 
 ## 動作原理
+
 ユーザー入力（本物の PII を含む）→ messages は原文を保存
 
 ↓ sanitize_messages()
@@ -441,13 +481,14 @@ LLM が見るのは [[PHONE_1]]、[[EMAIL_1]]
 **サブエージェントも保護対象**：メインエージェントから委任されたタスクも同じ脱敏 / 復元パイプラインを通ります。
 
 ## 例
+
 ```
->>> 降旨：/privacy test 私の電話は 13812345678、メールは a@b.com
+>>>降旨：/privacy test 私の電話は 13812345678、メールは a@b.com
 原文：私の電話は 13812345678、メールは a@b.com
 脱敏：私の電話は [[PHONE_1]]、メールは [[EMAIL_1]]
 復元：私の電話は 13812345678、メールは a@b.com
 
->>> 降旨：/privacy status
+>>>降旨：/privacy status
 [プライバシー脱敏]
 現在のモード: 標準モード (standard)
 有効ルール : 15 / 19
@@ -458,7 +499,7 @@ LLM が見るのは [[PHONE_1]]、[[EMAIL_1]]
 
 # ディレクトリ構成
 
-```text
+```
 baize-agent/
 ├── pyproject.toml              # パッケージ設定
 ├── README.md
@@ -504,21 +545,15 @@ baize-agent/
 
 本プロジェクトは pytest を使用。開発前にパッケージと開発依存を編集可能モードでインストール：
 
-```bash
-pip install -e ".[dev]"
-```
+    pip install -e ".[dev]"
 
 全テスト実行：
 
-```bash
-python -m pytest tests/ -v
-```
+    python -m pytest tests/ -v
 
 単一ファイルのみ：
 
-```bash
-python -m pytest tests/test_history.py -v
-```
+    python -m pytest tests/test_history.py -v
 
 ## コード構成の約束
 
@@ -553,6 +588,10 @@ A：白澤は自動で二段階圧縮します。まず古いツール結果を�
 
 A：デフォルトのコマンドホワイトリストが `rm -rf /` などの危険操作を遮断します。ファイル書き込み前には Diff を表示し、確認を求めます。
 
+- Q：英語や日本語で回答させるには？
+
+A：`English` または `日本語` と言えば自動で切り替わります。`/lang en`（または `/lang ja`）も使えます。以降の思考と回答はその言語になります。中国語に戻すには `中文` と言うか `/lang zh` と入力します。
+
 # 🤝 コントリビューション
 
 Issue と PR を歓迎します。まず `Baize.py` の `agent_loop` 関数を読み、Agent メインループを理解してから拡張することを推奨します。
@@ -585,12 +624,13 @@ MIT License
 
 - 開発者はアイデアと意思決定に集中し、白澤が雑務と実行を処理する。プログラミングを直感に戻し、創造を神話のように流暢に。
 
-# サポート
+# ☕ サポート
+
 もし白沢があなたに役立つなら、ぜひスポンサーとしてご支援ください。独立開発には多くの時間と労力がかかりますので、ご支援は製品の更新スケジュールを変えるものではありません。ありがとうございます！
+
 <p align="center">
   <img src="image/support.jpg" alt="WeChat QR" width="200" />
 </p>
-
 
 # 連絡先
 
