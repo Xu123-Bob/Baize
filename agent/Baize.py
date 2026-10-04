@@ -362,28 +362,52 @@ LONG_RUNNING_HINTS = {
     "web_search":  "✦ 正在四海八荒搜寻讯息，请稍候……",
     "run_webfetch":"✦ 正在远赴目标之地取经（抓取网页），请稍候……",
 }
-def _notify_long_running_tools(tool_calls, output_callback=None):
+# 提示延迟阈值（秒）：只有等待超过该时长且无任何输出，才提示一次
+_LONG_RUNNING_HINT_DELAY = 180   # 3 分钟
+
+
+def _start_long_running_watchdog(tool_name: str, output_callback=None):
     """
-    在工具执行前，对耗时较长的工具向用户发出提示，
-    避免界面长时间无回应被误认为卡死。
-    同一批调用中相同工具只提示一次。
+    为单个长耗时工具启动后台看门狗线程。
+
+    - 非长耗时工具：直接返回 None。
+    - 返回一个停止函数：工具执行结束（无论成功/异常）时调用它，
+      可取消尚未触发的提示，避免"工具已完成却仍提示"的尴尬。
     """
-    if not tool_calls:
-        return
-    seen: set = set()
-    for tc in tool_calls:
-        fn = getattr(tc, "function", None)
-        name = getattr(fn, "name", None) if fn else None
-        if not name or name not in LONG_RUNNING_TOOLS or name in seen:
-            continue
-        seen.add(name)
-        msg = LONG_RUNNING_HINTS.get(
-            name, f"✦ 灵术『{name}』正在施展中，请耐心等待……"
-        )
-        if output_callback:
-            output_callback('system', {'content': msg})
-        else:
-            print(msg)
+    if tool_name not in LONG_RUNNING_TOOLS:
+        return None
+
+    done_event = threading.Event()
+    start_time = time.time()
+
+    def _watchdog():
+        while True:
+            # 分片等待，便于及时响应停止信号
+            if done_event.wait(5):
+                return  # 工具已完成，无需提示
+            if time.time() - start_time < _LONG_RUNNING_HINT_DELAY:
+                continue
+            # 超过阈值仍未完成 → 提示一次，然后退出
+            msg = LONG_RUNNING_HINTS.get(
+                tool_name,
+                f"✦ 灵术『{tool_name}』正在施展中，请耐心等待……"
+            )
+            if output_callback:
+                try:
+                    output_callback('system', {'content': msg})
+                except Exception:
+                    print(msg)
+            else:
+                print(msg)
+            return
+
+    threading.Thread(
+        target=_watchdog,
+        daemon=True,
+        name=f"baize-hint-{tool_name}",
+    ).start()
+
+    return done_event.set   # 返回停止函数
 
 # 新增 AskUserQuestion 工具定义
 ASK_USER_TOOL = {
@@ -2209,43 +2233,54 @@ def _ensure_tool_call_ids(msg_dict: dict) -> list[str]:
 
 #定义单工具执行函数
 #确保 run_shell_hooks 函数在 _execute_single_tool 之前已定义
-def _execute_single_tool(tool_call):
-    """执行单个工具，包含所有钩子处理，返回 (tool_call_id, result)"""
+def _execute_single_tool(tool_call, output_callback=None):
+    """
+    执行单个工具，包含所有钩子处理，返回 (tool_call_id, result)
+    长耗时工具会启动看门狗，仅当运行超过 3 分钟且无新输出时提示一次。
+    """
     tool_args = json.loads(tool_call.function.arguments)
+    tool_name = tool_call.function.name
+    # 长耗时工具启动看门狗（超过 3 分钟无交互才提示）
+    stop_watchdog = _start_long_running_watchdog(tool_name, output_callback)
     
-    # 1. Shell PreToolUse 钩子
-    shell_decision = run_shell_hooks('PreToolUse', {
-        'tool_name': tool_call.function.name,
-        'tool_input': tool_args
-    })
-    if shell_decision and shell_decision.get('decision') == 'deny':
-        return tool_call.id, f"Error: Blocked by shell hook: {shell_decision.get('reason')}"
-    
-    # 2. Python PreToolUse 钩子
-    deny_result = HOOK.trigger('before_tool_call', tool_call)
-    if deny_result and deny_result.get('decision') == 'deny':
-        return tool_call.id, f"Error: Blocked by Python hook: {deny_result.get('reason', 'No reason')}"
-    
-    # 3. 执行工具
-    result = _dispatch_tool(tool_call)
-    
-    # 4. PostToolUse 钩子（Shell 和 Python）
-    run_shell_hooks('PostToolUse', {
-        'tool_name': tool_call.function.name,
-        'tool_input': tool_args,
-        'tool_result': result
-    })
-    HOOK.trigger('after_tool_call', tool_call, result)
-    
-    return tool_call.id, result
+    try:
+        # 1. Shell PreToolUse 钩子
+        shell_decision = run_shell_hooks('PreToolUse', {
+            'tool_name': tool_name,
+            'tool_input': tool_args
+        })
+        if shell_decision and shell_decision.get('decision') == 'deny':
+            return tool_call.id, f"Error: Blocked by shell hook: {shell_decision.get('reason')}"
+
+        # 2. Python PreToolUse 钩子
+        deny_result = HOOK.trigger('before_tool_call', tool_call)
+        if deny_result and deny_result.get('decision') == 'deny':
+            return tool_call.id, f"Error: Blocked by Python hook: {deny_result.get('reason', 'No reason')}"
+
+        # 3. 执行工具
+        result = _dispatch_tool(tool_call)
+
+        # 4. PostToolUse 钩子（Shell 和 Python）
+        run_shell_hooks('PostToolUse', {
+            'tool_name': tool_name,
+            'tool_input': tool_args,
+            'tool_result': result
+        })
+        HOOK.trigger('after_tool_call', tool_call, result)
+
+        return tool_call.id, result
+    finally:
+        # 无论成功/异常/被拦截，都取消看门狗，避免工具已完成仍弹提示
+        if stop_watchdog:
+            stop_watchdog()
 
 #统一工具分发（减少重复代码）
-def invoke_tool(tool_call):
+def invoke_tool(tool_call, output_callback=None):
     """
     执行单个工具调用，返回结果字符串。
     内部调用 _execute_single_tool，包含所有钩子处理。
     """
-    _, result = _execute_single_tool(tool_call)
+    _, result = _execute_single_tool(tool_call, output_callback)
     return result
 
 #子智能体调用（调后是因为钩子处理统一且完整\代码重复消除\错误处理与拦截逻辑一致\便于未来扩展)
@@ -2549,16 +2584,14 @@ def agent_loop(messages, output_callback=None):
                         serial_indices.append(i)
                 # 结果槽：按 index 存放，最后按原顺序取用
                 results: list[Optional[str]] = [None] * len(tool_calls)
-                # ---------- 2.5 长耗时工具提示（新增） ----------
-                # 在执行任何工具前，先向用户发出"请耐心等待"的提示，
-                # 避免界面长时间静默被误认为卡死。
-                _notify_long_running_tools(tool_calls, output_callback)
                 # ---------- 3. 并行执行安全工具 ----------
                 if parallel_indices:
                     future_to_idx: dict = {}
                     for i in parallel_indices:
                         # 提交到全局单例线程池；max_workers 已限制并发上限
-                        future = _TOOL_EXECUTOR.submit(_execute_single_tool, tool_calls[i])
+                        future = _TOOL_EXECUTOR.submit(
+                            _execute_single_tool, tool_calls[i], output_callback
+                        )
                         future_to_idx[future] = i
                     for future in as_completed(future_to_idx):
                         i = future_to_idx[future]
@@ -2573,7 +2606,7 @@ def agent_loop(messages, output_callback=None):
                 for i in serial_indices:
                     tc = tool_calls[i]
                     try:
-                        _, result = _execute_single_tool(tc)
+                        _, result = _execute_single_tool(tc, output_callback)
                         results[i] = result
                     except Exception as e:
                         results[i] = f"Tool execution error ({tc.function.name}): {e}"
