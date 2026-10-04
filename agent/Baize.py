@@ -2817,7 +2817,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.1.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.2.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
