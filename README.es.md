@@ -161,47 +161,96 @@ La ruta para usuarios de Windows es `C:\Users\tu_usuario\.baize\`.
 
 2. Seleccionar backend
 
-Abre `~/.baize/config.toml` y modifica `active_provider`:
+Abre `~/.baize/config.toml` y **modifica `active_provider`**:
 
 toml
 ```
-active_provider = "deepseek"    # o "openai" / "ollama"
+# Archivo de configuración de Bai Ze  
+# Cambiar el proveedor activo para cambiar el backend  
+# Valores opcionales: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+
+active_provider = "deepseek"
 
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
+model = "deepseek-flash"
+
+[model_providers.qwen]
+name = "Qwen"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+env_key = "DASHSCOPE_API_KEY"
+model = "qwen-plus"
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "MOONSHOT_API_KEY"
+model = "kimi-k2.7-code"
+
+[model_providers.glm]
+name = "GLM"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+env_key = "ZHIPUAI_API_KEY"
+model = "glm-4-plus"
 
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
+model = "gpt-4o"
 
 [model_providers.ollama]
 name = "Ollama (local)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b">
+model = "qwen2.5:7b"
 ```
 
 3. Ingresar la clave
 
-Edita `~/.baize/.env`:
+Edita `~/.baize/.env`,**si necesitas usar un LLM determinado, elimina el ` # ` situado delante de él, y añade ` # ` delante de los demás LLM para bloquear la salida de sus APIs. Después de introducir la Clave API, recuerda guardarla sin falta, solo tras guardarla será válido**:
 
 env
 ```
-# Obligatorio para backend DeepSeek
+# ============================================================
+# Archivo de claves de Bai Ze
+# ============================================================
+# Solo introduce la clave del backend que deseas utilizar, el resto puede mantenerse comentado.
+# El nombre de la variable debe coincidir con el campo env_key en config.toml.
+#
+# Ubicación：
+#   Linux / macOS: ~/.baize/.env
+#   Windows:       C:\Users\Tu nombre de usuario\.baize\.env
+# ============================================================
 
-DEEPSEEK_API_KEY=sk-tu_clave
+# ---------- DeepSeek（Backend predeterminado） ----------
+# Obtener dirección:https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=
 
+# ---------- OpenAI o cualquier interfaz compatible con OpenAI (opcional) ----------
+# Compatible con Groq, Tongyi, Moonshot, Zhipu, OpenAI, etc.  
+# Nota: base_url se configura en [model_providers.xxx] de config.toml, no aquí
+# OPENAI_API_KEY=
 
-# Obligatorio para interfaz compatible con OpenAI (GLM / Qwen / Kimi / OpenAI)
+# ---------- Qwen（opcional） ----------
+# Obtener dirección:https://dashscope.console.aliyun.com/
+# DASHSCOPE_API_KEY=
 
-#OPENAI_API_KEY=tu_clave
+# ---------- Kimi / Moonshot（opcional） ----------
+# Obtener dirección:https://platform.moonshot.cn/console/api-keys
+# MOONSHOT_API_KEY=
 
-#Ollama local no requiere clave
+# ---------- GLM（opcional） ----------
+# Obtener dirección:https://open.bigmodel.cn/usercenter/apikeys
+# ZHIPUAI_API_KEY=
+
+# ---------- Puerta de enlace personalizada（opcional） ----------
+# CUSTOM_API_KEY=
+
+# ---------- Ollama（modelo local, sin clave） ----------
+# Solo asegúrese de que Ollama esté ejecutándose en localhost:11434, no es necesario configurarlo aquí
 ```
 
 4. Reiniciar

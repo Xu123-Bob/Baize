@@ -160,47 +160,95 @@ Windows のパスは `C:\Users\ユーザー名\.baize\`。
 
 2. バックエンドを選択
 
-`~/.baize/config.toml` を開き、`active_provider` を変更：
+`~/.baize/config.toml` を開き、**`active_provider` を変更**：
 
 toml
 ```
-active_provider = "deepseek"    # または "openai" / "ollama"
+# 白沢設定ファイル
+# active_provider を変更してバックエンドを切り替える  # 選択可能な値：「deepseek」／「qwen」／「kimi」／「glm」／「openai」／「ollama」
+
+active_provider = "deepseek"
 
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
+model = "deepseek-flash"
+
+[model_providers.qwen]
+name = "Qwen"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+env_key = "DASHSCOPE_API_KEY"
+model = "qwen-plus"
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "MOONSHOT_API_KEY"
+model = "kimi-k2.7-code"
+
+[model_providers.glm]
+name = "GLM"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+env_key = "ZHIPUAI_API_KEY"
+model = "glm-4-plus"
 
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
+model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama（ローカル）"
+name = "Ollama (本地)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b">
+model = "qwen2.5:7b"
 ```
 
 3. キーを入力
 
-`~/.baize/.env` を編集：
+`~/.baize/.env` を編集，**どのLLMを使用するかは、前の`#`を削除し、他のLLMの前に`#`を追加して、その他のLLM APIの出力をロックしてください。APIキーを入力した後は、必ず保存することを忘れないでください。保存して初めて有効になります**：
 
 env
 ```
-# DeepSeek バックエンドでは必須
+# ============================================================
+# 白沢鍵ファイル
+# ============================================================
+# 使用するバックエンドの鍵のみを記入し、それ以外はコメントで保持してください。
+# 变数名は config.toml の env_key フィールドと一致している必要があります。
+#
+# 場所：
+#   Linux / macOS: ~/.baize/.env
+#   Windows:       C:\Users\あなたのユーザー名\.baize\.env
+# ============================================================
 
-DEEPSEEK_API_KEY=sk-あなたのキー
+# ---------- DeepSeek（デフォルトバックエンド） ----------
+# 住所の取得：https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=
 
+# ---------- OpenAI または任意の OpenAI 対応インターフェース（オプション） ----------
+# Groq、通義、Moonshot、智譜、OpenAI などに適用可能
+# 注意：base_url は config.toml の [model_providers.xxx] で設定されており、ここでは使用しない
+# OPENAI_API_KEY=
 
-# OpenAI 互換 API では必須（GLM / Qwen / Kimi / OpenAI）
+# ---------- Qwen（オプション） ----------
+# 住所の取得：https://dashscope.console.aliyun.com/
+# DASHSCOPE_API_KEY=
 
-#OPENAI_API_KEY=あなたのキー
+# ---------- Kimi / Moonshot（オプション） ----------
+# 住所の取得：https://platform.moonshot.cn/console/api-keys
+# MOONSHOT_API_KEY=
 
-#Ollama ローカルはキー不要
+# ---------- GLM（オプション） ----------
+# 住所の取得：https://open.bigmodel.cn/usercenter/apikeys
+# ZHIPUAI_API_KEY=
+
+# ---------- 自定义网关（オプション） ----------
+# CUSTOM_API_KEY=
+
+# ---------- Ollama（ローカルモデル、鍵不要） ----------
+# Ollamaがlocalhost:11434で動作していることを確認するだけで、ここに設定は不要です。
 ```
 
 4. 再起動

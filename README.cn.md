@@ -153,52 +153,100 @@ bash
 
 ~/.baize/.env          # 密钥文件>
 ```
-Windows 用户路径为 C:\Users\你的用户名\.baize\。
+Windows 用户路径为 `C:\Users\你的用户名\.baize\`。
 
 
 2. 选择后端
 
-打开 ~/.baize/config.toml，修改 active_provider：
+打开` ~/.baize/config.toml`，修改 **active_provider**（一定要修改）：
 
 toml
 ```
-active_provider = "deepseek"    # 或 "openai" / "ollama"
+# 白泽配置文件
+# 修改 active_provider 切换后端  # 可选值："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+
+active_provider = "deepseek"
 
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
+model = "deepseek-flash"
+
+[model_providers.qwen]
+name = "Qwen"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+env_key = "DASHSCOPE_API_KEY"
+model = "qwen-plus"
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "MOONSHOT_API_KEY"
+model = "kimi-k2.7-code"
+
+[model_providers.glm]
+name = "GLM"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+env_key = "ZHIPUAI_API_KEY"
+model = "glm-4-plus"
 
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
+model = "gpt-4o"
 
 [model_providers.ollama]
 name = "Ollama (本地)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b">
+model = "qwen2.5:7b"
 ```
 
 3. 填入密钥
 
-编辑 ~/.baize/.env：
+编辑` ~/.baize/.env`，**如果需要使用哪个LLM，即可把前面的` # `删除，并在其它LLM前面加上` # `，锁住其它LLM API的输出，输入API Key之后，一定记得保存，只有保存之后才有效**：
 
 env
 ```
-#DeepSeek 后端必填
+# ============================================================
+# 白泽密钥文件
+# ============================================================
+# 只填你要用的后端的密钥，其余保持注释即可。
+# 变量名必须与 config.toml 中的 env_key 字段一致。
+#
+# 位置：
+#   Linux / macOS: ~/.baize/.env
+#   Windows:       C:\Users\你的用户名\.baize\.env
+# ============================================================
 
-DEEPSEEK_API_KEY=sk-你的密钥
+# ---------- DeepSeek（默认后端） ----------
+# 获取地址：https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=
 
+# ---------- OpenAI 或任意 OpenAI 兼容接口（可选） ----------
+# 适用于 Groq、通义、Moonshot、智谱、OpenAI 等
+# 注意：base_url 在 config.toml 的 [model_providers.xxx] 里配置，不在此处
+# OPENAI_API_KEY=
 
-#OpenAI 兼容接口必填(GLM / Qwen / Kimi/ OpenAI)
+# ---------- 通义千问（可选） ----------
+# 获取地址：https://dashscope.console.aliyun.com/
+# DASHSCOPE_API_KEY=
 
-#OPENAI_API_KEY=你的密钥
+# ---------- Kimi / Moonshot（可选） ----------
+# 获取地址：https://platform.moonshot.cn/console/api-keys
+# MOONSHOT_API_KEY=
 
-#Ollama 本地无需密钥
+# ---------- 智谱 GLM（可选） ----------
+# 获取地址：https://open.bigmodel.cn/usercenter/apikeys
+# ZHIPUAI_API_KEY=
+
+# ---------- 自定义网关（可选） ----------
+# CUSTOM_API_KEY=
+
+# ---------- Ollama（本地模型，无需密钥） ----------
+# 只需确保 Ollama 已在 localhost:11434 运行即可，无需在此配置
 ```
 
 4. 重新启动

@@ -165,43 +165,91 @@ bash
 
 toml
 ```
-active_provider = "deepseek"    # или "openai" / "ollama"
+# Файл конфигурации Байцзэ
+# Измените значение active_provider для переключения бэкенда # Дополнительные значения: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+
+active_provider = "deepseek"
 
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
+model = "deepseek-flash"
+
+[model_providers.qwen]
+name = "Qwen"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+env_key = "DASHSCOPE_API_KEY"
+model = "qwen-plus"
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "MOONSHOT_API_KEY"
+model = "kimi-k2.7-code"
+
+[model_providers.glm]
+name = "GLM"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+env_key = "ZHIPUAI_API_KEY"
+model = "glm-4-plus"
 
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
+model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (local)"
+name = "Ollama (местный)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b">
+model = "qwen2.5:7b"
 ```
 
 3. Ввод ключа
 
-Отредактируйте `~/.baize/.env`:
+Отредактируйте `~/.baize/.env`, Если нужно использовать определённый LLM, удалите предыдущий `#` и добавьте `#` перед другим LLM, чтобы блокировать вывод API других LLM. После ввода API-ключа обязательно сохраняйте его — только после сохранения он станет действительным:
 
 env
 ```
-# Обязательно для бэкенда DeepSeek
+# ============================================================
+# Файл с ключом Байцзе
+# ============================================================
+# Заполните только ключ для используемого веб-сервера, остальное оставьте как комментарии.
+# Название переменной должно совпадать с полем env_key в файле config.toml.
+#
+# Положение:
+#   Linux / macOS: ~/.baize/.env
+#   Windows:       C:\Users\ваше имя пользователя\.baize\.env
+# ============================================================
 
-DEEPSEEK_API_KEY=sk-ваш-ключ
+# ---------- DeepSeek(бэкенд по умолчанию) ----------
+# Получить адрес：https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=
 
+# ---------- OpenAI или любой интерфейс, совместимый с OpenAI (по желанию) ----------
+# Поддерживается для Groq, Tongyi, Moonshot, Zhipu, OpenAI и других
+# Обратите внимание: base_url настраивается в [model_providers.xxx] в config.toml, здесь не указывается
+# OPENAI_API_KEY=
 
-# Обязательно для OpenAI-совместимых API (GLM / Qwen / Kimi / OpenAI)
+# ---------- Qwen（Опционально） ----------
+# Получить адрес：https://dashscope.console.aliyun.com/
+# DASHSCOPE_API_KEY=
 
-#OPENAI_API_KEY=ваш-ключ
+# ---------- Kimi / Moonshot（Опционально） ----------
+# Получить адрес：https://platform.moonshot.cn/console/api-keys
+# MOONSHOT_API_KEY=
 
-#Локальный Ollama не требует ключа
+# ----------  GLM（Опционально） ----------
+# Получить адрес：https://open.bigmodel.cn/usercenter/apikeys
+# ZHIPUAI_API_KEY=
+
+# ---------- Кастомный шлюз (по желанию) ----------
+# CUSTOM_API_KEY=
+
+# ---------- Ollama (локальная модель, без ключа) ----------
+# Достаточно просто убедиться, что Ollama работает на localhost:11434, конфигурации здесь не требуется
 ```
 
 4. Перезапуск

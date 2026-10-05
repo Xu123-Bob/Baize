@@ -165,43 +165,91 @@ Windows 사용자 경로는 `C:\Users\사용자이름\.baize\` 입니다.
 
 toml
 ```
-active_provider = "deepseek"    # 또는 "openai" / "ollama"
+# 백택 설정 파일  
+# active_provider를 수정하여 백엔드 전환하기    # 선택 가능한 값："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+
+active_provider = "deepseek"
 
 [model_providers.deepseek]
 name = "DeepSeek"
 base_url = "https://api.deepseek.com"
 env_key = "DEEPSEEK_API_KEY"
-model = "deepseek-v4-pro"
+model = "deepseek-flash"
+
+[model_providers.qwen]
+name = "Qwen"
+base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+env_key = "DASHSCOPE_API_KEY"
+model = "qwen-plus"
+
+[model_providers.kimi]
+name = "Kimi"
+base_url = "https://api.moonshot.cn/v1"
+env_key = "MOONSHOT_API_KEY"
+model = "kimi-k2.7-code"
+
+[model_providers.glm]
+name = "GLM"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+env_key = "ZHIPUAI_API_KEY"
+model = "glm-4-plus"
 
 [model_providers.openai]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
-model = "gpt-4o-mini"
+model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (로컬)"
+name = "Ollama (현지)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
-model = "qwen2.5:7b">
+model = "qwen2.5:7b"
 ```
 
 3. 키 입력
 
-`~/.baize/.env` 편집:
+`~/.baize/.env` 편집，**어떤 LLM을 사용해야 할 경우, 앞의 `#`를 삭제하고 다른 LLM 앞에 `#`를 추가하여 해당 LLM API의 출력을 차단하세요. API 키를 입력한 후에는 반드시 저장하는 것을 잊지 마세요. 저장된 후에야 유효하게 됩니다**:
 
 env
 ```
-#DeepSeek 백엔드 필수
+# ============================================================
+# 백택 키 파일
+# ============================================================
+# 사용할 백엔드 키만 입력하고 나머지는 주석으로 유지하세요.
+# 변수 이름은 config.toml의 env_key 필드와 일치해야 합니다.
+#
+# 위치:
+#   Linux / macOS: ~/.baize/.env
+#   Windows:       C:\Users\당신의 사용자 이름\.baize\.env
+# ============================================================
 
-DEEPSEEK_API_KEY=sk-당신의_키
+# ---------- DeepSeek（기본 백엔드） ----------
+# 주소 확인: https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=
 
+# ---------- OpenAI 또는 기타 OpenAI 호환 인터페이스(선택 사항) ----------
+#  Groq、Qwen、Moonshot、GLM、OpenAI  등에 적용 가능
+# 참고: base_url은 config.toml의 [model_providers.xxx] 항목에서 설정되며, 여기에는 포함되지 않습니다
+# OPENAI_API_KEY=
 
-#OpenAI 호환 인터페이스 필수(GLM / Qwen / Kimi / OpenAI)
+# ---------- Qwen（선택 가능） ----------
+# 주소 확인：https://dashscope.console.aliyun.com/
+# DASHSCOPE_API_KEY=
 
-#OPENAI_API_KEY=당신의_키
+# ---------- Kimi / Moonshot（선택 가능） ----------
+# 주소 확인：https://platform.moonshot.cn/console/api-keys
+# MOONSHOT_API_KEY=
 
-#Ollama 로컬은 키 불필요
+# ---------- GLM（선택 가능） ----------
+# 주소 확인：https://open.bigmodel.cn/usercenter/apikeys
+# ZHIPUAI_API_KEY=
+
+# ---------- 사용자 정의 게이트웨이（선택 가능） ----------
+# CUSTOM_API_KEY=
+
+# ---------- Ollama（로컬 모델, 키 없이 사용 가능） ----------
+# Ollama가 localhost:11434에서 실행되고 있는지 확인하기만 하면 됩니다. 여기서는 설정이 필요하지 않습니다.
 ```
 
 4. 재시작
