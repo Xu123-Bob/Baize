@@ -9,6 +9,9 @@
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  &nbsp;&nbsp;
+  <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
   </a>
 </p>
 
@@ -56,7 +59,7 @@
 
 ----------
 
-Créature auspcieuse de la mythologie chinoise antique, désormais réincarnée en assistant d’analyse de données et de VibeCoding de niveau entreprise.
+Créature auspcieuse de la mythologie chinoise antique, **désormais réincarnée en assistant d’analyse de données et de VibeCoding de niveau entreprise.**
 
 **Un CLI de Coding Agent open source, avec une puissante protection de la vie privée et une interaction multilingue. Prend en charge plusieurs backends (DeepSeek / compatible OpenAI / GLM / Qwen / Kimi / Ollama local), avec appels d’outils, chargement de skills, délégation à des sous-agents, compression de contexte et sandbox sécurisé.**
 

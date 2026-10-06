@@ -9,6 +9,9 @@
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  &nbsp;&nbsp;
+  <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
   </a>
 </p>
 
@@ -56,7 +59,7 @@
 
 ----------
 
-Байцзэ (Baize) — в древнекитайской мифологии благодатный зверь, который знает всё сущее, а теперь он воплотился в ассистента для Vibe Coding уровня предприятия.
+Байцзэ (Baize) — в древнекитайской мифологии благодатный зверь, **который знает всё сущее, а теперь он воплотился в ассистента для Vibe Coding уровня предприятия.**
 
 **Открытый Coding Agent CLI с мощной защитой приватности и многоязычным взаимодействием. Поддерживает несколько бэкендов (DeepSeek / OpenAI-совместимые / GLM / Qwen / Kimi / локальный Ollama), а также вызов инструментов, загрузку навыков, делегирование подагентам, сжатие контекста и безопасную песочницу.**
 

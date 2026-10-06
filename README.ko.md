@@ -9,6 +9,9 @@
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  &nbsp;&nbsp;
+  <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
   </a>
 </p>
 
@@ -56,7 +59,7 @@
 
 ----------
 
-고대 중국 신화의 신수로, 이제 엔터프라이즈급 데이터 분석 및 VibeCoding 어시스턴트로 환생했습니다.
+고대 중국 신화의 신수로, **이제 엔터프라이즈급 데이터 분석 및 VibeCoding 어시스턴트로 환생했습니다.**
 
 **오픈소스 Coding Agent CLI로, 강력한 프라이버시 보호와 다국어 상호작용을 제공합니다. 다중 백엔드(DeepSeek / OpenAI 호환 / GLM / Qwen / Kimi / 로컬 Ollama)를 지원하며 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다.**
 

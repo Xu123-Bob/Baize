@@ -9,6 +9,9 @@
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  &nbsp;&nbsp;
+  <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
   </a>
 </p>
 
@@ -56,7 +59,7 @@
 
 ----------
 
-中国古代神話に登場し、万物に通じる瑞獣。今はエンタープライズ向けデータ分析と VibeCoding アシスタントへ。
+中国古代神話に登場し、万物に通じる瑞獣。**今はエンタープライズ向けデータ分析と VibeCoding アシスタントへ。**
 
 **オープンソースの Coding Agent CLI で、強力なプライバシー保護と多言語インタラクションを備えています。複数のバックエンド（DeepSeek / OpenAI 互換 / GLM / Qwen / Kimi / ローカル Ollama）に対応し、ツール呼び出し、スキル読み込み、サブエージェント委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。**
 

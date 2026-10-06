@@ -9,6 +9,9 @@
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  &nbsp;&nbsp;
+  <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
   </a>
 </p>
 
@@ -56,7 +59,7 @@
 
 ----------
 
-Bestia auspiciosa de la mitología china antigua, ahora reencarnada como asistente empresarial de análisis de datos y VibeCoding.
+Bestia auspiciosa de la mitología china antigua, **ahora reencarnada como asistente empresarial de análisis de datos y VibeCoding.**
 
 **Un CLI de Coding Agent de código abierto, con potente protección de privacidad e interacción multilingüe. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / GLM / Qwen / Kimi / Ollama local), con llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad.**
 
