@@ -329,12 +329,7 @@ Baize автоматически определяет язык ввода и п�
 </p>
 
 <div align="center">
-Экран работы CLI Baize
-</div>
 
-<p align="center">
-  <img src="image/clipage02.jpg" alt="Экран работы CLI Baize" width="800" />
-</p>
 
 ## Встроенные команды
 

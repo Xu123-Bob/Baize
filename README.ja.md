@@ -327,13 +327,6 @@ bash
   <img src="image/clipage01.jpg" alt="白澤 CLI 起動画面" width="800" />
 </p>
 
-<div align="center">
-白澤 CLI 実行画面
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="白澤 CLI 実行画面" width="800" />
-</p>
 
 ## 組み込みコマンド
 

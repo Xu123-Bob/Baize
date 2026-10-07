@@ -328,13 +328,6 @@ bash
   <img src="image/clipage01.jpg" alt="백택 CLI 시작 화면" width="800" />
 </p>
 
-<div align="center">
-백택 CLI 실행 화면
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="백택 CLI 실행 화면" width="800" />
-</p>
 
 ## 내장 명령어
 

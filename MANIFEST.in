@@ -3,5 +3,7 @@ recursive-include agent/subagent *
 recursive-include agent/hooks *
 recursive-include agent/MCP *.json
 include agent/logo.txt
+include agent/logo_*.txt
+include agent/logo_text.txt
 include README.md
 include LICENSE

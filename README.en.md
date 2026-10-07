@@ -328,13 +328,6 @@ Baize CLI startup screen
   <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
 </p>
 
-<div align="center">
-Baize CLI running screen
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="Baize CLI running screen" width="800" />
-</p>
 
 ## Built-in Commands
 

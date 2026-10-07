@@ -323,14 +323,6 @@ bash
   <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
 
-<div align="center">
-白泽 CLI 运行界面
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="白泽 CLI 运行界面" width="800" />
-</p>
-
 
 ## 内置命令
 - `/exit、/quit` --> 退出白泽

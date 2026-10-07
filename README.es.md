@@ -329,13 +329,6 @@ Pantalla de inicio de Baize CLI
   <img src="image/clipage01.jpg" alt="Pantalla de inicio de Baize CLI" width="800" />
 </p>
 
-<div align="center">
-Pantalla de ejecución de Baize CLI
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="Pantalla de ejecución de Baize CLI" width="800" />
-</p>
 
 ## Comandos integrados
 

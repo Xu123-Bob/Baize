@@ -327,13 +327,6 @@ Baize CLI — démarrage
   <img src="image/clipage01.jpg" alt="Baize CLI démarrage" width="800" />
 </p>
 
-<div align="center">
-Baize CLI — exécution
-</div>
-
-<p align="center">
-  <img src="image/clipage02.jpg" alt="Baize CLI exécution" width="800" />
-</p>
 
 ## Commandes intégrées
 

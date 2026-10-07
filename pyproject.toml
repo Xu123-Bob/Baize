@@ -41,6 +41,8 @@ agent = [
     "subagent/**/*.md",
     "hooks/*.py",
     "logo.txt",
+    "logo_*.txt",
+    "logo_text.txt",
     "MCP/*.json",
 ]
 
