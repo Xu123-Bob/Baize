@@ -76,9 +76,18 @@ def generate_braille_logo(image_path, output_path, width=60, threshold=100):
 
 if __name__ == "__main__":
     project_root = Path(__file__).parent
+    agent_dir = project_root.parent           # ← 关键：定位到 agent/
+    agent_dir.mkdir(parents=True, exist_ok=True)
+# 预生成 4 个尺寸，供启动时按终端宽度自适应挑选
+    for w in (80, 60, 44, 32):
+        generate_braille_logo(
+            project_root / "logo.png",
+            agent_dir / f"logo_{w}.txt",
+            width=w,
+        )
 
     generate_braille_logo(
-    project_root / "logo.png",
-    project_root / "agent" / "logo.txt",
-    width=80
-)
+        project_root / "logo.png",
+        agent_dir / "logo.txt",
+        width=80,
+    )
