@@ -2845,12 +2845,118 @@ def reload_user_resources():
 
 
 
+# ==================== Logo 渲染辅助 ====================
+LOGO_SIZES = (44, 32, 60, 80)   # 优先小尺寸：Baize 变宽了，logo 要缩
+FORCE_LOGO_WIDTH = 44            # 强制用 44 列；None=自动
+
+_ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
+
+def _strip_ansi(text: str) -> str:
+    return _ANSI_RE.sub('', text)
+
+def _display_width(text: str) -> int:
+    return wcwidth.wcswidth(_strip_ansi(text))
+
+def _read_clean_lines(path: Path) -> list:
+    """读取文本文件，并去掉首尾「视觉空白行」"""
+    try:
+        lines = path.read_text(encoding='utf-8').splitlines()
+    except Exception:
+        return []
+    while lines and _display_width(lines[-1]) == 0:
+        lines.pop()
+    while lines and _display_width(lines[0]) == 0:
+        lines.pop(0)
+    return lines
+
+def _load_best_logo(available_width: int) -> list:
+    """根据可用宽度挑选最合适的 logo（预生成的多个尺寸）"""
+    # 手动指定优先
+    if FORCE_LOGO_WIDTH is not None:
+        p = project_root / f"logo_{FORCE_LOGO_WIDTH}.txt"
+        if p.exists():
+            return _read_clean_lines(p)
+
+    # 从大到小挑第一个放得下的
+    for w in LOGO_SIZES:
+        if w <= available_width:
+            p = project_root / f"logo_{w}.txt"
+            if p.exists():
+                return _read_clean_lines(p)
+
+    # 都放不下 → 用最小的
+    for w in reversed(LOGO_SIZES):
+        p = project_root / f"logo_{w}.txt"
+        if p.exists():
+            return _read_clean_lines(p)
+
+    # 最后回退到旧 logo.txt
+    p = project_root / "logo.txt"
+    if p.exists():
+        return _read_clean_lines(p)
+    return []
+    
+# ---- 黑金着色常量 ----
+_BG_BLACK    = "\033[48;5;233m"   # 近乎纯黑背景
+_GOLD_BRIGHT = "\033[38;5;220m"   # 亮金（主体字形）
+_GOLD_DARK   = "\033[38;5;136m"   # 暗金（描边/阴影）
+_GOLD_MID    = "\033[38;5;178m"   # 中金（做渐变过渡）
+_RESET       = "\033[0m"
+
+
+def _colorize_baize_line(line: str, row_idx: int, total: int) -> str:
+    """
+    黑金配色渲染一行 Baize 艺术字：
+      - 前后空格不加黑底（否则会破坏并排布局的留白）
+      - 中间部分整体套「黑底 + 金色前景」
+      - █ 用亮金，▀▄ 用暗金 → 形成浮雕感
+      - 整块再叠加纵向渐变（亮金 220 → 中金 178 → 暗金 136）
+    """
+    if not line:
+        return line
+
+    # 从亮金 → 暗金做逐行渐变
+    if total <= 1:
+        ratio = 0.0
+    else:
+        ratio = row_idx / (total - 1)
+    # 渐变代码：220 → 178 → 136
+    if ratio < 0.5:
+        code = 220 if ratio < 0.25 else 178
+    else:
+        code = 136 if ratio > 0.75 else 178
+    body_color = f"\033[38;5;{code}m"
+
+    # 分离前后空格
+    stripped_left = line.lstrip()
+    left_pad_len = len(line) - len(stripped_left)
+    left_pad = line[:left_pad_len]
+    core = stripped_left.rstrip()
+    right_pad = line[left_pad_len + len(core):]
+
+    # 逐字符着色
+    out = [left_pad, _BG_BLACK, body_color]
+    for ch in core:
+        if ch in "▀▄":
+            out.append(_GOLD_DARK)   # 装饰条固定暗金
+            out.append(ch)
+            out.append(body_color)   # 恢复主体色
+        elif ch == "█":
+            out.append(ch)
+        else:
+            out.append(ch)
+    out.append(_RESET)
+    out.append(right_pad)
+    return "".join(out)
+
+
+
 # 主程序入口
 def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.2.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.4.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2890,37 +2996,76 @@ def main():
     def display_width(text):
         return wcwidth.wcswidth(strip_ansi(text))
 
-    logo_path = project_root / "logo.txt"
-    logo_art = ""
-    if logo_path.exists():
-        logo_art = logo_path.read_text(encoding='utf-8')
-    # 打印 LOGO（自带彩色，保持不变）
-    if logo_art:
-        logo_lines = logo_art.splitlines()
-        term_width = shutil.get_terminal_size().columns
-        # 自适应缩放：根据终端宽度裁剪行数（若终端过窄）
-        logo_char_width = 80  # 改为你实际生成 logo.txt 时的宽度（如 60、80、100）
-        if term_width < logo_char_width + 10:
-            keep_ratio = term_width / (logo_char_width + 10)
-            keep_lines = max(1, int(len(logo_lines) * keep_ratio))
-            logo_lines = logo_lines[:keep_lines]
-        # 逐行居中打印 Logo
-        for line in logo_lines:
-            width = display_width(line)
-            left_pad = max(0, (term_width - width) // 2)
-            print(" " * left_pad + line)
-        # 在 Logo 下方添加副标题
-        subtitle = f"{GOLD}{BOLD}◈ 白泽--Coding Agent{RESET}"
-        width = display_width(subtitle)
-        left_pad = max(0, (term_width - width) // 2)
-        print(" " * left_pad + subtitle)
-        # ===== 新增：白泽自我介绍（20字以内） =====
-        self_intro = f"{GRAY}通晓万物，陪你直觉编程。{RESET}"
-        width_intro = display_width(self_intro)
-        left_pad_intro = max(0, (term_width - width_intro) // 2)
-        print(" " * left_pad_intro + self_intro)
+    # ===== 读取右侧 "Baize" 艺术字 =====
+    text_path = project_root / "logo_text.txt"
+    text_lines = _read_clean_lines(text_path) if text_path.exists() else []
+    text_width = max((_display_width(l) for l in text_lines), default=0)
 
-        print()  # Logo 区域结束后的空行
+    gap = 4           # logo 与文字之间的水平间距
+    side_margin = 6   # 左右各留 2 列，避免贴边
+    available_for_logo = term_width - text_width - gap - side_margin
+
+    # 根据剩余宽度自动挑选 logo 尺寸
+    if text_lines and available_for_logo > 0:
+        logo_lines = _load_best_logo(available_for_logo)
+    else:
+        logo_lines = _read_clean_lines(project_root / "logo.txt")
+
+    # ===== 渲染 =====
+    if logo_lines:
+        if text_lines and available_for_logo > 0:
+            # ---------- 并排布局 ----------
+            n_logo = len(logo_lines)
+            n_text = len(text_lines)
+            # 高度不够一侧，垂直居中补齐
+            if n_text < n_logo:
+                top = (n_logo - n_text) // 2
+                text_padded = [""] * top + text_lines + [""] * (n_logo - n_text - top)
+                logo_padded = list(logo_lines)
+            else:
+                top = (n_text - n_logo) // 2
+                logo_padded = [""] * top + list(logo_lines) + [""] * (n_text - n_logo - top)
+                text_padded = list(text_lines)
+
+            logo_max_w = max((_display_width(l) for l in logo_padded), default=0)
+            total_w = logo_max_w + gap + text_width
+            left_margin = max(0, (term_width - total_w) // 2)
+            n_rows = len(logo_padded)
+
+            for i in range(n_rows):
+                ll = logo_padded[i]
+                tl = text_padded[i]
+                ll_w = _display_width(ll)
+                pad = " " * max(0, logo_max_w - ll_w + gap)
+                if tl.strip():
+                    colored_tl = _colorize_baize_line(tl, i, n_rows)
+                else:
+                    colored_tl = tl
+                print(" " * left_margin + ll + pad + colored_tl)
+        else:
+            # ---------- 终端太窄 → 回退到堆叠 ----------
+            for line in logo_lines:
+                w = _display_width(line)
+                print(" " * max(0, (term_width - w) // 2) + line)
+            if text_lines:
+                print()
+                total = len(text_lines)
+                for i, line in enumerate(text_lines):
+                    w = _display_width(line)
+                    if line.strip():
+                        line = _colorize_baize_line(line, i, total)
+                    print(" " * max(0, (term_width - w) // 2) + line)
+
+    # --- 副标题 & 自我介绍 ---
+    subtitle = f"{GOLD}{BOLD}◈ 白泽 -- Coding Agent{RESET}"
+    w = _display_width(subtitle)
+    print(" " * max(0, (term_width - w) // 2) + subtitle)
+
+    self_intro = f"{GRAY}通晓万物，陪你直觉编程。{RESET}"
+    w = _display_width(self_intro)
+    print(" " * max(0, (term_width - w) // 2) + self_intro)
+
+    print()  # Logo 区域结束后的空行
     # 打印欢迎信息（去掉外框线，纯文本居中显示）
     welcome_lines = [
         f"{GOLD}{BOLD}  ◈ 灵兽归位！{RESET}",
