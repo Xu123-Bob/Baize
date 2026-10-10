@@ -2956,7 +2956,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.4.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.5.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -3061,7 +3061,7 @@ def main():
     w = _display_width(subtitle)
     print(" " * max(0, (term_width - w) // 2) + subtitle)
 
-    self_intro = f"{GRAY}通晓万物，陪你直觉编程。{RESET}"
+    self_intro = f"{GRAY}通晓万物，陪你安全编程。{RESET}"
     w = _display_width(self_intro)
     print(" " * max(0, (term_width - w) // 2) + self_intro)
 
@@ -3079,7 +3079,7 @@ def main():
         f"{GRAY}  隐私脱敏(Privacy desensitization)：说 '开启隐私脱敏' 或输入 /privacy on{RESET}",
         "",
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
-        f"{GRAY}  提升性能，提供多语言交互方式{RESET}",
+        f"{GRAY}  增加SPSS与SQL的MCP配置{RESET}",
         f"{GRAY}  提供隐私脱敏模式，方便用户使用{RESET}",
         f"{GRAY}  沙箱路径漏洞已修复{RESET}"
     ]
