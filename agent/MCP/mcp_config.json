@@ -15,6 +15,24 @@
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "./workspace"],
       "env": {},
       "enabled": false
+    },
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH":  "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": false
+    },
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "mssql+pyodbc://readonly_user:password@localhost:1433/your_db?driver=ODBC+Driver+17+for+SQL+Server"
+      },
+      "enabled": false
     }
   ]
 }
