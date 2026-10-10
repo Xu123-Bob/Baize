@@ -1,0 +1,7 @@
+# 数据接入专用依赖（不随 baize 主包安装）
+spss-studio-mcp @ git+https://github.com/flupke91/spss-studio-mcp.git@main
+atengk-mcp-server-rdbms>=0.1
+pyodbc>=5.0
+
+bash
+pip install -r requirements-data.txt
