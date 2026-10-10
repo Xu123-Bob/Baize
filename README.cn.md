@@ -4,11 +4,12 @@
 
 # 白泽 Baize
 
-**通晓万物，陪你安全编程。**
+**知无不言**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
@@ -59,7 +60,7 @@
 
 ----------
 
-中国神兽，如今化身**企业级VibeCoding与数据分析助手**。
+中国神兽化身VibeCoding与数据分析的安全助手。
 
 **一个开源的Coding Agent CLI，具有强大的隐私保护与多语种交互的功能，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。**
 
@@ -103,6 +104,29 @@
 
 - **黑金主题 CLI**：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
 
+# 白泽CLI界面
+<div align="center">
+白泽 CLI 启动界面
+</div>
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
+</p>
+
+白泽 CLI 运行界面--01
+</div>
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="白泽 CLI 启动界面" width="800" />
+</p>
+
+白泽 CLI 运行界面--02
+</div>
+
+<p align="center">
+  <img src="image/clipage03.jpg" alt="白泽 CLI 启动界面" width="800" />
+</p>
+
 
 # 安装
 
@@ -116,7 +140,7 @@
 ### 下载方式两个
 1.pip install https://github.com/Xu123-Bob/Baize.git
 
-bash  --win+R 输入cmd，然后输入：
+    bash  --win+R 输入cmd，然后输入：
 
     baize
 
@@ -124,7 +148,7 @@ bash  --win+R 输入cmd，然后输入：
 
 (1)解压后进入本文件目录：
 
-bash  --win+R 输入cmd
+    bash  --win+R 输入cmd
 
     cd 解压后的目录
 
@@ -136,18 +160,43 @@ bash  --win+R 输入cmd
 
 (2)下载 ZIP 后本地安装，解压后进入目录，执行：
 
-bash --win+R 输入cmd
+    bash --win+R 输入cmd
 
     pip install .
 
 下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
 
+### 可选：安装数据接入依赖（数据分析重要工具）
+如果你需要让白泽驱动 SPSS 或 SQL 数据库，额外安装：
+
+```bash
+
+pip install -r requirements-data.txt
+
+```
+`requirements-data.txt` 包含：
+- `spss-studio-mcp`：SPSS 统计分析 MCP server（需要本机已安装 IBM SPSS Statistics）
+- `atengk-mcp-server-rdbms`：通用关系型数据库 MCP server（PostgreSQL / MySQL / SQL Server / Oracle / 达梦等）
+- `pyodbc`：SQL Server 所需的 ODBC Python 绑定
+
+或者，如果项目已通过 `pyproject.toml` 安装，也可以用 extras：
+```bash
+pip install -e ".[data]"          # 一键安装全部数据接入依赖
+pip install -e ".[spss]"          # 只装 SPSS
+pip install -e ".[sql]"           # 只装通用 SQL
+pip install -e ".[sql-mssql]"     # SQL Server 专用（含 pyodbc）
+```
+- **⚠️ SQL Server 用户注意：pyodbc 只是 Python 绑定，系统层还需安装 Microsoft ODBC Driver 18 for SQL Server。**
+- **⚠️ SPSS 用户注意：spss-studio-mcp 只是 MCP 桥接层，必须本机已安装 IBM SPSS Statistics（版本 20–31）并处于已授权状态，并且设置环境变量 SPSS_INSTALL_PATH 指向 SPSS 安装目录。目前 SPSS 引擎主要在 Windows 上支持完整分析功能；Linux/macOS 下可以降级为"文件模式"（读取 .sav 文件、查看元数据、预览数据，但不支持统计分析）。**
+
 # 快速开始
 1. 首次运行
 
-bash
+```bash
 
-    baize
+baize
+
+```
 
 首次运行时，白泽会自动生成两个配置文件：
 
@@ -163,8 +212,7 @@ Windows 用户路径为 `C:\Users\你的用户名\.baize\`。
 
 打开` ~/.baize/config.toml`，修改 **active_provider**（一定要修改）：
 
-toml
-```
+```toml
 # 白泽配置文件
 # 修改 active_provider 切换后端  # 可选值："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
@@ -254,9 +302,11 @@ DEEPSEEK_API_KEY=
 
 4. 重新启动
 
-bash
+```bash
 
-    baize
+baize
+
+```
 
 看到黑金 Logo 和欢迎信息即启动成功。
 
@@ -314,16 +364,6 @@ bash
 支持**语言名 / 语言代码 / 中文名 / 原文名**四种写法。例如切换英文时，`English`、`en`、`英语`、`英文` 任意一种都可以。
 
 
-## 白泽CLI界面
-<div align="center">
-白泽 CLI 启动界面
-</div>
-
-<p align="center">
-  <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
-</p>
-
-
 ## 内置命令
 - `/exit、/quit` --> 退出白泽
 - `/clear`	--> 清空对话历史、待办、思考记录和工具记录
@@ -339,12 +379,23 @@ bash
 - `/技能名`	--> 加载指定技能（支持模糊匹配）
 - `/privacy`	--> 隐私脱敏控制（详见下方"隐私脱敏"章节）
 
+## 数据接入使用示例
+配置好 SPSS / SQL 后，可以直接用自然语言驱动：
+```text
+>>>降旨：用 SPSS 打开 data.sav，告诉我变量列表和样本量
+
+>>>降旨：对 data.sav 做描述性统计，然后跑一个线性回归
+
+>>>降旨：查一下 sales 表里上个月销售额超过 10 万的订单，按客户分组
+
+>>>降旨：把 SPSS 分析结果导出成 CSV，再用 SQL 关联客户主数据
+```
 
 # Ollama 本地模型（零成本）
 
 不想用云 API？用本地 Ollama：
 
-bash
+    bash
 
     #1. 安装 Ollama：https://ollama.com/download
     #2. 拉取模型
@@ -369,7 +420,7 @@ bash
 ## 技能（Skills）
 在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
 
-markdown
+    markdown
 
     ---
     name: pandas-eda
@@ -392,7 +443,7 @@ markdown
 
 在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
 
-markdown
+    markdown
 
     ---
     name: code-reviewer
@@ -415,51 +466,35 @@ markdown
 - sh、Stop-*.sh
 接收 JSON 输入，返回决策：
 
-bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# PreToolUse-guard.sh
 
-    #PreToolUse-guard.sh
+read -r input
 
-    read -r input
-
-    if echo "$input" | grep -q "rm -rf"; then
-
-    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"禁止删除"}}'
-
-    fi
+if echo "$input" | grep -q "rm -rf"; then
+  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
+fi
+```
 
 Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
-
 
 ## MCP 服务器
 
 在 ./MCP/mcp_config.json 中配置外部工具服务器：
-
-json
-
+    json
     {
-
       "mcpServers": [
-
         {
-
           "name": "filesystem",
-
           "command": "npx",
-
           "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-
           "env": {},
-
           "enabled": true
-
         }
-
       ]
-
      }
-
 
 # 安全设计
 
@@ -521,11 +556,11 @@ json
 
 用户输入（含真实 PII）→ messages 存原文
 
-↓ sanitize_messages()
+↓  sanitize_messages()
 
 发给 LLM 的是 [[PHONE_1]]、[[EMAIL_1]]
 
-↓ LLM 响应
+↓  LLM 响应
 
 返回的占位符 → restore_message()
 
@@ -553,10 +588,133 @@ json
 还原调用次数: 3
 ```
 
+# 数据接入
+白泽通过**MCP（Model Context Protocol）**与企业数据分析软件对接，主程序无需任何修改——只要在 `MCP/mcp_config.json`里登记 server 即可。
+
+## SPSS 接入
+### 前置条件
+- 本机已安装 IBM SPSS Statistics（版本 20–31，Windows 推荐）
+- SPSS 已授权可正常启动
+### 配置步骤
+1.**找到 SPSS 安装目录：**默认路径通常是 `C:\Program Files\IBM\SPSS Statistics\` 后面跟版本号（如 31）。
+
+2.**设置环境变量**（可在 .env 或系统环境变量中）：
+```text
+
+SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
+
+```
+
+3.**验证状态**：
+```bash
+
+spss-studio-mcp status
+
+```
+期望输出：
+```text
+
+=== SPSS MCP Capability Status ===
+pyreadstat : OK v1.3.6
+pandas     : OK v3.0.2
+SPSS batch : OK
+
+```
+4.**在`MCP/mcp_config.json`中登记**：
+```json
+{
+  "mcpServers": [
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH": "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+### 如果 `SPSS batch: NOT FOUND`
+说明`spss-studio-mcp`没找到 SPSS 引擎，但`pyreadstat`+`pandas`正常，此时进入**文件模式**：
+- 可读`.sav`、查看元数据、预览数据、CSV ↔ SAV 转换
+- 不能跑统计（t 检验、回归、ANOVA 等）
+解决办法：正确设置`MCP/mcp_config.json`中的`SPSS_INSTALL_PATH`，或接受文件模式降级。
+
+## SQL 接入
+### 支持的数据库
+PostgreSQL、MySQL、MariaDB、SQL Server、Oracle、达梦、人大金仓、TiDB、OceanBase 等（基于 SQLAlchemy 2.0 驱动）。
+
+### 配置步骤
+1.**准备只读数据库账号**（强烈建议）：
+```sql
+
+CREATE USER baize_ro WITH PASSWORD 'xxx';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
+
+```
+
+2.**准备连接字符串**：
+- PostgreSQL --> postgresql+psycopg://user:pwd@host:5432/db
+- MySQL --> mysql+pymysql://user:pwd@host:3306/db
+- SQL Server --> mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server
+- Oracle --> oracle+oracledb://user:pwd@host:1521/?service_name=ORCL
+
+3.**在`MCP/mcp_config.json`中登记**：
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "postgresql+psycopg://baize_ro:pwd@localhost:5432/prod"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### 安全护栏（内置）
+`atengk-mcp-server-rdbms` 提供多层防护：
+- **AST 级 SELECT 守卫**：基于`sqlglot`解析语法树，物理拦截`DELETE/UPDATE/DROP/TRUNCATE`等写操作。
+- **自动 LIMIT 注入**：未指定行数的查询强制追加`LIMIT 100`，防止全表拉取导致内存溢出。
+- **只读默认**：写操作必须通过`--allow-dml`/`--allow-ddl`显式授权。
+- **SQL 注入拦截**：AST 层拒绝字符串拼接构造的恶意语句。
+
+### 一次配置多个数据库
+如果想同时连多个库，可以注册多个 server：
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql_prod",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "postgresql+psycopg://ro:pwd@prod:5432/db" },
+      "enabled": true
+    },
+    {
+      "name": "sql_warehouse",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "mysql+pymysql://ro:pwd@dw:3306/analytics" },
+      "enabled": true
+    }
+  ]
+}
+```
+白泽会自动把它们的所有工具合并进`MATERTOOLS`，LLM 会根据任务自动选择。
+
 # 目录结构
 ```
     baize-agent/
     ├── pyproject.toml              # 打包配置
+    ├── requirements-data.txt       # 数据接入依赖（可选）
+    ├── requirements-data           # 接入依赖
     ├── README.md
     ├── tests/                      # 测试（不随包发布）
     |   ├── __init__.py
@@ -587,17 +745,17 @@ json
 # 环境变量参考
 		
 - 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
-
 - 变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
-
 - 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
-
 - 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
-
 - 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
 
-变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。
+**上述变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。**
 
+- 数据分析变量：SPSS_INSTALL_PATH 说明：IBM SPSS Statistics 安装目录 默认值：—（未设置则降级为文件模式）
+- 数据分析变量：DATABASE_URL 说明：SQL MCP 的数据库连接串 默认值：—（由 MCP server 读取）
+
+**上述变量写入 MCP/mcp_config.json 即可。**
 
 # 开发
 
@@ -647,6 +805,30 @@ A：白泽会自动两级压缩：先截断旧工具结果，再请求 LLM 生�
 
 A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显示 Diff 并请求确认。
 
+- Q：如何让白泽连接 SPSS？
+
+A：1、安装`pip install -r requirements-data.txt`；2、设置环境变量`SPSS_INSTALL_PATH`指向 SPSS 安装目录；3、在`MCP/mcp_config.json`里启用spss server。详见"数据接入（SPSS / SQL）"章节。
+
+- Q：`SPSS batch: NOT FOUND`怎么办？
+
+A：这表示没找到SPSS引擎。检查`SPSS_INSTALL_PATH`是否正确指向包含`stats.exe`的目录；若你只是处理`.sav`文件，也可以忽略此警告（会降级为文件模式）。
+
+- Q：连接 SQL 数据库需要装什么额外的东西？
+
+A：Python 层装`atengk-mcp-server-rdbms`（`pip install` 自动完成）。**SQL Server 用户还需在系统层安装 Microsoft ODBC Driver 18**，这个不能用 pip 装。
+
+- Q：白泽会误删我的数据库数据吗？
+
+A：不会。SQL MCP 默认只允许 SELECT，AST 语法树级拦截所有写操作。仍强烈建议为白泽单独创建**只读数据库账号**做双保险。
+
+- Q：SPSS 分析结果里的数据会不会泄露给 LLM？
+
+A：如果开启了隐私脱敏（`/privacy on`），工具返回结果在发往 LLM 前会自动脱敏手机号、邮箱、身份证等 PII。**但建议同时用只读数据库账号 + 数据采样**（只查必要字段）来降低风险。
+
+- Q：为什么加了 SPSS/SQL 后，白泽每次对话都变慢了、token 也变多了？
+
+A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。SPSS 有 60+ 工具，约增加 6000–12000 token 固定开销。如果常用工作流不涉及 SPSS，可以把它的`enabled`设为`false`，需要时再打开。
+
 # 🤝 贡献
 欢迎提交 Issue 和 PR。建议先阅读 Baize.py 中的 agent_loop 函数，理解 Agent 主循环后再做扩展。
 ### Thank you for every Contributor to Submit PR
@@ -671,8 +853,6 @@ MIT License
 - 基于 DeepSeek、OpenAI SDK、MCP 构建
 
 - 感谢所有在 Vibe Coding 路上同行的开发者
-
-- 开发者专注创意与决策，白泽处理琐碎与执行。让编程回归直觉，让创造如神话般流畅。
 
 # ☕ 赞助支持
 如果白泽对你有用，欢迎赞助打赏。独立开发也花费很多时间，赞助不会改变产品更新的排期，谢谢支持！

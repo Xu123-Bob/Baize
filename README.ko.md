@@ -4,11 +4,12 @@
 
 # 백택 Baize
 
-**만물을 통달하여, 안전하게 프로그래밍을 함께합니다.**
+**모든 것을 아는 것을 말하지 않는다**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
@@ -39,10 +40,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  </a>
   <a href="image/抖音.png">
     <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
-  
 </p>
 
 <p align="center">
@@ -59,7 +60,7 @@
 
 ----------
 
-고대 중국 신화의 신수로, **이제 엔터프라이즈급 데이터 분석 및 VibeCoding 어시스턴트로 환생했습니다.**
+중국 신물의 형상인 VibeCoding과 데이터 분석의 안전한 보조 도구.
 
 **오픈소스 Coding Agent CLI로, 강력한 프라이버시 보호와 다국어 상호작용을 제공합니다. 다중 백엔드(DeepSeek / OpenAI 호환 / GLM / Qwen / Kimi / 로컬 Ollama)를 지원하며 도구 호출, 스킬 로딩, 서브에이전트 위임, 컨텍스트 압축, 보안 샌드박스 등 완전한 기능을 갖추고 있습니다.**
 
@@ -104,12 +105,33 @@
 
 - **블랙 골드 테마 CLI**: 중국어 폭 자동 조정, 코드 하이라이트, Diff 색상, 사고 접기.
 
+# 백택 CLI 인터페이스
+
+<div align="center">
+백택 CLI 시작 화면
+</div>
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="백택 CLI 시작 화면" width="800" />
+</p>
+
+백택 CLI 실행 화면 -- 01
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="백택 CLI 실행 화면" width="800" />
+</p>
+
+백택 CLI 실행 화면 -- 02
+
+<p align="center">
+  <img src="image/clipage03.jpg" alt="백택 CLI 실행 화면" width="800" />
+</p>
+
 # 설치
 
 ## 사전 요구 사항
 
 - Python 3.10+ (tomllib 필요, 3.11+ 내장; 3.10은 tomli 설치 필요)
-
 - pip
 
 ## 소스에서 설치
@@ -120,7 +142,9 @@
 
 bash -- Win+R 입력 후 cmd, 그다음 입력:
 
-    baize
+```bash
+baize
+```
 
 2. 저장소 페이지에서 `<>Code` --> Download ZIP 클릭
 
@@ -128,11 +152,11 @@ bash -- Win+R 입력 후 cmd, 그다음 입력:
 
 bash -- Win+R 입력 후 cmd
 
-    cd 압축해제한_디렉토리
-
-    pip install -r requirements.txt
-
-    python -m Baize
+```bash
+cd 압축해제한_디렉토리
+pip install -r requirements.txt
+python -m Baize
+```
 
 다운로드 완료 후 Win+R로 cmd를 열고 CLI 인터페이스에서 `baize`를 입력하면 실행됩니다.
 
@@ -140,24 +164,51 @@ bash -- Win+R 입력 후 cmd
 
 bash -- Win+R 입력 후 cmd
 
-    pip install .
+```bash
+pip install .
+```
 
 다운로드 완료 후 Win+R로 cmd를 열고 CLI 인터페이스에서 `baize`를 입력하면 실행됩니다.
+
+### 선택 사항: 데이터 연결 의존성 설치
+
+백택이 SPSS 또는 SQL 데이터베이스를 구동해야 한다면 추가로 설치합니다:
+
+```bash
+pip install -r requirements-data.txt
+```
+
+`requirements-data.txt` 에는 다음이 포함됩니다:
+
+- `spss-studio-mcp`: SPSS 통계 분석 MCP server (로컬에 IBM SPSS Statistics 설치 필요)
+- `atengk-mcp-server-rdbms`: 범용 관계형 데이터베이스 MCP server (PostgreSQL / MySQL / SQL Server / Oracle / 다몽 등)
+- `pyodbc`: SQL Server 에 필요한 ODBC Python 바인딩
+
+또는 프로젝트가 `pyproject.toml` 로 설치되었다면 extras 를 사용할 수 있습니다:
+
+```bash
+pip install -e ".[data]"          # 모든 데이터 연결 의존성 설치
+pip install -e ".[spss]"          # SPSS 만
+pip install -e ".[sql]"           # 범용 SQL 만
+pip install -e ".[sql-mssql]"     # SQL Server 전용 (pyodbc 포함)
+```
+
+- **⚠️ SQL Server 사용자 주의: `pyodbc` 는 Python 바인딩일 뿐입니다. 시스템 레벨에 Microsoft ODBC Driver 18 for SQL Server 도 설치해야 합니다.**
+- **⚠️ SPSS 사용자 주의: `spss-studio-mcp` 는 MCP 브리지 계층일 뿐입니다. 로컬에 IBM SPSS Statistics(버전 20–31)가 설치되어 있고 라이선스가 활성화되어 있어야 하며, 환경 변수 `SPSS_INSTALL_PATH` 가 SPSS 설치 디렉토리를 가리켜야 합니다. 완전한 통계 분석 기능은 주로 Windows 에서 지원됩니다. Linux/macOS 에서는 "파일 모드"로 강등될 수 있습니다(.sav 읽기, 메타데이터 보기, 데이터 미리보기는 가능하지만 통계 분석은 지원하지 않음).**
 
 # 빠른 시작
 
 1. 첫 실행
 
-bash
-
-    baize
+```bash
+baize
+```
 
 첫 실행 시 백택은 자동으로 두 개의 설정 파일을 생성합니다:
 
-```
+```text
 ~/.baize/config.toml   # 백엔드 설정 (DeepSeek / OpenAI / Ollama 선택)
-
-~/.baize/.env          # 키 파일>
+~/.baize/.env          # 키 파일
 ```
 
 Windows 사용자 경로는 `C:\Users\사용자이름\.baize\` 입니다.
@@ -166,10 +217,10 @@ Windows 사용자 경로는 `C:\Users\사용자이름\.baize\` 입니다.
 
 `~/.baize/config.toml`을 열고 `active_provider`를 수정하세요:
 
-toml
-```
-# 백택 설정 파일  
-# active_provider를 수정하여 백엔드 전환하기    # 선택 가능한 값："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+```toml
+# 백택 설정 파일
+# active_provider를 수정하여 백엔드 전환하기
+# 선택 가능한 값："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
 active_provider = "deepseek"
 
@@ -204,7 +255,7 @@ env_key = "OPENAI_API_KEY"
 model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (현지)"
+name = "Ollama (로컬)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
 model = "qwen2.5:7b"
@@ -212,10 +263,9 @@ model = "qwen2.5:7b"
 
 3. 키 입력
 
-`~/.baize/.env` 편집，**어떤 LLM을 사용해야 할 경우, 앞의 `#`를 삭제하고 다른 LLM 앞에 `#`를 추가하여 해당 LLM API의 출력을 차단하세요. API 키를 입력한 후에는 반드시 저장하는 것을 잊지 마세요. 저장된 후에야 유효하게 됩니다**:
+`~/.baize/.env` 편집. **어떤 LLM을 사용해야 할 경우, 앞의 `#`를 삭제하고 다른 LLM 앞에 `#`를 추가하여 해당 LLM API의 출력을 차단하세요. API 키를 입력한 후에는 반드시 저장하는 것을 잊지 마세요. 저장된 후에야 유효하게 됩니다**:
 
-env
-```
+```env
 # ============================================================
 # 백택 키 파일
 # ============================================================
@@ -232,7 +282,7 @@ env
 DEEPSEEK_API_KEY=
 
 # ---------- OpenAI 또는 기타 OpenAI 호환 인터페이스(선택 사항) ----------
-#  Groq、Qwen、Moonshot、GLM、OpenAI  등에 적용 가능
+# Groq, Qwen, Moonshot, GLM, OpenAI 등에 적용 가능
 # 참고: base_url은 config.toml의 [model_providers.xxx] 항목에서 설정되며, 여기에는 포함되지 않습니다
 # OPENAI_API_KEY=
 
@@ -257,9 +307,9 @@ DEEPSEEK_API_KEY=
 
 4. 재시작
 
-bash
-
-    baize
+```bash
+baize
+```
 
 블랙 골드 로고와 환영 메시지가 보이면 시작 성공입니다.
 
@@ -267,12 +317,12 @@ bash
 
 시작 후 `>>> 降旨：` 프롬프트에서 자연어로 요구사항을 설명하면 됩니다:
 
-```
->>>降旨：Python으로 더우반 Top250을 크롤링하는 스크립트를 작성하고 CSV로 저장해줘
+```text
+>>> 降旨：Python으로 더우반 Top250을 크롤링하는 스크립트를 작성하고 CSV로 저장해줘
 
->>>降旨：src/ 아래 모든 Python 파일의 타입 오류를 확인해줘
+>>> 降旨：src/ 아래 모든 Python 파일의 타입 오류를 확인해줘
 
->>>降旨：이 저장소에서 requests를 사용하는 모든 곳을 찾아 httpx로 바꿔줘
+>>> 降旨：이 저장소에서 requests를 사용하는 모든 곳을 찾아 httpx로 바꿔줘
 ```
 
 ## 다국어 상호작용
@@ -285,7 +335,7 @@ bash
 
 입력 언어를 자동으로 감지해 전환합니다:
 
-```
+```text
 >>> 降旨：안녕, Python 스크립트 하나 써 줘
 [system] 입력 언어를 한국어로 감지했습니다. 백택이 한국어로 전환합니다.
 (한국어로 응답)
@@ -297,7 +347,7 @@ bash
 
 ### 방법 2: 수동 명령
 
-```
+```text
 >>> 降旨：/lang                # 현재 언어와 목록 확인
 [system] 현재 언어: 中文 (zh)
 [system] 사용 가능한 언어:
@@ -318,24 +368,13 @@ bash
 
 **언어명 / 언어 코드 / 중국어 표기 / 현지 표기** 모두 지원합니다. 예를 들어 영어로 전환하려면 `English`, `en`, `英语`, `英文` 중 아무거나 입력하면 됩니다.
 
-## 백택 CLI 인터페이스
-
-<div align="center">
-백택 CLI 시작 화면
-</div>
-
-<p align="center">
-  <img src="image/clipage01.jpg" alt="백택 CLI 시작 화면" width="800" />
-</p>
-
-
 ## 내장 명령어
 
 - `/exit`, `/quit` --> 백택 종료
 - `/clear` --> 대화 기록, 할 일, 사고 기록, 도구 기록 지우기
 - `/compact` --> 수동 컨텍스트 압축 (대화가 너무 길 때 사용)
 - `/commit` --> 현재 세션 저장 및 Git에 커밋 (Git 저장소 내부인 경우)
-- `/lang` → 현재 언어 표시; `/lang en`은 영어로 전환 (코드 또는 이름 허용)
+- `/lang` --> 현재 언어 표시; `/lang en`은 영어로 전환 (코드 또는 이름 허용)
 - `/skills` --> 사용 가능한 모든 스킬 나열
 - `/skills reload` --> 사용자 스킬 디렉토리 다시 로드
 - `/unload` --> 현재 활성화된 스킬 언로드
@@ -345,24 +384,38 @@ bash
 - `/스킬명` --> 지정된 스킬 로드 (퍼지 매칭 지원)
 - `/privacy` --> 프라이버시 마스킹 제어 (아래 "프라이버시 마스킹" 장 참조)
 
+## 데이터 연결 사용 예시
+
+SPSS / SQL 설정 후 자연어로 구동할 수 있습니다:
+
+```text
+>>> 降旨：SPSS 로 data.sav 를 열고 변수 목록과 표본 크기를 알려줘
+
+>>> 降旨：data.sav 에 대해 기술 통계를 수행하고, 그다음 선형 회귀를 실행해줘
+
+>>> 降旨：sales 테이블에서 지난달 매출이 10만을 초과한 주문을 고객별로 조회해줘
+
+>>> 降旨：SPSS 분석 결과를 CSV 로 내보내고, SQL 로 고객 마스터와 조인해줘
+```
+
 # Ollama 로컬 모델 (제로 비용)
 
 클라우드 API를 사용하고 싶지 않으신가요? 로컬 Ollama를 사용해 보세요:
 
-bash
+```bash
+# 1. Ollama 설치: https://ollama.com/download
+# 2. 모델 다운로드
+ollama pull qwen2.5:7b
 
-    #1. Ollama 설치: https://ollama.com/download
-    #2. 모델 다운로드
-    ollama pull qwen2.5:7b
+# 3. Ollama 서비스 시작
+ollama serve
 
-    #3. Ollama 서비스 시작
-    ollama serve
+# 4. ~/.baize/config.toml 수정
+active_provider = "ollama"
 
-    #4. ~/.baize/config.toml 수정
-    active_provider = "ollama"
-
-    #5. 백택 시작
-    baize
+# 5. 백택 시작
+baize
+```
 
 추천 모델: `qwen2.5:7b` (중국어 우수), `llama3.1:8b`, `deepseek-r1:7b`.
 
@@ -374,22 +427,20 @@ bash
 
 `./skills/스킬명/SKILL.md`에 도메인 지식을 작성하면, AI가 복잡한 작업을 만났을 때 자동으로 로드합니다.
 
-markdown
+```markdown
+---
+name: pandas-eda
+description: pandas를 사용한 탐색적 데이터 분석 모범 사례
+tags: data,python
+---
 
-    ---
-    name: pandas-eda
+# Pandas EDA 가이드
 
-    description: pandas를 사용한 탐색적 데이터 분석 모범 사례
-
-    tags: data,python
-    ---
-
-    #Pandas EDA 가이드
-
-    ##핵심 단계
-    1. df.info()로 필드 타입과 결측 확인
-    2. df.describe() 통계 설명
-    ...
+## 핵심 단계
+1. df.info()로 필드 타입과 결측 확인
+2. df.describe() 통계 설명
+...
+```
 
 대화 중 `/pandas-eda`로 수동 로드할 수도 있습니다.
 
@@ -397,19 +448,18 @@ markdown
 
 `./subagent/역할명/AGENT.md`에 전용 서브에이전트를 정의하면, 메인 에이전트가 `agent` 도구로 작업을 위임할 수 있습니다.
 
-markdown
+```markdown
+---
+name: code-reviewer
+description: 엄격한 코드 리뷰어
+---
 
-    ---
-    name: code-reviewer
-
-    description: 엄격한 코드 리뷰어
-    ---
-
-    당신은 시니어 코드 리뷰어입니다. 리뷰 시 우선 관심사:
-    1. 경계 조건과 예외 처리
-    2. 리소스 누수
-    3. 동시성 안전
-    ...
+당신은 시니어 코드 리뷰어입니다. 리뷰 시 우선 관심사:
+1. 경계 조건과 예외 처리
+2. 리소스 누수
+3. 동시성 안전
+...
+```
 
 ## 훅(Hooks)
 
@@ -421,19 +471,17 @@ markdown
 
 JSON 입력을 받아 결정을 반환합니다:
 
-bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# PreToolUse-guard.sh
 
-    #PreToolUse-guard.sh
+read -r input
 
-    read -r input
-
-    if echo "$input" | grep -q "rm -rf"; then
-
-    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"삭제 금지"}}'
-
-    fi
+if echo "$input" | grep -q "rm -rf"; then
+  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"삭제 금지"}}'
+fi
+```
 
 Python 훅은 내장 API를 직접 호출할 수 있습니다 (`Baize.py`의 `hook_*` 함수 참조).
 
@@ -441,19 +489,19 @@ Python 훅은 내장 API를 직접 호출할 수 있습니다 (`Baize.py`의 `ho
 
 `./MCP/mcp_config.json`에 외부 도구 서버를 설정:
 
-json
-
+```json
+{
+  "mcpServers": [
     {
-      "mcpServers": [
-        {
-          "name": "filesystem",
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-          "env": {},
-          "enabled": true
-        }
-      ]
+      "name": "filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "env": {},
+      "enabled": true
     }
+  ]
+}
+```
 
 # 보안 설계
 
@@ -478,14 +526,14 @@ json
 
 ### 방법 1: 자연어
 
-```
->>>降旨：프라이버시 마스킹 켜줘
+```text
+>>> 降旨：프라이버시 마스킹 켜줘
 [시스템] 프라이버시 마스킹이 활성화되었습니다 (표준 모드).
 
->>>降旨：엄격 마스킹 켜줘
+>>> 降旨：엄격 마스킹 켜줘
 [시스템] 프라이버시 마스킹이 활성화되었습니다 (엄격 모드).
 
->>>降旨：프라이버시 보호 꺼줘
+>>> 降旨：프라이버시 보호 꺼줘
 [시스템] 프라이버시 마스킹이 비활성화되었습니다.
 ```
 
@@ -527,13 +575,13 @@ LLM이 보는 것: [[PHONE_1]], [[EMAIL_1]]
 
 ## 예시
 
-```
->>>降旨：/privacy test 내 전화는 13812345678, 이메일은 a@b.com
+```text
+>>> 降旨：/privacy test 내 전화는 13812345678, 이메일은 a@b.com
 원문: 내 전화는 13812345678, 이메일은 a@b.com
 마스킹: 내 전화는 [[PHONE_1]], 이메일은 [[EMAIL_1]]
 복원: 내 전화는 13812345678, 이메일은 a@b.com
 
->>>降旨：/privacy status
+>>> 降旨：/privacy status
 [프라이버시 마스킹]
 현재 모드 : 표준 모드 (standard)
 활성 규칙 : 15 / 19
@@ -542,16 +590,157 @@ LLM이 보는 것: [[PHONE_1]], [[EMAIL_1]]
 복원 횟수 : 3
 ```
 
+# 데이터 연결
+
+백택은 **MCP(Model Context Protocol)** 를 통해 기업용 데이터 분석 소프트웨어와 연결합니다. 메인 프로그램은 수정할 필요가 없으며, `MCP/mcp_config.json` 에 server 를 등록하기만 하면 됩니다.
+
+## SPSS 연결
+
+### 사전 조건
+
+- 로컬에 IBM SPSS Statistics 설치됨(버전 20–31, Windows 권장)
+- SPSS 라이선스가 정상이며 실행 가능
+
+### 설정 단계
+
+1. **SPSS 설치 디렉토리 찾기:** 기본 경로는 보통 `C:\Program Files\IBM\SPSS Statistics\` 뒤에 버전 번호(예: 31)가 붙습니다.
+
+2. **환경 변수 설정** (`.env` 또는 시스템 환경 변수):
+
+```text
+SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
+```
+
+3. **상태 확인:**
+
+```bash
+spss-studio-mcp status
+```
+
+예상 출력:
+
+```text
+=== SPSS MCP Capability Status ===
+pyreadstat : OK v1.3.6
+pandas     : OK v3.0.2
+SPSS batch : OK
+```
+
+4. **`MCP/mcp_config.json` 에 등록:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH": "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### `SPSS batch: NOT FOUND` 인 경우
+
+`spss-studio-mcp` 가 SPSS 엔진을 찾지 못했지만 `pyreadstat` + `pandas` 는 정상이라는 뜻입니다. 이 경우 **파일 모드**로 들어갑니다:
+
+- `.sav` 읽기, 메타데이터 보기, 데이터 미리보기, CSV ↔ SAV 변환 가능
+- t 검정, 회귀, ANOVA 등 통계 분석은 불가
+
+해결 방법: `MCP/mcp_config.json` 의 `SPSS_INSTALL_PATH` 를 올바르게 설정하거나, 파일 모드 강등을 받아들입니다.
+
+## SQL 연결
+
+### 지원 데이터베이스
+
+PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, 다몽, 인대금창, TiDB, OceanBase 등(SQLAlchemy 2.0 드라이버 기반).
+
+### 설정 단계
+
+1. **읽기 전용 데이터베이스 계정 준비** (강력 권장):
+
+```sql
+CREATE USER baize_ro WITH PASSWORD 'xxx';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
+```
+
+2. **연결 문자열 준비:**
+
+- PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
+- MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
+- SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
+- Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
+
+3. **`MCP/mcp_config.json` 에 등록:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "postgresql+psycopg://baize_ro:pwd@localhost:5432/prod"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### 내장 보안 가드레일
+
+`atengk-mcp-server-rdbms` 는 다층 보호를 제공합니다:
+
+- **AST 수준 SELECT 가드**: `sqlglot` 로 구문 트리를 분석하여 `DELETE/UPDATE/DROP/TRUNCATE` 등 쓰기 작업을 물리적으로 차단.
+- **자동 LIMIT 주입**: 행 수를 지정하지 않은 쿼리에는 강제로 `LIMIT 100` 을 추가하여 전체 테이블 조회로 인한 메모리 오버플로 방지.
+- **기본 읽기 전용**: 쓰기 작업은 `--allow-dml` / `--allow-ddl` 로 명시적 허가가 필요.
+- **SQL 인젝션 차단**: 문자열 연결로 구성된 악성 문을 AST 계층에서 거부.
+
+### 여러 데이터베이스 동시 설정
+
+여러 데이터베이스에 동시에 연결하려면 여러 server 를 등록할 수 있습니다:
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql_prod",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "postgresql+psycopg://ro:pwd@prod:5432/db" },
+      "enabled": true
+    },
+    {
+      "name": "sql_warehouse",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "mysql+pymysql://ro:pwd@dw:3306/analytics" },
+      "enabled": true
+    }
+  ]
+}
+```
+
+백택은 이들의 모든 도구를 자동으로 `MATERTOOLS` 에 병합하고, LLM 이 작업에 따라 자동 선택합니다.
+
 # 디렉토리 구조
 
-```
+```text
 baize-agent/
 ├── pyproject.toml              # 패키징 설정
+├── requirements-data.txt       # 데이터 연결 의존성 (선택 사항)
+├── requirements-data           # 데이터 연결 의존성
 ├── README.md
 ├── tests/                      # 테스트 (패키지에 미포함)
-|   ├── __init__.py
-|   ├── test_history.py
-|   └── test_skill_loader.py
+│   ├── __init__.py
+│   ├── test_history.py
+│   └── test_skill_loader.py
 ├── .env.example                # 환경 변수 예시
 ├── .gitignore
 └── agent/                      # 메인 패키지
@@ -564,9 +753,9 @@ baize-agent/
     ├── skills/                 # 내장 스킬
     ├── subagent/               # 내장 서브에이전트
     ├── core/                   # 핵심 로직 (부작용 없음, 단위 테스트 가능)
-    |   ├── __init__.py
-    |   ├── history.py          # 세션 기록 정리 / 토큰 추정 / 압축
-    |   └── privacy.py          # 프라이버시 마스킹: PII 감지 / 자리표시자 치환 / 가역 복원
+    │   ├── __init__.py
+    │   ├── history.py          # 세션 기록 정리 / 토큰 추정 / 압축
+    │   └── privacy.py          # 프라이버시 마스킹: PII 감지 / 자리표시자 치환 / 가역 복원
     ├── hooks/                  # 내장 훅
     └── MCP/                    # MCP 클라이언트 및 설정
         ├── __init__.py
@@ -584,21 +773,32 @@ baize-agent/
 
 변수는 `~/.baize/.env`에 작성하면 되며, shell 설정 파일을 수정할 필요가 없습니다.
 
+- 데이터 분석 변수: `SPSS_INSTALL_PATH` 설명: IBM SPSS Statistics 설치 디렉토리 기본값: —(미설정 시 파일 모드로 강등)
+- 데이터 분석 변수: `DATABASE_URL` 설명: SQL MCP 의 데이터베이스 연결 문자열 기본값: —(MCP server 가 읽음)
+
+이 변수들은 `MCP/mcp_config.json` 에 작성합니다.
+
 # 개발
 
 ## 테스트 실행
 
 본 프로젝트는 pytest를 사용합니다. 개발 전 편집 가능 모드로 패키지와 개발 의존성을 설치하세요:
 
-    pip install -e ".[dev]"
+```bash
+pip install -e ".[dev]"
+```
 
 전체 테스트 실행:
 
-    python -m pytest tests/ -v
+```bash
+python -m pytest tests/ -v
+```
 
 단일 파일만 실행:
 
-    python -m pytest tests/test_history.py -v
+```bash
+python -m pytest tests/test_history.py -v
+```
 
 ## 코드 구조 규칙
 
@@ -633,9 +833,29 @@ A: 백택은 자동으로 2단계 압축합니다: 먼저 오래된 도구 결�
 
 A: 기본 명령 화이트리스트가 `rm -rf /` 같은 위험 작업을 차단하며, 파일 쓰기 전 Diff를 표시하고 확인을 요청합니다.
 
-- Q: 영어나 일본어로 답변하게 하려면?
+- Q: 백택을 SPSS에 연결하려면?
 
-A: `English` 또는 `日本語`라고 말하면 자동으로 전환됩니다. `/lang en`(또는 `/lang ja`)도 사용할 수 있습니다. 이후의 사고와 답변은 해당 언어로 진행됩니다. 중국어로 돌아가려면 `中文`이라고 말하거나 `/lang zh`를 입력하세요.
+A: 1. `pip install -r requirements-data.txt` 실행; 2. 환경 변수 `SPSS_INSTALL_PATH` 를 SPSS 설치 디렉토리로 설정; 3. `MCP/mcp_config.json` 에서 spss server 활성화. 자세한 내용은 "데이터 연결(SPSS / SQL)" 장을 참조하세요.
+
+- Q: `SPSS batch: NOT FOUND` 는 어떻게 하나요?
+
+A: SPSS 엔진을 찾지 못했다는 뜻입니다. `SPSS_INSTALL_PATH` 가 `stats.exe` 를 포함하는 디렉토리를 정확히 가리키는지 확인하세요. `.sav` 파일만 처리한다면 이 경고를 무시해도 됩니다(파일 모드로 강등됨).
+
+- Q: SQL 데이터베이스 연결에 추가로 무엇을 설치해야 하나요?
+
+A: Python 계층에는 `atengk-mcp-server-rdbms` 를 설치합니다(`pip install` 로 자동 완료). **SQL Server 사용자는 시스템 계층에 Microsoft ODBC Driver 18 도 필요**하며, 이는 pip 로 설치할 수 없습니다.
+
+- Q: 백택이 데이터베이스 데이터를 실수로 삭제하나요?
+
+A: 아닙니다. SQL MCP 는 기본적으로 SELECT 만 허용하며, AST 구문 트리 수준에서 모든 쓰기 작업을 차단합니다. 그래도 백택 전용 **읽기 전용 데이터베이스 계정**을 만드는 것을 강력히 권장합니다.
+
+- Q: SPSS 분석 결과의 데이터가 LLM 에 유출되나요?
+
+A: 프라이버시 마스킹을 활성화(`/privacy on`)하면 도구 반환 결과는 LLM 에 전송되기 전에 휴대폰 번호·이메일·신분증 등 PII 가 자동 마스킹됩니다. **다만 읽기 전용 데이터베이스 계정 + 데이터 샘플링**(필요한 필드만 조회)을 함께 사용해 리스크를 낮추는 것을 권장합니다.
+
+- Q: SPSS/SQL 을 추가하면 백택의 매 대화가 느려지고 token 도 늘어나는 이유는?
+
+A: MCP server 가 노출하는 도구 정의가 매 턴 LLM 에 전송되기 때문입니다. SPSS 에는 60+ 도구가 있어 약 6000–12000 token 의 고정 오버헤드가 추가됩니다. 자주 쓰는 워크플로우가 SPSS 를 사용하지 않는다면 해당 `enabled` 를 `false` 로 두고 필요할 때 켜면 됩니다.
 
 # 🤝 기여
 
@@ -666,8 +886,6 @@ MIT License
 - DeepSeek, OpenAI SDK, MCP를 기반으로 구축되었습니다
 
 - Vibe Coding 여정을 함께하는 모든 개발자에게 감사드립니다
-
-- 개발자는 창의성과 의사결정에 집중하고, 백택은 잡무와 실행을 처리합니다. 프로그래밍을 직관으로 되돌리고, 창조를 신화처럼 유려하게 만드세요.
 
 # ☕ 후원
 

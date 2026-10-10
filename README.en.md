@@ -4,7 +4,7 @@
 
 # Baize
 
-**Know all things, and code with you safely.**
+**Speak freely and without reservation.**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -59,7 +59,7 @@
 
 ----------
 
-An ancient Chinese divine beast, now reincarnated as **an enterprise-grade  VibeCoding and data analysis assistant.**
+The Chinese mythical creature has transformed into VibeCoding, a security assistant for data analysis.
 
 **An open-source Coding Agent CLI with powerful privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / GLM / Qwen / Kimi / local Ollama) and provides a complete toolkit: tool invocation, skill loading, subagent delegation, context compression, secure sandbox, and more.**
 
@@ -104,6 +104,28 @@ An ancient Chinese divine beast, now reincarnated as **an enterprise-grade  Vibe
 
 - **Black-gold themed CLI**: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
 
+# Baize CLI Interface
+
+<div align="center">
+Baize CLI startup screen
+</div>
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
+</p>
+
+Baize CLI runtime screen -- 01
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="Baize CLI runtime screen" width="800" />
+</p>
+
+Baize CLI runtime screen -- 02
+
+<p align="center">
+  <img src="image/clipage03.jpg" alt="Baize CLI runtime screen" width="800" />
+</p>
+
 # Installation
 
 ## Prerequisites
@@ -118,7 +140,7 @@ An ancient Chinese divine beast, now reincarnated as **an enterprise-grade  Vibe
 
 1. `pip install https://github.com/Xu123-Bob/Baize.git`
 
-bash -- Press Win+R and enter cmd, then type:
+    bash -- Press Win+R and enter cmd, then type:
 
     baize
 
@@ -126,7 +148,7 @@ bash -- Press Win+R and enter cmd, then type:
 
 (1) After unzipping, enter this file directory:
 
-bash -- Press Win+R and enter cmd
+    bash -- Press Win+R and enter cmd
 
     cd path/to/extracted/directory
 
@@ -138,17 +160,43 @@ After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run 
 
 (2) After downloading the ZIP, install locally: unzip, enter the directory, and run:
 
-bash -- Press Win+R and enter cmd
+    bash -- Press Win+R and enter cmd
 
     pip install .
 
 After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
 
+### Optional: Install Data Access Dependencies
+
+If you need Baize to drive SPSS or SQL databases, install:
+
+```bash
+pip install -r requirements-data.txt
+```
+
+`requirements-data.txt` includes:
+
+- `spss-studio-mcp`: SPSS statistical analysis MCP server (requires IBM SPSS Statistics installed locally)
+- `atengk-mcp-server-rdbms`: General relational database MCP server (PostgreSQL / MySQL / SQL Server / Oracle / DM, etc.)
+- `pyodbc`: ODBC Python binding required by SQL Server
+
+Or, if the project is installed via `pyproject.toml`, use extras:
+
+```bash
+pip install -e ".[data]"          # Install all data access dependencies
+pip install -e ".[spss]"          # SPSS only
+pip install -e ".[sql]"           # General SQL only
+pip install -e ".[sql-mssql]"     # SQL Server only, including pyodbc
+```
+
+- **⚠️ SQL Server users: `pyodbc` is only the Python binding. You also need Microsoft ODBC Driver 18 for SQL Server installed at the system level.**
+- **⚠️ SPSS users: `spss-studio-mcp` is only an MCP bridge. IBM SPSS Statistics (version 20–31) must be installed and licensed locally, and the environment variable `SPSS_INSTALL_PATH` must point to the SPSS installation directory. Full statistical analysis is mainly supported on Windows. On Linux/macOS, it can fall back to “file mode” (read `.sav`, inspect metadata, preview data, but no statistical analysis).**
+
 # Quick Start
 
 1. First run
 
-bash
+    bash
 
     baize
 
@@ -166,8 +214,8 @@ Windows path: `C:\Users\your-username\.baize\`.
 
 Open `~/.baize/config.toml` and **modify `active_provider`**:
 
-toml
-```
+```toml
+
 # Baize Configuration File
 # Modify the 'active_provider' to switch the backend  # Optional values: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
@@ -214,8 +262,7 @@ model = "qwen2.5:7b"
 
 Edit `~/.baize/.env`, **if you need to use a specific LLM, simply remove the `#` at the beginning and add `#` before other LLMs to lock the output of other LLM APIs. After entering the API Key, be sure to save it. Only after saving will it be effective**:
 
-env
-```
+```env
 # ============================================================
 # baize Key File
 # ============================================================
@@ -257,7 +304,7 @@ DEEPSEEK_API_KEY=
 
 4. Restart
 
-bash
+    bash
 
     baize
 
@@ -318,17 +365,6 @@ Baize automatically detects your input language and switches:
 
 Supports **language name / language code / Chinese name / native name**. To switch to English, any of `English`, `en`, `英语`, `英文` works.
 
-## Baize CLI Interface
-
-<div align="center">
-Baize CLI startup screen
-</div>
-
-<p align="center">
-  <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
-</p>
-
-
 ## Built-in Commands
 
 - `/exit`, `/quit` --> Exit Baize
@@ -349,7 +385,7 @@ Baize CLI startup screen
 
 Don't want to use a cloud API? Use local Ollama:
 
-bash
+    bash
 
     #1. Install Ollama: https://ollama.com/download
     #2. Pull a model
@@ -421,19 +457,17 @@ Place the following under `./hooks/`:
 
 They receive JSON input and return a decision:
 
-bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# PreToolUse-guard.sh
 
-    #PreToolUse-guard.sh
+read -r input
 
-    read -r input
-
-    if echo "$input" | grep -q "rm -rf"; then
-
-    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
-
-    fi
+if echo "$input" | grep -q "rm -rf"; then
+  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
+fi
+```
 
 Python hooks can directly call built-in APIs (see the `hook_*` functions in `Baize.py`).
 
@@ -541,6 +575,144 @@ Placeholders : 2
 Sanitize calls: 3
 Restore calls : 3
 ```
+# Data Access
+
+Baize connects to enterprise data analysis software through **MCP (Model Context Protocol)**. The main program does not need any modification—just register the server in `MCP/mcp_config.json`.
+
+## SPSS Integration
+
+### Prerequisites
+
+- IBM SPSS Statistics installed locally (version 20–31, Windows recommended)
+- SPSS is licensed and can start normally
+
+### Configuration Steps
+
+1. **Find the SPSS installation directory:** the default path is usually `C:\Program Files\IBM\SPSS Statistics\` followed by the version number, such as `31`.
+
+2. **Set the environment variable** in `.env` or system environment variables:
+
+```text
+SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
+```
+
+3. **Verify the status:**
+
+```bash
+spss-studio-mcp status
+```
+
+Expected output:
+
+```text
+=== SPSS MCP Capability Status ===
+pyreadstat : OK v1.3.6
+pandas     : OK v3.0.2
+SPSS batch : OK
+```
+
+4. **Register it in `MCP/mcp_config.json`:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH": "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### If `SPSS batch: NOT FOUND`
+
+It means `spss-studio-mcp` did not find the SPSS engine, but `pyreadstat` + `pandas` are working. In this case, Baize enters **file mode**:
+
+- Can read `.sav`, inspect metadata, preview data, and convert CSV ↔ SAV
+- Cannot run statistics such as t-tests, regression, ANOVA, etc.
+
+Solution: correctly set `SPSS_INSTALL_PATH` in `MCP/mcp_config.json`, or accept the file mode fallback.
+
+## SQL Integration
+
+### Supported Databases
+
+PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, DM, KingbaseES, TiDB, OceanBase, etc. (based on SQLAlchemy 2.0 drivers).
+
+### Configuration Steps
+
+1. **Prepare a read-only database account** (strongly recommended):
+
+```sql
+CREATE USER baize_ro WITH PASSWORD 'xxx';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
+```
+
+2. **Prepare the connection string:**
+
+- PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
+- MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
+- SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
+- Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
+
+3. **Register it in `MCP/mcp_config.json`:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "postgresql+psycopg://baize_ro:pwd@localhost:5432/prod"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### Built-in Security Guardrails
+
+`atengk-mcp-server-rdbms` provides multiple layers of protection:
+
+- **AST-level SELECT guard**: uses `sqlglot` to parse the syntax tree and physically blocks write operations such as `DELETE/UPDATE/DROP/TRUNCATE`.
+- **Automatic LIMIT injection**: queries without a specified row count are forced to append `LIMIT 100`, preventing full-table pulls from causing memory overflow.
+- **Read-only by default**: write operations require explicit authorization via `--allow-dml` / `--allow-ddl`.
+- **SQL injection blocking**: malicious statements built by string concatenation are rejected at the AST level.
+
+### Configure Multiple Databases at Once
+
+If you want to connect multiple databases at the same time, register multiple servers:
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql_prod",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "postgresql+psycopg://ro:pwd@prod:5432/db" },
+      "enabled": true
+    },
+    {
+      "name": "sql_warehouse",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "mysql+pymysql://ro:pwd@dw:3306/analytics" },
+      "enabled": true
+    }
+  ]
+}
+```
+
+Baize automatically merges all their tools into `MATERTOOLS`, and the LLM selects the appropriate tool based on the task.
 
 # Directory Structure
 
@@ -583,6 +755,11 @@ baize-agent/
 - Variable: `OLLAMA_BASE_URL`  Description: Ollama service address  Default: `http://localhost:11434`
 
 Write variables to `~/.baize/.env`; there is no need to modify shell config files.
+
+- Data analysis variable: `SPSS_INSTALL_PATH` Description: IBM SPSS Statistics installation directory Default: — (falls back to file mode if not set)
+- Data analysis variable: `DATABASE_URL` Description: Database connection string for SQL MCP Default: — (read by the MCP server)
+
+Write these variables to `MCP/mcp_config.json`.
 
 # Development
 
@@ -633,9 +810,29 @@ A: Baize automatically performs two-level compression: first truncating old tool
 
 A: The default command whitelist blocks dangerous operations such as `rm -rf /`; before writing files, it shows a Diff and asks for confirmation.
 
-- Q: How can I make Baize reply in English or Japanese?
+- Q: How can I make Baize connect to SPSS?
 
-A: Just say `English` or `日本語`, and it will switch automatically. You can also use `/lang en` (or `/lang ja`). All subsequent thinking and replies will use that language. To switch back to Chinese, say `中文` or type `/lang zh`.
+A: 1. Install `pip install -r requirements-data.txt`; 2. Set the environment variable `SPSS_INSTALL_PATH` to the SPSS installation directory; 3. Enable the SPSS server in `MCP/mcp_config.json`. See the "Data Access" section for details.
+
+- Q: What should I do if `SPSS batch: NOT FOUND` appears?
+
+A: This means the SPSS engine was not found. Check whether `SPSS_INSTALL_PATH` correctly points to the directory containing `stats.exe`; if you only process `.sav` files, you can ignore this warning (it will fall back to file mode).
+
+- Q: What else do I need to install to connect to SQL databases?
+
+A: Install `atengk-mcp-server-rdbms` at the Python level (automatically done by `pip install`). **SQL Server users also need to install Microsoft ODBC Driver 18 at the system level**, which cannot be installed via pip.
+
+- Q: Will Baize accidentally delete my database data?
+
+A: No. SQL MCP only allows SELECT by default, and all write operations are blocked at the AST syntax tree level. It is still strongly recommended to create a separate **read-only database account** for Baize as a double safeguard.
+
+- Q: Will data in SPSS analysis results leak to the LLM?
+
+A: If privacy sanitization is enabled (`/privacy on`), tool return results are automatically sanitized for phone numbers, emails, ID cards and other PII before being sent to the LLM. **However, it is recommended to also use a read-only database account + data sampling** (query only necessary fields) to reduce risk.
+
+- Q: Why does Baize become slower and use more tokens after adding SPSS/SQL?
+
+A: Because the tool definitions exposed by the MCP server are sent to the LLM with every conversation turn. SPSS has 60+ tools, adding about 6000–12000 tokens of fixed overhead. If your common workflow does not involve SPSS, you can set its `enabled` to `false` and turn it on when needed.
 
 # 🤝 Contributing
 
@@ -666,8 +863,6 @@ MIT License
 - Built on DeepSeek, OpenAI SDK, and MCP
 
 - Thanks to all developers walking the Vibe Coding path together
-
-- Developers focus on ideas and decisions; Baize handles the trivial and execution. Let programming return to intuition, and let creation flow like myth.
 
 # ☕ Support
 

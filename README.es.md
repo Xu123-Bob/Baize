@@ -4,11 +4,12 @@
 
 # Baize 白泽
 
-**Conoce todas las cosas, acompaña tu programación segura.**
+**No oculta nada que sepa**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
@@ -39,10 +40,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  </a>
   <a href="image/抖音.png">
     <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
-  
 </p>
 
 <p align="center">
@@ -59,7 +60,7 @@
 
 ----------
 
-Bestia auspiciosa de la mitología china antigua, **ahora reencarnada como asistente empresarial de análisis de datos y VibeCoding.**
+VibeCoding, la encarnación de los monosímbolos chinos, asistente seguro para análisis de datos.
 
 **Un CLI de Coding Agent de código abierto, con potente protección de privacidad e interacción multilingüe. Compatible con múltiples backends (DeepSeek / compatible con OpenAI / GLM / Qwen / Kimi / Ollama local), con llamada a herramientas, carga de skills, delegación a subagentes, compresión de contexto y sandbox de seguridad.**
 
@@ -104,12 +105,33 @@ Bestia auspiciosa de la mitología china antigua, **ahora reencarnada como asist
 
 - **CLI con tema negro dorado**: ancho adaptativo en chino, resaltado de código, coloreado de Diff, plegado de pensamientos.
 
+# Interfaz CLI de Baize
+
+<div align="center">
+Pantalla de inicio de Baize CLI
+</div>
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="Pantalla de inicio de Baize CLI" width="800" />
+</p>
+
+Pantalla de ejecución de Baize CLI -- 01
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="Pantalla de ejecución de Baize CLI" width="800" />
+</p>
+
+Pantalla de ejecución de Baize CLI -- 02
+
+<p align="center">
+  <img src="image/clipage03.jpg" alt="Pantalla de ejecución de Baize CLI" width="800" />
+</p>
+
 # Instalación
 
 ## Requisitos previos
 
 - Python 3.10+ (necesita tomllib, incluido en 3.11+; para 3.10 instalar tomli)
-
 - pip
 
 ## Instalar desde el código fuente
@@ -120,7 +142,9 @@ Bestia auspiciosa de la mitología china antigua, **ahora reencarnada como asist
 
 bash -- Presiona Win+R e ingresa cmd, luego escribe:
 
-    baize
+```bash
+baize
+```
 
 2. En la página del repositorio, haz clic en `<>Code` --> Download ZIP
 
@@ -128,11 +152,11 @@ bash -- Presiona Win+R e ingresa cmd, luego escribe:
 
 bash -- Presiona Win+R e ingresa cmd
 
-    cd directorio_descomprimido
-
-    pip install -r requirements.txt
-
-    python -m Baize
+```bash
+cd directorio_descomprimido
+pip install -r requirements.txt
+python -m Baize
+```
 
 Una vez completada la instalación, presiona Win+R, ingresa cmd, abre la interfaz CLI, escribe `baize` y ejecútalo.
 
@@ -140,24 +164,51 @@ Una vez completada la instalación, presiona Win+R, ingresa cmd, abre la interfa
 
 bash -- Presiona Win+R e ingresa cmd
 
-    pip install .
+```bash
+pip install .
+```
 
 Una vez completada la instalación, presiona Win+R, ingresa cmd, abre la interfaz CLI, escribe `baize` y ejecútalo.
+
+### Opcional: instalar dependencias de acceso a datos
+
+Si necesitas que Baize controle SPSS o bases de datos SQL, instala además:
+
+```bash
+pip install -r requirements-data.txt
+```
+
+`requirements-data.txt` incluye:
+
+- `spss-studio-mcp`: MCP server de análisis estadístico SPSS (requiere IBM SPSS Statistics instalado localmente)
+- `atengk-mcp-server-rdbms`: MCP server de bases de datos relacionales genéricas (PostgreSQL / MySQL / SQL Server / Oracle / DM, etc.)
+- `pyodbc`: enlace Python ODBC requerido por SQL Server
+
+O, si el proyecto ya está instalado mediante `pyproject.toml`, usa extras:
+
+```bash
+pip install -e ".[data]"          # Instalar todas las dependencias de acceso a datos
+pip install -e ".[spss]"          # Solo SPSS
+pip install -e ".[sql]"           # Solo SQL genérico
+pip install -e ".[sql-mssql]"     # Solo SQL Server, incluye pyodbc
+```
+
+- **⚠️ Usuarios de SQL Server: `pyodbc` es solo el enlace Python. También necesitas instalar Microsoft ODBC Driver 18 for SQL Server a nivel de sistema.**
+- **⚠️ Usuarios de SPSS: `spss-studio-mcp` es solo una capa puente MCP. IBM SPSS Statistics (versión 20–31) debe estar instalado y licenciado localmente, y la variable de entorno `SPSS_INSTALL_PATH` debe apuntar al directorio de instalación de SPSS. El análisis estadístico completo se admite principalmente en Windows. En Linux/macOS puede degradarse a "modo archivo" (leer `.sav`, ver metadatos, previsualizar datos, pero sin análisis estadístico).**
 
 # Inicio rápido
 
 1. Primera ejecución
 
-bash
-
-    baize
+```bash
+baize
+```
 
 En la primera ejecución, Baize genera automáticamente dos archivos de configuración:
 
-```
+```text
 ~/.baize/config.toml   # Configuración del backend (elige DeepSeek / OpenAI / Ollama)
-
-~/.baize/.env          # Archivo de claves>
+~/.baize/.env          # Archivo de claves
 ```
 
 La ruta para usuarios de Windows es `C:\Users\tu_usuario\.baize\`.
@@ -166,10 +217,9 @@ La ruta para usuarios de Windows es `C:\Users\tu_usuario\.baize\`.
 
 Abre `~/.baize/config.toml` y **modifica `active_provider`**:
 
-toml
-```
-# Archivo de configuración de Bai Ze  
-# Cambiar el proveedor activo para cambiar el backend  
+```toml
+# Archivo de configuración de Baize
+# Cambiar active_provider para cambiar el backend
 # Valores opcionales: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
 active_provider = "deepseek"
@@ -213,12 +263,11 @@ model = "qwen2.5:7b"
 
 3. Ingresar la clave
 
-Edita `~/.baize/.env`,**si necesitas usar un LLM determinado, elimina el ` # ` situado delante de él, y añade ` # ` delante de los demás LLM para bloquear la salida de sus APIs. Después de introducir la Clave API, recuerda guardarla sin falta, solo tras guardarla será válido**:
+Edita `~/.baize/.env`, **si necesitas usar un LLM determinado, elimina el ` # ` situado delante de él, y añade ` # ` delante de los demás LLM para bloquear la salida de sus APIs. Después de introducir la Clave API, recuerda guardarla sin falta, solo tras guardarla será válido**:
 
-env
-```
+```env
 # ============================================================
-# Archivo de claves de Bai Ze
+# Archivo de claves de Baize
 # ============================================================
 # Solo introduce la clave del backend que deseas utilizar, el resto puede mantenerse comentado.
 # El nombre de la variable debe coincidir con el campo env_key en config.toml.
@@ -233,7 +282,7 @@ env
 DEEPSEEK_API_KEY=
 
 # ---------- OpenAI o cualquier interfaz compatible con OpenAI (opcional) ----------
-# Compatible con Groq, Tongyi, Moonshot, Zhipu, OpenAI, etc.  
+# Compatible con Groq, Tongyi, Moonshot, Zhipu, OpenAI, etc.
 # Nota: base_url se configura en [model_providers.xxx] de config.toml, no aquí
 # OPENAI_API_KEY=
 
@@ -258,9 +307,9 @@ DEEPSEEK_API_KEY=
 
 4. Reiniciar
 
-bash
-
-    baize
+```bash
+baize
+```
 
 Cuando veas el logo negro dorado y el mensaje de bienvenida, el inicio fue exitoso.
 
@@ -268,12 +317,12 @@ Cuando veas el logo negro dorado y el mensaje de bienvenida, el inicio fue exito
 
 Después de iniciar, en el prompt `>>> 降旨：` describe tus necesidades en lenguaje natural:
 
-```
->>>降旨：Escribe un script en Python para hacer scraping del Top250 de Douban y guárdalo como CSV
+```text
+>>> 降旨：Escribe un script en Python para hacer scraping del Top250 de Douban y guárdalo como CSV
 
->>>降旨：Revisa todos los errores de tipo en los archivos Python bajo src/
+>>> 降旨：Revisa todos los errores de tipo en los archivos Python bajo src/
 
->>>降旨：Busca todos los lugares en este repositorio que usan requests y cámbialos a httpx
+>>> 降旨：Busca todos los lugares en este repositorio que usan requests y cámbialos a httpx
 ```
 
 ## Interacción multilingüe
@@ -286,7 +335,7 @@ Dos formas de cambiar:
 
 Baize detecta el idioma de tu entrada y cambia automáticamente:
 
-```
+```text
 >>> 降旨：Hola, ¿puedes escribirme un script en Python?
 [system] Idioma de entrada detectado: Español. Baize cambió a Español.
 (responde en español)
@@ -298,7 +347,7 @@ Baize detecta el idioma de tu entrada y cambia automáticamente:
 
 ### Opción 2: comando manual
 
-```
+```text
 >>> 降旨：/lang                # Muestra el idioma actual y la lista disponible
 [system] Idioma actual: 中文 (zh)
 [system] Disponibles:
@@ -319,24 +368,13 @@ Baize detecta el idioma de tu entrada y cambia automáticamente:
 
 Admite **nombre del idioma / código / nombre en chino / nombre nativo**. Para cambiar al inglés, cualquiera de `English`, `en`, `英语`, `英文` funciona.
 
-## Interfaz CLI de Baize
-
-<div align="center">
-Pantalla de inicio de Baize CLI
-</div>
-
-<p align="center">
-  <img src="image/clipage01.jpg" alt="Pantalla de inicio de Baize CLI" width="800" />
-</p>
-
-
 ## Comandos integrados
 
 - `/exit`, `/quit` --> Salir de Baize
 - `/clear` --> Limpiar historial de conversación, pendientes, registros de pensamiento y registros de herramientas
 - `/compact` --> Compresión manual del contexto (usar cuando la conversación es demasiado larga)
 - `/commit` --> Guardar la sesión actual y confirmar en Git (si estás en un repositorio Git)
-- `/lang` → Muestra el idioma actual; `/lang en` cambia a inglés (acepta código o nombre)
+- `/lang` --> Muestra el idioma actual; `/lang en` cambia a inglés (acepta código o nombre)
 - `/skills` --> Listar todas las skills disponibles
 - `/skills reload` --> Recargar el directorio de skills del usuario
 - `/unload` --> Descargar la skill activa actual
@@ -346,24 +384,38 @@ Pantalla de inicio de Baize CLI
 - `/nombre_skill` --> Cargar la skill especificada (soporta coincidencia difusa)
 - `/privacy` --> Control de enmascaramiento de privacidad (ver "Enmascaramiento de privacidad" abajo)
 
+## Ejemplos de uso de acceso a datos
+
+Después de configurar SPSS / SQL, puedes controlarlos con lenguaje natural:
+
+```text
+>>> 降旨：Usa SPSS para abrir data.sav y dime la lista de variables y el tamaño de muestra
+
+>>> 降旨：Haz estadística descriptiva sobre data.sav y luego ejecuta una regresión lineal
+
+>>> 降旨：Consulta los pedidos de la tabla sales con importe superior a 100.000 el mes pasado, agrupados por cliente
+
+>>> 降旨：Exporta el resultado del análisis SPSS a CSV y luego únelo con los datos maestros de clientes usando SQL
+```
+
 # Modelo local Ollama (coste cero)
 
 ¿No quieres usar la API en la nube? Usa Ollama local:
 
-bash
+```bash
+# 1. Instalar Ollama: https://ollama.com/download
+# 2. Descargar modelo
+ollama pull qwen2.5:7b
 
-    #1. Instalar Ollama: https://ollama.com/download
-    #2. Descargar modelo
-    ollama pull qwen2.5:7b
+# 3. Iniciar servicio Ollama
+ollama serve
 
-    #3. Iniciar servicio Ollama
-    ollama serve
+# 4. Modificar ~/.baize/config.toml
+active_provider = "ollama"
 
-    #4. Modificar ~/.baize/config.toml
-    active_provider = "ollama"
-
-    #5. Iniciar Baize
-    baize
+# 5. Iniciar Baize
+baize
+```
 
 Modelos recomendados: `qwen2.5:7b` (fuerte en chino), `llama3.1:8b`, `deepseek-r1:7b`.
 
@@ -375,22 +427,20 @@ Baize soporta cuatro formas de extensión. Colócalas en el directorio de trabaj
 
 Escribe conocimiento de dominio en `./skills/nombre_skill/SKILL.md`. La IA lo cargará automáticamente cuando encuentre tareas complejas.
 
-markdown
+```markdown
+---
+name: pandas-eda
+description: Mejores prácticas para análisis exploratorio de datos con pandas
+tags: data,python
+---
 
-    ---
-    name: pandas-eda
+# Guía de Pandas EDA
 
-    description: Mejores prácticas para análisis exploratorio de datos con pandas
-
-    tags: data,python
-    ---
-
-    # Guía de Pandas EDA
-
-    ## Pasos clave
-    1. df.info() para ver tipos de campos y valores faltantes
-    2. df.describe() descripción estadística
-    ...
+## Pasos clave
+1. df.info() para ver tipos de campos y valores faltantes
+2. df.describe() descripción estadística
+...
+```
 
 También puedes cargarlo manualmente en la conversación con `/pandas-eda`.
 
@@ -398,19 +448,18 @@ También puedes cargarlo manualmente en la conversación con `/pandas-eda`.
 
 Define subagentes especializados en `./subagent/nombre_rol/AGENT.md`. El agente principal puede delegar tareas mediante la herramienta `agent`.
 
-markdown
+```markdown
+---
+name: code-reviewer
+description: Revisor de código estricto
+---
 
-    ---
-    name: code-reviewer
-
-    description: Revisor de código estricto
-    ---
-
-    Eres un revisor de código senior. Al revisar, prioriza:
-    1. Condiciones de borde y manejo de excepciones
-    2. Fugas de recursos
-    3. Seguridad de concurrencia
-    ...
+Eres un revisor de código senior. Al revisar, prioriza:
+1. Condiciones de borde y manejo de excepciones
+2. Fugas de recursos
+3. Seguridad de concurrencia
+...
+```
 
 ## Hooks
 
@@ -422,19 +471,17 @@ Coloca en `./hooks/`:
 
 Reciben entrada JSON y devuelven una decisión:
 
-bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# PreToolUse-guard.sh
 
-    #PreToolUse-guard.sh
+read -r input
 
-    read -r input
-
-    if echo "$input" | grep -q "rm -rf"; then
-
-    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Prohibido eliminar"}}'
-
-    fi
+if echo "$input" | grep -q "rm -rf"; then
+  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Prohibido eliminar"}}'
+fi
+```
 
 Los hooks de Python pueden llamar directamente a la API integrada (ver las funciones `hook_*` en `Baize.py`).
 
@@ -442,19 +489,19 @@ Los hooks de Python pueden llamar directamente a la API integrada (ver las funci
 
 Configura servidores de herramientas externos en `./MCP/mcp_config.json`:
 
-json
-
+```json
+{
+  "mcpServers": [
     {
-      "mcpServers": [
-        {
-          "name": "filesystem",
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-          "env": {},
-          "enabled": true
-        }
-      ]
+      "name": "filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "env": {},
+      "enabled": true
     }
+  ]
+}
+```
 
 # Diseño de seguridad
 
@@ -479,14 +526,14 @@ Baize incluye un mecanismo de enmascaramiento **bidireccional y reversible**. La
 
 ### Opción 1: Lenguaje natural
 
-```
->>>降旨：activa el enmascaramiento de privacidad
+```text
+>>> 降旨：activa el enmascaramiento de privacidad
 [system] Enmascaramiento de privacidad activado (modo estándar).
 
->>>降旨：activa el enmascaramiento estricto
+>>> 降旨：activa el enmascaramiento estricto
 [system] Enmascaramiento de privacidad activado (modo estricto).
 
->>>降旨：desactiva la protección de privacidad
+>>> 降旨：desactiva la protección de privacidad
 [system] Enmascaramiento de privacidad desactivado.
 ```
 
@@ -528,13 +575,13 @@ Restaurado al original → guardar / mostrar / ejecutar
 
 ## Ejemplo
 
-```
->>>降旨：/privacy test Mi teléfono es 13812345678, correo a@b.com
+```text
+>>> 降旨：/privacy test Mi teléfono es 13812345678, correo a@b.com
 Original: Mi teléfono es 13812345678, correo a@b.com
 Enmascarado: Mi teléfono es [[PHONE_1]], correo [[EMAIL_1]]
 Restaurado: Mi teléfono es 13812345678, correo a@b.com
 
->>>降旨：/privacy status
+>>> 降旨：/privacy status
 [Enmascaramiento de privacidad]
 Modo actual : estándar
 Reglas activas: 15 / 19
@@ -543,16 +590,157 @@ Enmascaramientos: 3
 Restauraciones: 3
 ```
 
+# Acceso a datos
+
+Baize se conecta al software empresarial de análisis de datos mediante **MCP (Model Context Protocol)**. El programa principal no necesita ninguna modificación: solo hay que registrar el server en `MCP/mcp_config.json`.
+
+## Integración con SPSS
+
+### Requisitos previos
+
+- IBM SPSS Statistics instalado localmente (versión 20–31, se recomienda Windows)
+- SPSS con licencia y capaz de iniciarse normalmente
+
+### Pasos de configuración
+
+1. **Encuentra el directorio de instalación de SPSS:** la ruta predeterminada suele ser `C:\Program Files\IBM\SPSS Statistics\` seguida del número de versión, como `31`.
+
+2. **Configura la variable de entorno** en `.env` o en las variables de entorno del sistema:
+
+```text
+SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
+```
+
+3. **Verifica el estado:**
+
+```bash
+spss-studio-mcp status
+```
+
+Salida esperada:
+
+```text
+=== SPSS MCP Capability Status ===
+pyreadstat : OK v1.3.6
+pandas     : OK v3.0.2
+SPSS batch : OK
+```
+
+4. **Regístralo en `MCP/mcp_config.json`:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH": "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### Si aparece `SPSS batch: NOT FOUND`
+
+Significa que `spss-studio-mcp` no encontró el motor SPSS, pero `pyreadstat` + `pandas` funcionan. En este caso, Baize entra en **modo archivo**:
+
+- Puede leer `.sav`, ver metadatos, previsualizar datos y convertir CSV ↔ SAV
+- No puede ejecutar estadísticas como t-test, regresión, ANOVA, etc.
+
+Solución: configura correctamente `SPSS_INSTALL_PATH` en `MCP/mcp_config.json`, o acepta la degradación a modo archivo.
+
+## Integración con SQL
+
+### Bases de datos compatibles
+
+PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, DM, KingbaseES, TiDB, OceanBase, etc. (basado en drivers SQLAlchemy 2.0).
+
+### Pasos de configuración
+
+1. **Prepara una cuenta de base de datos de solo lectura** (muy recomendado):
+
+```sql
+CREATE USER baize_ro WITH PASSWORD 'xxx';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
+```
+
+2. **Prepara la cadena de conexión:**
+
+- PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
+- MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
+- SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
+- Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
+
+3. **Regístralo en `MCP/mcp_config.json`:**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "postgresql+psycopg://baize_ro:pwd@localhost:5432/prod"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### Barreras de seguridad integradas
+
+`atengk-mcp-server-rdbms` ofrece múltiples capas de protección:
+
+- **Guardia SELECT a nivel AST**: usa `sqlglot` para analizar el árbol sintáctico y bloquea físicamente operaciones de escritura como `DELETE/UPDATE/DROP/TRUNCATE`.
+- **Inyección automática de LIMIT**: las consultas sin número de filas especificado reciben forzosamente `LIMIT 100`, evitando que la extracción de toda la tabla provoque desbordamiento de memoria.
+- **Solo lectura por defecto**: las operaciones de escritura requieren autorización explícita mediante `--allow-dml` / `--allow-ddl`.
+- **Bloqueo de inyección SQL**: las sentencias maliciosas construidas por concatenación de cadenas se rechazan a nivel AST.
+
+### Configurar varias bases de datos a la vez
+
+Si quieres conectar varias bases de datos al mismo tiempo, registra varios servers:
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql_prod",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "postgresql+psycopg://ro:pwd@prod:5432/db" },
+      "enabled": true
+    },
+    {
+      "name": "sql_warehouse",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "mysql+pymysql://ro:pwd@dw:3306/analytics" },
+      "enabled": true
+    }
+  ]
+}
+```
+
+Baize fusionará automáticamente todas sus herramientas en `MATERTOOLS`, y el LLM seleccionará la adecuada según la tarea.
+
 # Estructura de directorios
 
-```
+```text
 baize-agent/
 ├── pyproject.toml              # Configuración de empaquetado
+├── requirements-data.txt       # Dependencias de acceso a datos (opcional)
+├── requirements-data           # Dependencias de acceso a datos
 ├── README.md
 ├── tests/                      # Pruebas (no se publican con el paquete)
-|   ├── __init__.py
-|   ├── test_history.py
-|   └── test_skill_loader.py
+│   ├── __init__.py
+│   ├── test_history.py
+│   └── test_skill_loader.py
 ├── .env.example                # Ejemplo de variables de entorno
 ├── .gitignore
 └── agent/                      # Paquete principal
@@ -565,9 +753,9 @@ baize-agent/
     ├── skills/                 # Skills integradas
     ├── subagent/               # Subagentes integrados
     ├── core/                   # Lógica central (sin efectos secundarios, testeable)
-    |   ├── __init__.py
-    |   ├── history.py          # Limpieza de historial / estimación de tokens / compresión
-    |   └── privacy.py          # Enmascaramiento de privacidad: detección de PII 
+    │   ├── __init__.py
+    │   ├── history.py          # Limpieza de historial / estimación de tokens / compresión
+    │   └── privacy.py          # Enmascaramiento de privacidad: detección de PII / sustitución de marcadores / restauración reversible
     ├── hooks/                  # Hooks integrados
     └── MCP/                    # Cliente MCP y configuración
         ├── __init__.py
@@ -585,21 +773,32 @@ baize-agent/
 
 Escribe las variables en `~/.baize/.env`, no es necesario modificar los archivos de configuración del shell.
 
+- Variable de análisis de datos: `SPSS_INSTALL_PATH` Descripción: Directorio de instalación de IBM SPSS Statistics Valor por defecto: — (si no se establece, se degrada a modo archivo)
+- Variable de análisis de datos: `DATABASE_URL` Descripción: Cadena de conexión de base de datos para SQL MCP Valor por defecto: — (leída por el MCP server)
+
+Estas variables se escriben en `MCP/mcp_config.json`.
+
 # Desarrollo
 
 ## Ejecutar pruebas
 
 Este proyecto usa pytest. Antes de desarrollar, instala el paquete en modo editable con las dependencias de desarrollo:
 
-    pip install -e ".[dev]"
+```bash
+pip install -e ".[dev]"
+```
 
 Ejecutar todas las pruebas:
 
-    python -m pytest tests/ -v
+```bash
+python -m pytest tests/ -v
+```
 
 Ejecutar solo un archivo:
 
-    python -m pytest tests/test_history.py -v
+```bash
+python -m pytest tests/test_history.py -v
+```
 
 ## Convenciones de estructura de código
 
@@ -634,9 +833,29 @@ R: Baize comprime automáticamente en dos niveles: primero trunca resultados ant
 
 R: La lista blanca de comandos por defecto bloquea operaciones peligrosas como `rm -rf /`; antes de escribir archivos muestra el Diff y solicita confirmación.
 
-- P: ¿Cómo hago que Baize responda en inglés o japonés?
+- P: ¿Cómo hago que Baize se conecte a SPSS?
 
-R: Solo di `English` o `日本語` y cambiará automáticamente. También puedes usar `/lang en` (o `/lang ja`). Todo el razonamiento y las respuestas siguientes usarán ese idioma. Para volver al chino, di `中文` o escribe `/lang zh`.
+R: 1. Instala `pip install -r requirements-data.txt`; 2. Configura la variable de entorno `SPSS_INSTALL_PATH` apuntando al directorio de instalación de SPSS; 3. Activa el server spss en `MCP/mcp_config.json`. Ver la sección "Acceso a datos (SPSS / SQL)" para más detalles.
+
+- P: ¿Qué hago si aparece `SPSS batch: NOT FOUND`?
+
+R: Significa que no se encontró el motor SPSS. Comprueba si `SPSS_INSTALL_PATH` apunta correctamente al directorio que contiene `stats.exe`; si solo procesas archivos `.sav`, puedes ignorar esta advertencia (se degradará a modo archivo).
+
+- P: ¿Qué más necesito instalar para conectar a bases de datos SQL?
+
+R: Instala `atengk-mcp-server-rdbms` a nivel Python (lo hace `pip install` automáticamente). **Los usuarios de SQL Server también necesitan instalar Microsoft ODBC Driver 18 a nivel de sistema**, lo cual no se puede instalar con pip.
+
+- P: ¿Baize borrará accidentalmente mis datos de base de datos?
+
+R: No. SQL MCP solo permite SELECT por defecto, y todas las operaciones de escritura se bloquean a nivel de AST. Aun así, se recomienda encarecidamente crear una **cuenta de base de datos de solo lectura** exclusiva para Baize como doble seguro.
+
+- P: ¿Se filtrarán los datos de los resultados del análisis SPSS al LLM?
+
+R: Si se activa el enmascaramiento de privacidad (`/privacy on`), los resultados devueltos por las herramientas se enmascaran automáticamente (teléfonos, correos, documentos de identidad y otras PII) antes de enviarse al LLM. **Sin embargo, se recomienda usar también una cuenta de base de datos de solo lectura + muestreo de datos** (consultar solo los campos necesarios) para reducir el riesgo.
+
+- P: ¿Por qué Baize se vuelve más lento y usa más tokens tras añadir SPSS/SQL?
+
+R: Porque las definiciones de herramientas expuestas por el MCP server se envían al LLM en cada turno de conversación. SPSS tiene más de 60 herramientas, lo que añade unos 6000–12000 tokens de sobrecarga fija. Si tu flujo de trabajo habitual no usa SPSS, puedes poner su `enabled` en `false` y activarlo cuando lo necesites.
 
 # 🤝 Contribuir
 
@@ -667,8 +886,6 @@ MIT License
 - Construido sobre DeepSeek, OpenAI SDK, MCP
 
 - Gracias a todos los desarrolladores que acompañan en el camino del Vibe Coding
-
-- El desarrollador se enfoca en la creatividad y las decisiones, Baize se encarga de lo trivial y la ejecución. Devuelve la programación a la intuición, haz que la creación fluya como un mito.
 
 # ☕ Apoyo económico
 

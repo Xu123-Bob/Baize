@@ -4,11 +4,12 @@
 
 # 白澤 Baize
 
-**万物に通じ、安全にコーディングを共に。**
+**知ることをすべて語る**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
@@ -39,10 +40,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  </a>
   <a href="image/抖音.png">
     <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
-  
 </p>
 
 <p align="center">
@@ -59,7 +60,7 @@
 
 ----------
 
-中国古代神話に登場し、万物に通じる瑞獣。**今はエンタープライズ向けデータ分析と VibeCoding アシスタントへ。**
+中国の神獣が化したVibeCodingとデータ分析の安全アシスタント。
 
 **オープンソースの Coding Agent CLI で、強力なプライバシー保護と多言語インタラクションを備えています。複数のバックエンド（DeepSeek / OpenAI 互換 / GLM / Qwen / Kimi / ローカル Ollama）に対応し、ツール呼び出し、スキル読み込み、サブエージェント委任、コンテキスト圧縮、セキュアサンドボックスなど、完全な機能を備えています。**
 
@@ -104,6 +105,28 @@
 
 - **黒金テーマ CLI**：中国語幅の自動調整、コードハイライト、Diff 着色、思考の折りたたみ。
 
+# 白澤 CLI 界面
+
+<div align="center">
+白澤 CLI 起動画面
+</div>
+
+<p align="center">
+  <img src="image/clipage01.jpg" alt="白澤 CLI 起動画面" width="800" />
+</p>
+
+白澤 CLI 実行画面 -- 01
+
+<p align="center">
+  <img src="image/clipage02.jpg" alt="白澤 CLI 実行画面" width="800" />
+</p>
+
+白澤 CLI 実行画面 -- 02
+
+<p align="center">
+  <img src="image/clipage03.jpg" alt="白澤 CLI 実行画面" width="800" />
+</p>
+
 # インストール
 
 ## 前提条件
@@ -119,7 +142,9 @@
 
 bash -- Win+R を押して cmd と入力し、次を実行：
 
-    baize
+```bash
+baize
+```
 
 2. リポジトリページで `<>Code` --> Download ZIP をクリック
 
@@ -127,11 +152,11 @@ bash -- Win+R を押して cmd と入力し、次を実行：
 
 bash -- Win+R を押して cmd と入力
 
-    cd 解凍後のディレクトリ
-
-    pip install -r requirements.txt
-
-    python -m Baize
+```bash
+cd 解凍後のディレクトリ
+pip install -r requirements.txt
+python -m Baize
+```
 
 インストール後、Win+R で cmd を開き、CLI 界面で `baize` と入力すれば実行できる。
 
@@ -139,24 +164,51 @@ bash -- Win+R を押して cmd と入力
 
 bash -- Win+R を押して cmd と入力
 
-    pip install .
+```bash
+pip install .
+```
 
 インストール後、Win+R で cmd を開き、CLI 界面で `baize` と入力すれば実行できる。
+
+### 任意：データ接続依存関係のインストール
+
+白澤から SPSS や SQL データベースを操作する場合は、追加でインストールします：
+
+```bash
+pip install -r requirements-data.txt
+```
+
+`requirements-data.txt` には以下が含まれます：
+
+- `spss-studio-mcp`：SPSS 統計分析 MCP server（本機に IBM SPSS Statistics がインストール済みである必要があります）
+- `atengk-mcp-server-rdbms`：汎用リレーショナルデータベース MCP server（PostgreSQL / MySQL / SQL Server / Oracle / 達夢など）
+- `pyodbc`：SQL Server に必要な ODBC Python バインディング
+
+または、`pyproject.toml` でインストール済みの場合は extras を使えます：
+
+```bash
+pip install -e ".[data]"          # データ接続依存関係をすべてインストール
+pip install -e ".[spss]"          # SPSS のみ
+pip install -e ".[sql]"           # 汎用 SQL のみ
+pip install -e ".[sql-mssql]"     # SQL Server 専用（pyodbc 含む）
+```
+
+- **⚠️ SQL Server ユーザー注意：`pyodbc` は Python バインディングのみです。システム側に Microsoft ODBC Driver 18 for SQL Server も必要です。**
+- **⚠️ SPSS ユーザー注意：`spss-studio-mcp` は MCP ブリッジ層にすぎません。本機に IBM SPSS Statistics（バージョン 20–31）がインストールされ、ライセンス認証済みである必要があります。また、環境変数 `SPSS_INSTALL_PATH` を SPSS インストールディレクトリに設定してください。完全な統計分析機能は主に Windows でサポートされます。Linux/macOS では「ファイルモード」に降格できます（`.sav` の読み取り、メタデータ確認、データプレビューは可能ですが、統計分析はできません）。**
 
 # クイックスタート
 
 1. 初回実行
 
-bash
-
-    baize
+```bash
+baize
+```
 
 初回実行時、白澤は2つの設定ファイルを自動生成する：
 
-```
+```text
 ~/.baize/config.toml   # バックエンド設定（DeepSeek / OpenAI / Ollama を選択）
-
-~/.baize/.env          # キーファイル>
+~/.baize/.env          # キーファイル
 ```
 
 Windows のパスは `C:\Users\ユーザー名\.baize\`。
@@ -165,10 +217,10 @@ Windows のパスは `C:\Users\ユーザー名\.baize\`。
 
 `~/.baize/config.toml` を開き、**`active_provider` を変更**：
 
-toml
-```
+```toml
 # 白沢設定ファイル
-# active_provider を変更してバックエンドを切り替える  # 選択可能な値：「deepseek」／「qwen」／「kimi」／「glm」／「openai」／「ollama」
+# active_provider を変更してバックエンドを切り替える
+# 選択可能な値："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
 active_provider = "deepseek"
 
@@ -203,7 +255,7 @@ env_key = "OPENAI_API_KEY"
 model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (本地)"
+name = "Ollama (ローカル)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
 model = "qwen2.5:7b"
@@ -211,15 +263,14 @@ model = "qwen2.5:7b"
 
 3. キーを入力
 
-`~/.baize/.env` を編集，**どのLLMを使用するかは、前の`#`を削除し、他のLLMの前に`#`を追加して、その他のLLM APIの出力をロックしてください。APIキーを入力した後は、必ず保存することを忘れないでください。保存して初めて有効になります**：
+`~/.baize/.env` を編集。**どの LLM を使用するかは、前の `#` を削除し、他の LLM の前に `#` を追加して、その他の LLM API の出力をロックしてください。API キーを入力した後は、必ず保存することを忘れないでください。保存して初めて有効になります**：
 
-env
-```
+```env
 # ============================================================
 # 白沢鍵ファイル
 # ============================================================
 # 使用するバックエンドの鍵のみを記入し、それ以外はコメントで保持してください。
-# 变数名は config.toml の env_key フィールドと一致している必要があります。
+# 変数名は config.toml の env_key フィールドと一致している必要があります。
 #
 # 場所：
 #   Linux / macOS: ~/.baize/.env
@@ -227,7 +278,7 @@ env
 # ============================================================
 
 # ---------- DeepSeek（デフォルトバックエンド） ----------
-# 住所の取得：https://platform.deepseek.com/api_keys
+# 取得先：https://platform.deepseek.com/api_keys
 DEEPSEEK_API_KEY=
 
 # ---------- OpenAI または任意の OpenAI 対応インターフェース（オプション） ----------
@@ -236,29 +287,29 @@ DEEPSEEK_API_KEY=
 # OPENAI_API_KEY=
 
 # ---------- Qwen（オプション） ----------
-# 住所の取得：https://dashscope.console.aliyun.com/
+# 取得先：https://dashscope.console.aliyun.com/
 # DASHSCOPE_API_KEY=
 
 # ---------- Kimi / Moonshot（オプション） ----------
-# 住所の取得：https://platform.moonshot.cn/console/api-keys
+# 取得先：https://platform.moonshot.cn/console/api-keys
 # MOONSHOT_API_KEY=
 
 # ---------- GLM（オプション） ----------
-# 住所の取得：https://open.bigmodel.cn/usercenter/apikeys
+# 取得先：https://open.bigmodel.cn/usercenter/apikeys
 # ZHIPUAI_API_KEY=
 
-# ---------- 自定义网关（オプション） ----------
+# ---------- カスタムゲートウェイ（オプション） ----------
 # CUSTOM_API_KEY=
 
 # ---------- Ollama（ローカルモデル、鍵不要） ----------
-# Ollamaがlocalhost:11434で動作していることを確認するだけで、ここに設定は不要です。
+# Ollama が localhost:11434 で動作していることを確認するだけで、ここに設定は不要です。
 ```
 
 4. 再起動
 
-bash
-
-    baize
+```bash
+baize
+```
 
 黒金のロゴとウェルカムメッセージが表示されれば起動成功。
 
@@ -266,12 +317,12 @@ bash
 
 起動後、`>>> 降旨：` プロンプトで自然言語で要件を記述する：
 
-```
->>>降旨：Python で Douban Top250 をスクレイピングし、CSV として保存するスクリプトを書いて
+```text
+>>> 降旨：Python で Douban Top250 をスクレイピングし、CSV として保存するスクリプトを書いて
 
->>>降旨：src/ 以下のすべての Python ファイルの型エラーをチェックして
+>>> 降旨：src/ 以下のすべての Python ファイルの型エラーをチェックして
 
->>>降旨：このリポジトリ内で requests を使っている箇所をすべて探し、httpx に変更して
+>>> 降旨：このリポジトリ内で requests を使っている箇所をすべて探し、httpx に変更して
 ```
 
 ## 多言語インタラクション
@@ -284,7 +335,7 @@ bash
 
 入力を自動で言語判定して切り替えます：
 
-```
+```text
 >>> 降旨：こんにちは、Python スクリプトを書いてください
 [system] 入力言語を 日本語 と判定しました。白澤を 日本語 に切り替えました。
 （日本語で応答）
@@ -296,7 +347,7 @@ bash
 
 ### 方法 2：手動コマンド
 
-```
+```text
 >>> 降旨：/lang                # 現在の言語と利用可能リストを表示
 [system] 現在の言語：中文 (zh)
 [system] 利用可能：
@@ -317,24 +368,13 @@ bash
 
 **言語名 / 言語コード / 中国語名 / 現地語名** をサポート。英語に切り替える場合、`English`、`en`、`英语`、`英文` のいずれでも可。
 
-## 白澤 CLI 界面
-
-<div align="center">
-白澤 CLI 起動画面
-</div>
-
-<p align="center">
-  <img src="image/clipage01.jpg" alt="白澤 CLI 起動画面" width="800" />
-</p>
-
-
 ## 組み込みコマンド
 
 - `/exit`、`/quit` --> 白澤を終了
 - `/clear` --> 会話履歴、ToDo、思考記録、ツール記録をクリア
 - `/compact` --> 手動でコンテキストを圧縮（会話が長すぎる場合に使用）
 - `/commit` --> 現在のセッションを保存し、Git にコミット（Git リポジトリ内の場合）
-- `/lang` → 現在の言語を表示；`/lang en` で英語に切替（コードまたは名前）
+- `/lang` --> 現在の言語を表示；`/lang en` で英語に切替（コードまたは名前）
 - `/skills` --> 利用可能なすべてのスキルを一覧表示
 - `/skills reload` --> ユーザースキルディレクトリを再読み込み
 - `/unload` --> 現在有効なスキルをアンロード
@@ -344,24 +384,38 @@ bash
 - `/スキル名` --> 指定スキルを読み込み（あいまい一致対応）
 - `/privacy` --> プライバシー脱敏の制御（下記「プライバシー脱敏」章を参照）
 
+## データ接続の使用例
+
+SPSS / SQL を設定した後は、自然言語で操作できます：
+
+```text
+>>> 降旨：SPSS で data.sav を開き、変数リストとサンプルサイズを教えて
+
+>>> 降旨：data.sav に対して記述統計を実行し、その後線形回帰を実行して
+
+>>> 降旨：sales テーブルで先月の売上が 10 万を超える注文を顧客ごとに集計して
+
+>>> 降旨：SPSS の分析結果を CSV に出力し、SQL で顧客マスタと結合して
+```
+
 # Ollama ローカルモデル（ゼロコスト）
 
 クラウド API を使いたくない？ローカル Ollama を使う：
 
-bash
+```bash
+# 1. Ollama をインストール：https://ollama.com/download
+# 2. モデルを取得
+ollama pull qwen2.5:7b
 
-    #1. Ollama をインストール：https://ollama.com/download
-    #2. モデルを取得
-    ollama pull qwen2.5:7b
+# 3. Ollama サービスを起動
+ollama serve
 
-    #3. Ollama サービスを起動
-    ollama serve
+# 4. ~/.baize/config.toml を変更
+active_provider = "ollama"
 
-    #4. ~/.baize/config.toml を変更
-    active_provider = "ollama"
-
-    #5. 白澤を起動
-    baize
+# 5. 白澤を起動
+baize
+```
 
 推奨モデル：`qwen2.5:7b`（中国語に強い）、`llama3.1:8b`、`deepseek-r1:7b`。
 
@@ -373,22 +427,20 @@ bash
 
 `./skills/スキル名/SKILL.md` に領域知識を書く。AI は複雑なタスクに遭遇すると主動的に読み込む。
 
-markdown
+```markdown
+---
+name: pandas-eda
+description: pandas による探索的データ分析のベストプラクティス
+tags: data,python
+---
 
-    ---
-    name: pandas-eda
+# Pandas EDA ガイド
 
-    description: pandas による探索的データ分析のベストプラクティス
-
-    tags: data,python
-    ---
-
-    # Pandas EDA ガイド
-
-    ## 核心ステップ
-    1. df.info() でフィールド型と欠損を確認
-    2. df.describe() で統計記述
-    ...
+## 核心ステップ
+1. df.info() でフィールド型と欠損を確認
+2. df.describe() で統計記述
+...
+```
 
 会話中に `/pandas-eda` で手動読み込みもできる。
 
@@ -396,19 +448,18 @@ markdown
 
 `./subagent/役割名/AGENT.md` に専用サブエージェントを定義。メインエージェントは `agent` ツールでタスクを委任できる。
 
-markdown
+```markdown
+---
+name: code-reviewer
+description: 厳格なコードレビュアー
+---
 
-    ---
-    name: code-reviewer
-
-    description: 厳格なコードレビュアー
-    ---
-
-    あなたはシニアコードレビュアーです。レビューでは以下を優先：
-    1. 境界条件と例外処理
-    2. リソースリーク
-    3. 並行安全性
-    ...
+あなたはシニアコードレビュアーです。レビューでは以下を優先：
+1. 境界条件と例外処理
+2. リソースリーク
+3. 並行安全性
+...
+```
 
 ## フック（Hooks）
 
@@ -420,19 +471,17 @@ markdown
 
 JSON 入力を受け取り、判断を返す：
 
-bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# PreToolUse-guard.sh
 
-    #PreToolUse-guard.sh
+read -r input
 
-    read -r input
-
-    if echo "$input" | grep -q "rm -rf"; then
-
-    echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"削除禁止"}}'
-
-    fi
+if echo "$input" | grep -q "rm -rf"; then
+  echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"削除禁止"}}'
+fi
+```
 
 Python フックは組み込み API を直接呼び出せる（`Baize.py` の `hook_*` 関数を参照）。
 
@@ -440,19 +489,19 @@ Python フックは組み込み API を直接呼び出せる（`Baize.py` の `h
 
 `./MCP/mcp_config.json` で外部ツールサーバーを設定：
 
-json
-
+```json
+{
+  "mcpServers": [
     {
-      "mcpServers": [
-        {
-          "name": "filesystem",
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-          "env": {},
-          "enabled": true
-        }
-      ]
+      "name": "filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "env": {},
+      "enabled": true
     }
+  ]
+}
+```
 
 # セキュリティ設計
 
@@ -477,14 +526,14 @@ json
 
 ### 方法 1：自然言語
 
-```
->>>降旨：プライバシー脱敏を有効にして
+```text
+>>> 降旨：プライバシー脱敏を有効にして
 [system] プライバシー脱敏を有効にしました（標準モード）。
 
->>>降旨：厳格な脱敏を有効にして
+>>> 降旨：厳格な脱敏を有効にして
 [system] プライバシー脱敏を有効にしました（厳格モード）。
 
->>>降旨：プライバシー保護を無効にして
+>>> 降旨：プライバシー保護を無効にして
 [system] プライバシー脱敏を無効にしました。
 ```
 
@@ -526,13 +575,13 @@ LLM が見るのは [[PHONE_1]]、[[EMAIL_1]]
 
 ## 例
 
-```
->>>降旨：/privacy test 私の電話は 13812345678、メールは a@b.com
+```text
+>>> 降旨：/privacy test 私の電話は 13812345678、メールは a@b.com
 原文：私の電話は 13812345678、メールは a@b.com
 脱敏：私の電話は [[PHONE_1]]、メールは [[EMAIL_1]]
 復元：私の電話は 13812345678、メールは a@b.com
 
->>>降旨：/privacy status
+>>> 降旨：/privacy status
 [プライバシー脱敏]
 現在のモード: 標準モード (standard)
 有効ルール : 15 / 19
@@ -541,16 +590,157 @@ LLM が見るのは [[PHONE_1]]、[[EMAIL_1]]
 復元呼び出し: 3
 ```
 
+# データ接続
+
+白澤は **MCP（Model Context Protocol）** を通じて企業向けデータ分析ソフトウェアと接続します。本体プログラムに変更は不要で、`MCP/mcp_config.json` に server を登録するだけです。
+
+## SPSS 接続
+
+### 前提条件
+
+- 本機に IBM SPSS Statistics がインストール済み（バージョン 20–31、Windows 推奨）
+- SPSS がライセンス認証済みで正常に起動できる
+
+### 設定手順
+
+1. **SPSS インストールディレクトリを確認：** 通常は `C:\Program Files\IBM\SPSS Statistics\` の後にバージョン番号（例：31）が付きます。
+
+2. **環境変数を設定**（`.env` またはシステム環境変数）：
+
+```text
+SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
+```
+
+3. **状態を確認：**
+
+```bash
+spss-studio-mcp status
+```
+
+期待される出力：
+
+```text
+=== SPSS MCP Capability Status ===
+pyreadstat : OK v1.3.6
+pandas     : OK v3.0.2
+SPSS batch : OK
+```
+
+4. **`MCP/mcp_config.json` に登録：**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "spss",
+      "command": "spss-studio-mcp",
+      "args": ["serve", "--transport", "stdio"],
+      "env": {
+        "SPSS_INSTALL_PATH": "C:\\Program Files\\IBM\\SPSS Statistics\\31"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### `SPSS batch: NOT FOUND` の場合
+
+`spss-studio-mcp` が SPSS エンジンを見つけられませんでしたが、`pyreadstat` + `pandas` は正常です。この場合、**ファイルモード**になります：
+
+- `.sav` の読み取り、メタデータ確認、データプレビュー、CSV ↔ SAV 変換が可能
+- t 検定、回帰、ANOVA などの統計分析は不可
+
+解決方法：`MCP/mcp_config.json` の `SPSS_INSTALL_PATH` を正しく設定するか、ファイルモードへの降格を受け入れてください。
+
+## SQL 接続
+
+### 対応データベース
+
+PostgreSQL、MySQL、MariaDB、SQL Server、Oracle、達夢、人大金倉、TiDB、OceanBase など（SQLAlchemy 2.0 ドライバー使用）。
+
+### 設定手順
+
+1. **読み取り専用データベースアカウントを準備**（強く推奨）：
+
+```sql
+CREATE USER baize_ro WITH PASSWORD 'xxx';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
+```
+
+2. **接続文字列を準備：**
+
+- PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
+- MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
+- SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
+- Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
+
+3. **`MCP/mcp_config.json` に登録：**
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DATABASE_URL": "postgresql+psycopg://baize_ro:pwd@localhost:5432/prod"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+### セキュリティガードレール（内蔵）
+
+`atengk-mcp-server-rdbms` は多層防御を提供します：
+
+- **AST レベルの SELECT ガード**：`sqlglot` で構文木を解析し、`DELETE/UPDATE/DROP/TRUNCATE` などの書き込み操作を物理的にブロック。
+- **自動 LIMIT 注入**：行数未指定のクエリには強制的に `LIMIT 100` を追加し、全表取得によるメモリ溢れを防止。
+- **デフォルト読み取り専用**：書き込み操作は `--allow-dml` / `--allow-ddl` で明示的に許可が必要。
+- **SQL インジェクション遮断**：文字列連結で構築された悪意ある文を AST 層で拒否。
+
+### 複数データベースの同時設定
+
+複数のデータベースに同時接続したい場合は、複数の server を登録できます：
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "sql_prod",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "postgresql+psycopg://ro:pwd@prod:5432/db" },
+      "enabled": true
+    },
+    {
+      "name": "sql_warehouse",
+      "command": "atengk-mcp-server-rdbms",
+      "args": ["--transport", "stdio"],
+      "env": { "DATABASE_URL": "mysql+pymysql://ro:pwd@dw:3306/analytics" },
+      "enabled": true
+    }
+  ]
+}
+```
+
+白澤はそれらのすべてのツールを自動的に `MATERTOOLS` に統合し、LLM がタスクに応じて自動選択します。
+
 # ディレクトリ構成
 
-```
+```text
 baize-agent/
 ├── pyproject.toml              # パッケージ設定
+├── requirements-data.txt       # データ接続依存関係（オプション）
+├── requirements-data           # データ接続依存関係
 ├── README.md
 ├── tests/                      # テスト（パッケージには含まれない）
-|   ├── __init__.py
-|   ├── test_history.py
-|   └── test_skill_loader.py
+│   ├── __init__.py
+│   ├── test_history.py
+│   └── test_skill_loader.py
 ├── .env.example                # 環境変数例
 ├── .gitignore
 └── agent/                      # メインパッケージ
@@ -563,9 +753,9 @@ baize-agent/
     ├── skills/                 # 組み込みスキル
     ├── subagent/               # 組み込みサブエージェント
     ├── core/                   # コアロジック（副作用なし、単体テスト可能）
-    |   ├── __init__.py
-    |   ├── history.py          # セッション履歴クリーニング / token 推定 / 圧縮
-    |   └── privacy.py          # プライバシー脱敏：PII 検出 / プレースホルダー置換 / 可逆復元
+    │   ├── __init__.py
+    │   ├── history.py          # セッション履歴クリーニング / token 推定 / 圧縮
+    │   └── privacy.py          # プライバシー脱敏：PII 検出 / プレースホルダー置換 / 可逆復元
     ├── hooks/                  # 組み込みフック
     └── MCP/                    # MCP クライアントと設定
         ├── __init__.py
@@ -583,21 +773,32 @@ baize-agent/
 
 変数は `~/.baize/.env` に書けばよく、shell 設定ファイルを変更する必要はない。
 
+- データ分析変数：`SPSS_INSTALL_PATH` 説明：IBM SPSS Statistics インストールディレクトリ デフォルト：—（未設定ならファイルモードに降格）
+- データ分析変数：`DATABASE_URL` 説明：SQL MCP のデータベース接続文字列 デフォルト：—（MCP server が読み取る）
+
+これらの変数は `MCP/mcp_config.json` に書きます。
+
 # 開発
 
 ## テスト実行
 
 本プロジェクトは pytest を使用。開発前にパッケージと開発依存を編集可能モードでインストール：
 
-    pip install -e ".[dev]"
+```bash
+pip install -e ".[dev]"
+```
 
 全テスト実行：
 
-    python -m pytest tests/ -v
+```bash
+python -m pytest tests/ -v
+```
 
 単一ファイルのみ：
 
-    python -m pytest tests/test_history.py -v
+```bash
+python -m pytest tests/test_history.py -v
+```
 
 ## コード構成の約束
 
@@ -632,9 +833,29 @@ A：白澤は自動で二段階圧縮します。まず古いツール結果を�
 
 A：デフォルトのコマンドホワイトリストが `rm -rf /` などの危険操作を遮断します。ファイル書き込み前には Diff を表示し、確認を求めます。
 
-- Q：英語や日本語で回答させるには？
+- Q：白澤を SPSS に接続するには？
 
-A：`English` または `日本語` と言えば自動で切り替わります。`/lang en`（または `/lang ja`）も使えます。以降の思考と回答はその言語になります。中国語に戻すには `中文` と言うか `/lang zh` と入力します。
+A：1. `pip install -r requirements-data.txt` を実行；2. 環境変数 `SPSS_INSTALL_PATH` を SPSS インストールディレクトリに設定；3. `MCP/mcp_config.json` で spss server を有効化。詳細は「データ接続（SPSS / SQL）」章を参照。
+
+- Q：`SPSS batch: NOT FOUND` 怎么办？
+
+A：SPSS エンジンが見つかっていません。`SPSS_INSTALL_PATH` が `stats.exe` を含むディレクトリを正しく指しているか確認してください。`.sav` ファイルだけを扱う場合は、この警告を無視しても構いません（ファイルモードに降格します）。
+
+- Q：SQL データベースに接続するには何を追加でインストール？
+
+A：Python 層では `atengk-mcp-server-rdbms` をインストールします（`pip install` で自動完了）。**SQL Server ユーザーはシステム層に Microsoft ODBC Driver 18 も必要**で、これは pip ではインストールできません。
+
+- Q：白澤がデータベースデータを誤って削除しない？
+
+A：しません。SQL MCP はデフォルトで SELECT のみ許可し、AST 構文木レベルですべての書き込み操作を遮断します。さらに、白澤専用の**読み取り専用データベースアカウント**を作成することを強く推奨します。
+
+- Q：SPSS 分析結果のデータが LLM に漏れない？
+
+A：プライバシー脱敏を有効（`/privacy on`）にすると、ツール戻り値は LLM に送信される前に電話番号・メール・身分証などの PII が自動脱敏されます。**ただし、読み取り専用データベースアカウント + データサンプリング**（必要なフィールドのみ照会）も併用してリスクを下げることを推奨します。
+
+- Q：SPSS/SQL を追加すると、白澤の毎回の会話が遅くなり、token も増えるのはなぜ？
+
+A：MCP server が公開するツール定義が毎ターン LLM に送信されるためです。SPSS には 60+ のツールがあり、約 6000–12000 token の固定オーバーヘッドが増えます。常用ワークフローで SPSS を使わない場合は、その `enabled` を `false` にし、必要時に開けばよいです。
 
 # 🤝 コントリビューション
 
@@ -666,11 +887,9 @@ MIT License
 
 - Vibe Coding の道を共に歩むすべての開発者に感謝
 
-- 開発者はアイデアと意思決定に集中し、白澤が雑務と実行を処理する。プログラミングを直感に戻し、創造を神話のように流暢に。
-
 # ☕ サポート
 
-もし白沢があなたに役立つなら、ぜひスポンサーとしてご支援ください。独立開発には多くの時間と労力がかかりますので、ご支援は製品の更新スケジュールを変えるものではありません。ありがとうございます！
+もし白澤があなたに役立つなら、ぜひスポンサーとしてご支援ください。独立開発には多くの時間と労力がかかりますので、ご支援は製品の更新スケジュールを変えるものではありません。ありがとうございます！
 
 <p align="center">
   <img src="image/support.jpg" alt="WeChat QR" width="200" />
@@ -679,13 +898,13 @@ MIT License
 # 連絡先
 
 - 白澤に興味がある方、オープンソース協力に参加したい方、または私の更新を継続的に知りたい方は、以下の方法で連絡できます。
-- **現在、私は求人中であります。これまで市場調査やユーザーリサーチの業務に従事しており、Agentについても一定の知識を持っています。私のスキルが貴社のニーズに合致する場合、ぜひご一緒に働きたいと思います（意向ポジション：AI製品運営／ユーザーリサーチ／マーケティングリサーチ）。**
+- **現在、私は求人中であります。これまで市場調査やユーザーリサーチの業務に従事しており、Agent についても一定の知識を持っています。私のスキルが貴社のニーズに合致する場合、ぜひご一緒に働きたいと思います（意向ポジション：AI 製品運営／ユーザーリサーチ／マーケティングリサーチ）。**
 
 <p align="center">
   <img src="image/weixin.jpg" alt="WeChat QR コード" width="200" />
 </p>
 
-<p align="center">微信でQRコードをスキャンしてください。「Baizeオープンソース協力」または「企業採用」と明記してください。</p>
+<p align="center">微信で QR コードをスキャンしてください。「Baize オープンソース協力」または「企業採用」と明記してください。</p>
 
 <p align="center">
   <img src="image/抖音.png" alt="Douyin QR コード" width="200" />
