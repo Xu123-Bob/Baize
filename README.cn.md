@@ -12,7 +12,7 @@
   </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55"/>
   </a>
 </p>
 
@@ -830,7 +830,7 @@ A：如果开启了隐私脱敏（`/privacy on`），工具返回结果在发往
 A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。SPSS 有 60+ 工具，约增加 6000–12000 token 固定开销。如果常用工作流不涉及 SPSS，可以把它的`enabled`设为`false`，需要时再打开。
 
 # 🤝 贡献
-欢迎提交 Issue 和 PR。建议先阅读 Baize.py 中的 agent_loop 函数，理解 Agent 主循环后再做扩展。
+欢迎提交 Issue 和 PR。建议先阅读CONTRIBUTOR.md中的内容再提交PR。
 ### Thank you for every Contributor to Submit PR
 - Github Contributor：
 [@anupamme](https://github.com/anupamme)

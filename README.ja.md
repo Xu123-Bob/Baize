@@ -859,7 +859,7 @@ A：MCP server が公開するツール定義が毎ターン LLM に送信され
 
 # 🤝 コントリビューション
 
-Issue と PR を歓迎します。まず `Baize.py` の `agent_loop` 関数を読み、Agent メインループを理解してから拡張することを推奨します。
+IssueやPRの投稿をお待ちしています。まずCONTRIBUTOR.mdの内容を確認してから、PRを提出することをお勧めします。
 
 ### Thank you for every Contributor to Submit PR
 

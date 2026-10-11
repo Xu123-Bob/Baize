@@ -852,7 +852,7 @@ R : Parce que les définitions d’outils exposées par le MCP server sont envoy
 
 # 🤝 Contribuer
 
-Les issues et PRs sont bienvenus. Avant d'étendre, lisez la fonction `agent_loop` dans `Baize.py` pour comprendre la boucle principale.
+Bienvenue pour soumettre des issues et des PR. Nous vous recommandons de lire d'abord le contenu du fichier CONTRIBUTOR.md avant de soumettre un PR.
 
 ### Merci à tous les contributeurs qui envoient des PRs
 

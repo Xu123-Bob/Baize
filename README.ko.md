@@ -859,7 +859,7 @@ A: MCP server 가 노출하는 도구 정의가 매 턴 LLM 에 전송되기 때
 
 # 🤝 기여
 
-Issue와 PR을 환영합니다. 먼저 `Baize.py`의 `agent_loop` 함수를 읽고 Agent 메인 루프를 이해한 후 확장하는 것을 권장합니다.
+ISSUE와 PR 제출을 환영합니다. 먼저 CONTRIBUTOR.md의 내용을 읽은 후 PR을 제출하는 것을 권장합니다.
 
 ### PR을 제출해 주신 모든 기여자에게 감사드립니다
 

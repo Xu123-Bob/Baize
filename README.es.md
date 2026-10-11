@@ -12,7 +12,7 @@
   </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55"/>
   </a>
 </p>
 
@@ -889,7 +889,7 @@ MIT License
 
 # ☕ Apoyo económico
 
-Si Baize te resulta útil, agradezco tu apoyo económico. El desarrollo independiente también lleva mucho tiempo, el apoyo no cambia la planificación de actualizaciones del producto, ¡gracias por tu apoyo!
+Bienvenido a enviar Issues y PR. Se recomienda leer primero el contenido de CONTRIBUTOR.md antes de enviar un PR.
 
 <p align="center">
   <img src="image/support.jpg" alt="Código QR de WeChat" width="200" />
