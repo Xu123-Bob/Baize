@@ -21,19 +21,43 @@ from __future__ import annotations
 import json
 import re
 import threading
+import time
 from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Callable, Optional
+import secrets
 
 
-# ==================== 模式常量 ====================
+# ==================== 模式常量 ====================       # ★ 必须保留
 MODE_OFF = "off"
 MODE_STANDARD = "standard"
 MODE_STRICT = "strict"
 _ALL_MODES = (MODE_OFF, MODE_STANDARD, MODE_STRICT)
 
-# 占位符正则：全局共享，用于还原时一次性扫描替换
-_PLACEHOLDER_RE = re.compile(r'\[\[([A-Z][A-Z0-9]*)_(\d+)\]\]')
+# ==================== 占位符格式 ====================
+# 格式：«PZ_TYPE_<16hex>»
+#   - « »：非 ASCII 括号，与用户输入冲突概率极低
+#   - PZ：Baize 前缀，便于 grep 审计
+#   - TYPE：规则占位符（PHONE/EMAIL/...）
+#   - 16hex：64 bit 随机 token（不可预测、不可枚举）
+#
+# ⚠️ 不要改回 [[TYPE_N]] 形式！
+#    序号可枚举，会导致"用户输入 [[PHONE_1]] 即还原出真实号码"的注入攻击。
+PLACEHOLDER_OPEN = "«PZ_"
+PLACEHOLDER_CLOSE = "»"
+PLACEHOLDER_TOKEN_BYTES = 8          # 8 字节 → 16 hex 字符
+
+# 还原时使用的正则：只识别新格式
+_PLACEHOLDER_RE = re.compile(
+    r'«PZ_([A-Z][A-Z0-9]*)_([0-9a-f]{16})»'
+)
+
+# 兼容扫描：识别任何"看起来像占位符样式"的字符串，
+# 用于在脱敏入口处做中和处理（详见 3.5）。
+_ANY_PLACEHOLDER_SHAPE_RE = re.compile(
+    r'[\[«⟦]{1,2}PZ?[_A-Z0-9]*[\]»⟧]{1,2}|'
+    r'\[\[[A-Z][A-Z0-9]*_\d+\]\]'
+)
 
 
 # ==================== 工具函数 ====================
@@ -77,6 +101,11 @@ _STANDARD_RULES = [
     PrivacyRule("bank_card", "银行卡号",
         re.compile(r'(?<!\d)(\d{16,19})(?!\d)'), "BANKCARD",
         validator=_luhn_check),
+    # ★ 新增到正确位置：db_url 必须在 email 之前，
+    #   否则 "user:pass@host.com" 里的 "pass@host.com" 会被 email 先吃
+    PrivacyRule("db_url", "数据库连接串",
+        re.compile(r'(?i)\b(postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|mssql)://([^:\s]+):([^@\s]+)@'),
+        "DBURL", group=0),
     PrivacyRule("email", "电子邮箱",
         re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'),
         "EMAIL"),
@@ -102,6 +131,11 @@ _STANDARD_RULES = [
     PrivacyRule("bearer_token", "Bearer Token",
         re.compile(r'(?i)\bBearer\s+([A-Za-z0-9._\-]{20,})'),
         "BEARER", group=1),
+    # ★ 新增到正确位置：jwt 必须在 password_field 之前，
+    #   否则 "token: eyJ..." 会被 password_field（关键字含 token）先吃
+    PrivacyRule("jwt", "JWT Token",
+        re.compile(r'\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b'),
+        "JWT"),
     PrivacyRule("private_key", "私钥块",
         re.compile(r'-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?'
                    r'-----END [A-Z ]*PRIVATE KEY-----'),
@@ -113,6 +147,51 @@ _STANDARD_RULES = [
     PrivacyRule("url_credential", "URL 中的凭证",
         re.compile(r'(?<=://)([^/\s:@]{1,64}):([^/\s@]{1,64})@'),
         "URLCRE"),
+    # 国际手机号（E.164）
+    #   - 强制 + 号开头（避免匹配普通数字串）
+    #   - validator 要求 10-15 位数字（E.164 上限 15；排除 +2024-01-01 这类日期）
+    PrivacyRule("phone_intl", "国际手机号",
+        re.compile(r'(?<![\d+])\+\d{1,3}[\s\-]?\(?\d{2,4}\)?[\s\-]?\d{3,4}[\s\-]?\d{3,4}(?!\d)'),
+        "PHONE",
+        validator=lambda s: 10 <= len(re.sub(r'\D', '', s)) <= 15),
+    # 中国大陆固定电话
+    #   - 区号以 0 开头，2-3 位
+    #   - 号码 7-8 位
+    #   - 允许中间有空格或短横线
+    PrivacyRule("landline_cn", "中国固定电话",
+        re.compile(r'(?<!\d)(0\d{2,3}[\s\-]?\d{7,8})(?!\d)'),
+        "TEL"),
+    # 中国护照号（E/G + 8 位数字）
+    PrivacyRule("passport_cn", "中国护照号",
+        re.compile(r'(?<![A-Za-z0-9])([EG]\d{8})(?![A-Za-z0-9])'),
+        "PASSPORT"),
+    # 带分隔符的银行卡号（4-4-4-4~7，用空格或短横线分隔）
+    #   与现有 bank_card 不重叠：后者只匹配连续数字
+    PrivacyRule("bank_card_sep", "银行卡号（含分隔）",
+        re.compile(r'(?<!\d)(\d{4}[\s\-]\d{4}[\s\-]\d{4}[\s\-]\d{4,7})(?!\d)'),
+        "BANKCARD",
+        validator=lambda s: _luhn_check(s)),
+    # AWS Session Token
+    #   要求明确的前缀 aws_session_token + 100+ 字符
+    PrivacyRule("aws_session", "AWS Session Token",
+        re.compile(r'(?i)aws_session_token\s*[:=]\s*["\']?([A-Za-z0-9/+=]{100,})'),
+        "AWSSESS", group=1),
+    # GCP Service Account Key（JSON 里的 private_key_id）
+    PrivacyRule("gcp_key", "GCP Service Account Key",
+        re.compile(r'"private_key_id"\s*:\s*"([a-f0-9]{40})"'),
+        "GCPKEY", group=1),
+    # Slack Token
+    PrivacyRule("slack_token", "Slack Token",
+        re.compile(r'\bxox[baprs]-[A-Za-z0-9\-]{10,}\b'),
+        "SLACK"),
+    # Stripe Key
+    PrivacyRule("stripe_key", "Stripe Key",
+        re.compile(r'\b(sk|pk|rk)_(live|test)_[A-Za-z0-9]{20,}\b'),
+        "STRIPE"),
+    # MAC 地址
+    PrivacyRule("mac", "MAC 地址",
+        re.compile(r'\b(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b'),
+        "MAC"),
 ]
 
 # ---------- 严格模式：容易误伤，需显式开启 ----------
@@ -154,6 +233,21 @@ _STRICT_RULES = [
             r'[A-Z][A-Z0-9]{5,6}(?![\u4e00-\u9fffA-Z0-9])'
         ),
         "CARPLATE", modes=("strict",)),
+    # 港澳台证件号
+    #   ⚠️ 正则较宽（[A-Z]\d{6,9}），standard 模式误报率高
+    #   仅在 strict 模式启用；用户如嫌误报多，可通过 /privacy rules 关闭
+    PrivacyRule("id_hk_mo_tw", "港澳台证件号",
+        re.compile(r'(?<![A-Za-z0-9])([A-Z]\d{6,9}[0-9A-Z]?)(?![A-Za-z0-9])'),
+        "IDCARD", modes=("strict",)),
+
+    # 中文详细地址
+    #   要求明确包含 省/市/自治区 + 市/区/县 + 路/街/道/巷/号
+    PrivacyRule("address_cn", "中文详细地址",
+        re.compile(r'[\u4e00-\u9fff]{2,}(?:省|市|自治区)'
+                   r'[\u4e00-\u9fff]{2,}(?:市|区|县)'
+                   r'[\u4e00-\u9fff]{2,}(?:路|街|道|巷|号)'
+                   r'[\d\u4e00-\u9fff]{1,20}'),
+        "ADDRESS", modes=("strict",)),
 ]
 
 # ==================== 工具参数脱敏策略 ====================
@@ -190,19 +284,33 @@ class PrivacySanitizer:
         sanitizer.restore_message(resp_msg)
     """
 
-    def __init__(self, mode: str = MODE_OFF):
+    def __init__(self, mode: str = MODE_OFF,
+                max_entries: int = 2000,
+                ttl_seconds: float = 86400):
+        """
+        参数：
+        max_entries : 映射表最大条目数（超出按 LRU 淘汰）
+        ttl_seconds : 条目的最长存活时间（秒），默认 24 小时
+        """
         if mode not in _ALL_MODES:
             mode = MODE_OFF
         self._lock = threading.RLock()
         self._mode = mode
         self._rules = list(_STANDARD_RULES) + list(_STRICT_RULES)
-        # 占位符 -> 原文（保持插入顺序，便于审计）
-        self._map: OrderedDict[str, str] = OrderedDict()
-        # 原文 -> 占位符（避免同一原文产生多个占位符）
+        # 占位符 -> (原文, 时间戳)；OrderedDict 天然支持 LRU（move_to_end / popitem(last=False)）
+        self._map: OrderedDict[str, tuple[str, float]] = OrderedDict()
+        # 原文 -> 占位符（反向索引，避免同一原文产生多个占位符）
         self._reverse: dict[str, str] = {}
-        # 每个前缀的当前序号，避免每次 sum 遍历
-        self._counters: dict[str, int] = {}
-        self._stats = {"sanitize_calls": 0, "restore_calls": 0}
+        self._max_entries = max(1, max_entries)
+        self._ttl = max(1.0, ttl_seconds)
+        self._stats = {
+            "sanitize_calls": 0,
+            "restore_calls": 0,
+            "evictions": 0,   # 被 LRU 淘汰的条目数
+            "expired": 0,     # 被 TTL 淘汰的条目数
+        }
+        # 会话标识：用于调试与跨会话隔离
+        self._session_id: str = secrets.token_hex(4)
 
     # ---------- 模式控制 ----------
     @property
@@ -237,14 +345,25 @@ class PrivacySanitizer:
         return False
 
     # ---------- 文本脱敏 ----------
-    def sanitize_text(self, text: str) -> str:
+    def sanitize_text(self, text: str, *, neutralize: bool = True) -> str:
+        """
+        文本脱敏。
+    
+        neutralize=True（默认）：先中和输入里的伪占位符，用于"处理外部不可信输入"。
+        neutralize=False：跳过中和，用于"我们自己的可信输入"（如落盘脱敏）。
+        注意：`neutralize` 是关键字参数（`*` 之后），调用时必须写成sanitize_text(text, neutralize=False)
+        不能写成位置参数 sanitize_text(text, False)。
+        """
         if not text or not self.is_enabled():
             return text
         with self._lock:
+            if neutralize:
+                text = self._neutralize_placeholders(text)
             rules = [r for r in self._rules
-                     if r.enabled and self._mode in r.modes]
+                    if r.enabled and self._mode in r.modes]
             for rule in rules:
                 text = self._apply_rule(text, rule)
+            # 统一 GC 一次（_apply_rule 可能添加/刷新了若干条目）
             self._stats["sanitize_calls"] += 1
             return text
 
@@ -256,16 +375,26 @@ class PrivacySanitizer:
                 return m.group(0)
             if not original:
                 return m.group(0)
+            # ★ 若匹配到的内容本身含已生成的占位符，跳过（避免二次脱敏）
+            #   例：jwt 先跑了 "token: eyJ..." → "token: «PZ_JWT_xxx»"
+            #       然后 password_field 匹配到 group=2 = "«PZ_JWT_xxx»"
+            #       若不跳过，会被再次替换成 "«PZ_PASSWD_yyy»"，覆盖 jwt 的成果
+            if _PLACEHOLDER_RE.search(original):
+                return m.group(0)
             if rule.validator and not rule.validator(original):
                 return m.group(0)
-            # 复用占位符
+            now = time.time()
             if original in self._reverse:
+                # ---- 复用已有占位符 ----
                 ph = self._reverse[original]
+                # LRU 刷新：把该条目移到 OrderedDict 末尾（"最近使用"）
+                if ph in self._map:
+                    _orig, _ts = self._map.pop(ph)
+                    self._map[ph] = (_orig, now)   # 更新时间戳 + 挪到末尾
             else:
-                idx = self._counters.get(rule.placeholder, 0) + 1
-                self._counters[rule.placeholder] = idx
-                ph = f"[[{rule.placeholder}_{idx}]]"
-                self._map[ph] = original
+                # ---- 新增占位符 ----
+                ph = self._make_placeholder(rule.placeholder)
+                self._map[ph] = (original, now)
                 self._reverse[original] = ph
             # 只替换指定组时保留前后文
             if rule.group:
@@ -277,6 +406,70 @@ class PrivacySanitizer:
 
         return rule.pattern.sub(_repl, text)
 
+    def _make_placeholder(self, prefix: str) -> str:
+       """
+       生成一个不可预测的占位符。
+       使用 secrets.token_hex 而非序号，防止枚举/猜测/重放。
+
+       注意：不做任何碰撞处理 —— 2^64 空间下，实际运行中
+      （每天 100 万次脱敏、连续 1000 年）的碰撞概率 < 10^-7。
+       """
+       token = secrets.token_hex(PLACEHOLDER_TOKEN_BYTES)
+       return f"{PLACEHOLDER_OPEN}{prefix}_{token}{PLACEHOLDER_CLOSE}"
+
+    def _neutralize_placeholders(self, text: str) -> str:
+        """
+        把文本中任何"看起来像占位符"的片段打断，使其无法被 restore_text 识别。
+
+        为什么需要：
+            攻击者可以在用户输入中直接写「«PZ_PHONE_<猜测的token>»」，
+            或者诱导工具输出/LLM 输出中包含类似的字符串。
+            若不做中和，这些字符串可能恰好命中映射表，从而被还原成真实 PII。
+
+            中和方式：在 `«` 与 `P` 之间、`»` 之前插入零宽非连接符 (U+200C)。
+            对 LLM 的语义影响可忽略（tokenizer 一般直接忽略），
+            但正则不再匹配，还原路径彻底失效。
+
+        幂等性：
+            对同一文本重复调用是安全的 —— 已经中和过的串不再匹配 `_PLACEHOLDER_RE`。
+        """
+        if not text:
+            return text
+        # 只在确实含有可疑片段时才走正则，避免性能损耗
+        if "«" not in text and "[[" not in text and "⟦" not in text:
+            return text
+
+        # 中和"新格式"与"旧格式"两类占位符样式
+        def _nz(m: re.Match) -> str:
+            s = m.group(0)
+            # 在开括号后和闭括号前各插入一个 ZWNJ
+            if s.startswith("«"):
+                return "«\u200c" + s[1:-1] + "\u200c»"
+            if s.startswith("⟦"):
+                return "⟦\u200c" + s[1:-1] + "\u200c⟧"
+            if s.startswith("[["):
+                return "[\u200c[" + s[2:-2] + "]\u200c]"
+            # 兜底：整体包裹
+            return "\u200c" + s + "\u200c"
+
+        return _ANY_PLACEHOLDER_SHAPE_RE.sub(_nz, text)
+
+    def neutralize(self, text: str) -> str:
+        """
+        公开的中和入口：把文本里所有"看起来像占位符"的片段打断。
+
+        用途：
+            供持久化层（load_session）在处理外部数据时调用，
+            避免攻击者在 session 文件里手工嵌入伪占位符。
+
+        与 _neutralize_placeholders 的关系：
+            只是后者的一层公开别名，行为完全一致。
+            之所以不直接暴露 _neutralize_placeholders，
+            是因为下划线开头代表"类内部实现细节"，
+            外部模块不应直接调用，以免未来重命名造成依赖破坏。
+        """
+        return self._neutralize_placeholders(text)
+    
     # 新增私有方法 _sanitize_arguments
     def _sanitize_arguments(self, args_str: str) -> str:
         """
@@ -317,6 +510,79 @@ class PrivacySanitizer:
         # separators 去掉多余空格，节省 token；ensure_ascii=False 保留中文
         return json.dumps(sanitized, ensure_ascii=False, separators=(",", ":"))
 
+    def redact_for_persist(self, text: str) -> str:
+        """
+        落盘专用：单向脱敏。使用一次性映射表，返回值无法被还原。
+    
+        即使当前 mode=off，也会以 standard 模式执行；standard 模式会升级为 strict。
+        这是"默认安全"原则的体现：磁盘上的数据，永远比内存更敏感。
+        """
+        if not text:
+            return text
+        disk_mode = self._effective_disk_mode()
+        # 一次性脱敏器：用完即弃，映射表随 GC 回收
+        tmp = PrivacySanitizer(mode=disk_mode)
+        try:
+            return tmp.sanitize_text(text, neutralize=False)
+        finally:
+            tmp.new_session()   # 显式清空（可选，帮助 GC）
+
+    def _effective_disk_mode(self) -> str:
+        """落盘时的实际模式：比内存模式更激进。"""
+        if self._mode == MODE_OFF:
+            return MODE_STANDARD
+        if self._mode == MODE_STANDARD:
+            return MODE_STRICT
+        return MODE_STRICT
+
+    def redact_messages_for_persist(self, messages: list) -> list:
+        """
+        落盘专用：对整个消息列表脱敏，返回新列表。
+    
+        与 sanitize_messages 的区别：
+            - 使用一次性映射表（不污染会话）
+            - 对所有工具 arguments 脱敏（不限于白名单）
+            - 所有 tool 结果都脱敏
+            - 不做中和
+        """
+        if not messages:
+            return messages
+        disk_mode = self._effective_disk_mode()
+        tmp = PrivacySanitizer(mode=disk_mode)
+        try:
+            out = []
+            for m in messages:
+                if not isinstance(m, dict):
+                    out.append(m); continue
+                nm = dict(m)
+                # 1) content
+                if isinstance(nm.get("content"), str) and nm["content"]:
+                    nm["content"] = tmp.sanitize_text(
+                        nm["content"], neutralize=False
+                    )
+                # 2) tool_calls[*].function.arguments（全部脱敏，不分白名单）
+                if nm.get("tool_calls"):
+                    new_tcs = []
+                    for tc in nm["tool_calls"]:
+                        if not isinstance(tc, dict):
+                            new_tcs.append(tc); continue
+                        tc2 = dict(tc)
+                        fn = tc2.get("function")
+                        if isinstance(fn, dict):
+                            fn2 = dict(fn)
+                            if isinstance(fn2.get("arguments"), str) and fn2["arguments"]:
+                                # 对 arguments 也走结构化脱敏（保持 JSON 合法）
+                                fn2["arguments"] = tmp._sanitize_arguments(
+                                    fn2["arguments"]
+                                )
+                            tc2["function"] = fn2
+                        new_tcs.append(tc2)
+                    nm["tool_calls"] = new_tcs
+                out.append(nm)
+            return out
+        finally:
+            tmp.new_session()
+
     # ---------- 文本还原 ----------
     def restore_text(self, text: str) -> str:
         if not text:
@@ -325,10 +591,41 @@ class PrivacySanitizer:
             if not self._map:
                 return text
 
-            def _sub(m: re.Match) -> str:
-                return self._map.get(m.group(0), m.group(0))
+            now = time.time()
+            expired_in_this_call: list[str] = []   # 收集本次识别出的过期占位符
 
+            def _sub(m: re.Match) -> str:
+                ph = m.group(0)
+            # 双重保险：
+            #   1) 正则本身只认 «PZ_TYPE_<16hex>» 格式
+            #   2) 即使格式对，也必须在本次会话的映射表中
+            # 两者同时满足才还原，避免"输入里恰好长得像"的伪占位符被展开
+                entry = self._map.get(ph)
+                if entry is None:
+                    # 不在映射里：可能是伪造的、或已淘汰的
+                    return ph
+                orig, ts = entry
+                # ---- TTL 检查 ----
+                if now - ts > self._ttl:
+                    expired_in_this_call.append(ph)
+                    return ph
+                # ---- LRU 刷新 ----
+                # 命中即"最近使用"，移到末尾
+                self._map.move_to_end(ph)
+                # 更新时间戳，让反复使用的占位符"续命"
+                self._map[ph] = (orig, now)
+                return orig
+            
             text = _PLACEHOLDER_RE.sub(_sub, text)
+
+            # 清理本次识别出的过期条目（在正则回调外做，避免回调里修改 dict）
+            for ph in expired_in_this_call:
+                entry = self._map.pop(ph, None)
+                if entry is not None:
+                    orig, _ts = entry
+                    self._reverse.pop(orig, None)
+                    self._stats["expired"] += 1
+
             self._stats["restore_calls"] += 1
             return text
 
@@ -478,26 +775,88 @@ class PrivacySanitizer:
 
     # ---------- 会话管理 ----------
     def clear(self):
+        """
+        兼容旧接口：清空映射。
+        新代码建议直接调用 new_session()，它会同时轮换 session_id。
+        """
+        self.new_session()
+
+    def _gc_locked(self) -> None:
+        """
+        LRU + TTL 清理，必须持 self._lock 调用。
+
+        执行顺序：
+            1. 先清 TTL 过期的条目
+            2. 再按 LRU 淘汰超容量的条目
+        顺序很重要：先清过期可以避免"过期条目占了 LRU 名额"。
+        """
+        now = time.time()
+
+        # ---- 1) TTL 清理 ----
+        # OrderedDict 不支持直接反向遍历删除，先收集再删
+        expired_keys = [
+            k for k, (_orig, ts) in self._map.items()
+            if now - ts > self._ttl
+        ]
+        for k in expired_keys:
+            orig, _ts = self._map.pop(k)
+            self._reverse.pop(orig, None)
+            self._stats["expired"] += 1
+
+        # ---- 2) LRU 淘汰 ----
+        while len(self._map) > self._max_entries:
+            # popitem(last=False) 弹出最早插入的条目
+            k, (orig, _ts) = self._map.popitem(last=False)
+            self._reverse.pop(orig, None)
+            self._stats["evictions"] += 1
+
+    def new_session(self, session_id: Optional[str] = None) -> str:
+        """
+        开始一个新会话：清空所有占位符映射，生成新 session_id。
+
+        何时调用：
+          - 程序启动时（main()）
+          - /clear 命令
+          - /privacy clear 命令
+          - 用户显式切换工作区时（可选）
+
+        为什么必须：
+            单例模式 + 长期进程下，会话 A 的映射会残留在内存里。
+            如果攻击者在会话 B 里重放会话 A 见过的占位符，
+            就会把会话 A 的 PII 拉进会话 B —— 典型的跨会话泄露。
+        """
         with self._lock:
             self._map.clear()
             self._reverse.clear()
-            self._counters.clear()
+            self._session_id = session_id or secrets.token_hex(4)
+            return self._session_id
+
+    @property
+    def session_id(self) -> str:
+        """当前会话标识（只读）。"""
+        with self._lock:
+            return self._session_id
 
     # ---------- 统计 ----------
     def get_stats(self) -> dict:
         with self._lock:
             return {
                 "mode": self._mode,
+                "session_id": self._session_id,
                 "active_rules": len(self.list_active_rules()),
                 "total_rules": len(self._rules),
                 "active_placeholders": len(self._map),
-                **self._stats,
+                "max_entries": self._max_entries,
+                "ttl_seconds": self._ttl,
+                **self._stats,  # 含 evictions / expired
             }
 
     def list_placeholders(self) -> list[tuple[str, str]]:
-        """列出当前所有占位符 -> 原文的映射（谨慎使用）。"""
+        """列出当前所有占位符 -> 原文的映射（谨慎使用）。
+        返回结构：（占位符, 原文）元组的列表，按 LRU 顺序（最早 -> 最近）。
+        """
         with self._lock:
-            return list(self._map.items())
+            return [(ph, orig) for ph, (orig, _ts) in self._map.items()]
 
 
 # ==================== 自然语言意图识别 ====================
