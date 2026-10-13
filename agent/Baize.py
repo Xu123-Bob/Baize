@@ -12,7 +12,6 @@ from agent.utils import lined_print, framed_print
 import sys
 import re
 import signal
-import psutil
 from pathlib import Path
 # agent/ 目录就是资源根（skills、subagent、hooks、logo.txt、MCP 都在这里）
 from importlib.resources import files
@@ -59,7 +58,6 @@ import wcwidth  # 引入 wcwidth 库用于计算中文显示宽度
 from agent.ui_theme import (llm_status,render_thinking, render_answer, render_tool_call,render_tool_result, render_final, render_system)
 from tenacity import (retry,stop_after_attempt,wait_exponential,retry_if_exception_type,before_sleep_log)
 import logging
-import httpx
 from typing import Optional
 
 
@@ -89,6 +87,10 @@ TASKS_DIR = CURRENT_WORKDIR / ".tasks"
 THRESHOLD = 80000
 # 隐私脱敏器（全局单例，默认关闭）
 PRIVACY = PrivacySanitizer(mode=MODE_OFF)
+# 落盘脱敏开关（默认开启）
+#   True  → save_session / auto_compact / hook_audit_log 落盘前脱敏（推荐）
+#   False → 保持原行为（落盘含明文，仅调试/迁移旧数据时短暂使用）
+PERSIST_REDACT_ENABLED = True
 # 用于存储历史思考内容和工具调用（供 /show 命令使用）
 HISTORY_THOUGHTS = []
 HISTORY_TOOL_CALLS = []   # 每个元素为 {'name': str, 'args': str, 'result': str}
@@ -1807,6 +1809,7 @@ def auto_compact(messages, callback=None):
         transcript_dir=get_transcript_dir(),
         hook_trigger=HOOK.trigger,
         callback=callback,
+        redact_messages_fn=PRIVACY.redact_messages_for_persist,
     )
 
 # TaskManager任务管理工具函数（供 agent_loop 调用）
@@ -1950,18 +1953,70 @@ def hook_dangerous_command(tool_call):
                 'reason': f'拦截危险命令模式: {pattern}'
             }
     return None
+# 脱敏后长度膨胀
+def _truncate_at_placeholder(text: str, limit: int) -> str:
+    """
+    截断到 limit 字符；若截断点落在占位符内部，回退到占位符开头。
+
+    为什么需要：
+        脱敏后文本含 «PZ_TYPE_<16hex>» 形式的占位符。
+        直接 [:limit] 可能切到占位符中间（例如 "...«PZ_PHONE_a3f8"），
+        虽然残缺占位符不会被 restore_text 识别（正则要完整匹配），
+        但看起来丑，且审计时不易人工阅读。回退到占位符开头更整洁。
+    """
+    if len(text) <= limit:
+        return text
+    truncated = text[:limit]
+    # 如果截断点在一个占位符内部，回退到占位符开头
+    m = re.search(r'«PZ_[A-Z0-9_]*$', truncated)
+    if m:
+        truncated = truncated[:m.start()]
+    return truncated
 
 #记录每一次工具调用的审计日志
 def hook_audit_log(tool_call, result):
-    """PostToolUse 等价：记录审计日志"""
+    """PostToolUse 等价：记录审计日志（落盘前脱敏 + 截断）"""
     log_dir = CURRENT_WORKDIR / ".claude/logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / f"audit-{datetime.now().strftime('%Y-%m-%d')}.log"
     timestamp = datetime.now().isoformat()
     tool_name = tool_call.function.name
-    tool_input = tool_call.function.arguments
-    with open(log_file, 'a', encoding='utf-8') as f:
-        f.write(f"[{timestamp}] {tool_name}: {tool_input} -> {result[:200]}\n")
+
+    # ---- 1) 提取原始文本 ----
+    raw_args = tool_call.function.arguments
+    if not isinstance(raw_args, str):   #类型防御
+        raw_args = str(raw_args)
+    if not isinstance(result, str):
+        result = str(result)
+    
+    # ---- 审计日志脱敏 ----
+    if PERSIST_REDACT_ENABLED:
+        try:
+            safe_args = _truncate_at_placeholder(
+                PRIVACY.redact_for_persist(raw_args), 500
+            )
+            safe_result = _truncate_at_placeholder(
+                PRIVACY.redact_for_persist(result), 300
+            )
+        except Exception:
+            # 脱敏失败 → 拒绝写出明文
+            safe_args = f"[REDACT FAILED: {type(e).__name__}]"
+            safe_result = "[REDACT FAILED]"
+    else:
+        # 用户显式关闭落盘脱敏 → 保留原文（但仍需截断和净化）
+        safe_args = _truncate_at_placeholder(raw_args, 500)
+        safe_result = _truncate_at_placeholder(result, 300)
+    # ---- 3) 净化：换行符/回车符替换为空格 ----
+    #      防止单条日志被拆成多行，破坏审计结构
+    safe_args = safe_args.replace("\n", " ").replace("\r", " ")
+    safe_result = safe_result.replace("\n", " ").replace("\r", " ")
+    # ---- 4) 写盘 ----
+    try:
+        with open(log_file, 'a', encoding='utf-8') as f:
+            f.write(f"[{timestamp}] {tool_name}: {safe_args} -> {safe_result}\n")
+    except Exception as e:
+        # 写盘失败不阻断工具调用（audit 只是辅助）
+        print(f"\033[93m[audit] 写入日志失败：{e}\033[0m")
 
 #注册在 after_tool_call 事件上的内置钩子，其作用是在代理修改文件后，自动调用代码格式化工具对文件进行美化
 def hook_auto_format(tool_call, result):
@@ -2069,6 +2124,16 @@ def save_session(workdir: Path = None, commit_to_git: bool = False):
     non_system = [msg for msg in SESSION_HISTORY if msg.get("role") != "system"]
     session_file = workdir / ".baize_session.json"
 
+    # ---- 落盘前脱敏（默认开启，可用 /privacy persist off 关闭）----
+    if PERSIST_REDACT_ENABLED:
+        try:
+            to_disk = PRIVACY.redact_messages_for_persist(non_system)
+        except Exception as e:
+            print(f"\033[91m[系统] 落盘脱敏失败，拒绝写出明文：{e}\033[0m")
+            return
+    else:
+        to_disk = non_system
+
     # 1) 实时写入 JSON（保证崩溃恢复）
     try:
         with open(session_file, 'w', encoding='utf-8') as f:
@@ -2119,6 +2184,12 @@ def load_session(workdir: Path) -> list:
             with open(session_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             sanitize_history(data)  # 修复历史中断导致的悬空 tool_calls
+            # 新增：对加载进来的历史做一次占位符中和，
+            # 防止攻击者在 session 文件中嵌入伪占位符
+            if PRIVACY.is_enabled():
+                for m in data:
+                    if isinstance(m, dict) and isinstance(m.get("content"), str):
+                        m["content"] = PRIVACY._neutralize_placeholders(m["content"])
             return data
         except Exception as e:
             print(f"[系统] 加载会话失败: {e}")
@@ -2956,7 +3027,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.5.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.7.0  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -2965,6 +3036,10 @@ def main():
     # ========== 1. 初始化 MCP 管理器（内置配置） ==========
     # init_mcp_client 会设置全局 _global_mcp_manager，并连接内置配置的服务器
     init_mcp_client(project_root / "MCP" / "mcp_config.json")
+    # ========== 1.5 初始化隐私会话 ==========
+    # 每次启动生成独立会话，避免上次进程的映射（若有持久化）串入
+    PRIVACY.new_session()
+    print(f"\033[90m[隐私] 会话 ID: {PRIVACY.session_id}\033[0m")
     # ========== 2. 注册代码内嵌的钩子（内置优先级） ==========
     # 这些钩子不是文件夹中的脚本，而是直接定义的函数，属于“内置”的一部分
     HOOK.register('before_tool_call', hook_sensitive_file_protection, source="builtin")
@@ -3172,7 +3247,10 @@ def main():
                 HISTORY_TOOL_CALLS.clear()
                 # 卸载当前激活的技能
                 ACTIVE_SKILL = None
+                # 新增：轮换隐私会话
+                PRIVACY.new_session()
                 print("[系统] 已清除所有对话历史、待办列表、思考记录和工具调用记录。")
+                print(f"[系统] 隐私会话已轮换（新 ID: {PRIVACY.session_id}）。")
                 continue
             elif cmd == "/show thought":
                 if HISTORY_THOUGHTS:
@@ -3254,6 +3332,7 @@ def main():
                     }.get(s["mode"], s["mode"])
                     print(f"\n[隐私脱敏]")
                     print(f"  当前模式    : {mode_label} ({s['mode']})")
+                    print(f"  会话 ID     : {s.get('session_id', '-')}")
                     print(f"  启用规则数  : {s['active_rules']} / {s['total_rules']}")
                     print(f"  活跃占位符  : {s['active_placeholders']}")
                     print(f"  脱敏调用次数: {s['sanitize_calls']}")
@@ -3279,15 +3358,55 @@ def main():
                     print("[系统] 隐私脱敏已开启（严格模式，可能误伤普通姓名）。")
                     continue
                 if sub == "rules":
-                    print("\n[隐私脱敏规则清单]")
-                    for r in PRIVACY.list_all_rules():
-                        status = "启用" if r.enabled else "禁用"
-                        modes = ",".join(r.modes)
-                        print(f"  - {r.name:<16s} {r.label:<18s} [{status}] modes={modes}")
+                    rules = PRIVACY.list_all_rules()
+                    if not rules:
+                        print("[系统] 当前没有注册任何规则。")
+                        continue
+                    print(f"\n[隐私脱敏规则清单] 共 {len(rules)} 条")
+                    # 按 mode 分组显示
+                    std_rules = [r for r in rules if MODE_STANDARD in r.modes or MODE_STRICT in r.modes]
+                    strict_only = [r for r in rules if r.modes == ("strict",)]
+                    for group_name, group in (("标准+严格", std_rules), ("仅严格", strict_only)):
+                        if not group:
+                            continue
+                        print(f"\n  【{group_name}】")
+                        for r in group:
+                            status = "✓" if r.enabled else "✗"
+                            modes = ",".join(r.modes)
+                            print(f"    [{status}] {r.name:<16s} {r.label:<22s} ({modes})")
+                    print(f"\n  用法：")
+                    print(f"    /privacy rule-off <name>   禁用某条规则")
+                    print(f"    /privacy rule-on  <name>   重新启用")
+                    continue
+                # ---------- 规则开关 ----------
+                if sub in ("rule-on", "rule-off"):
+                    # ---- 参数校验 ----
+                    if len(parts) < 3 or not parts[2].strip():
+                        print(f"[系统] 用法：/privacy {sub} <规则名>")
+                        print(f"[系统] 用 /privacy rules 查看所有规则名")
+                        continue
+                    rule_name = parts[2].strip()
+                    # 规则名不允许含空格（防止用户误把多个名字挤在一起）
+                    if " " in rule_name:
+                        print(f"[系统] 规则名不能含空格：{rule_name!r}")
+                        continue
+                    # ---- 执行 ----
+                    enabled = (sub == "rule-on")
+                    ok = PRIVACY.set_rule_enabled(rule_name, enabled)
+                    if ok:
+                        action = "启用" if enabled else "禁用"
+                        # 找到该规则的 label 用于友好回显
+                        rule = next((r for r in PRIVACY.list_all_rules()
+                                    if r.name == rule_name), None)
+                        label = rule.label if rule else rule_name
+                        print(f"[系统] 已{action}规则：{rule_name}（{label}）")
+                    else:
+                        print(f"[系统] 未找到规则：{rule_name!r}")
+                        print(f"[系统] 用 /privacy rules 查看所有规则名")
                     continue
                 if sub == "clear":
-                    PRIVACY.clear()
-                    print("[系统] 已清空所有占位符映射。")
+                    PRIVACY.new_session()
+                    print(f"[系统] 已清空所有占位符映射，新会话 ID: {PRIVACY.session_id}。")
                     continue
                 if sub == "test":
                     if len(parts) < 3:
