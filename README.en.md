@@ -2,13 +2,14 @@
 
 <img src="image/logopage02.png" alt="Baize Logo" width="320" />
 
-# Baize
+# Baize 白泽
 
-**Speak freely and without reservation.**
+**Speak all you know; keep all secrets.**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
     <img src="https://atomgit.com/Com_Xu/Baize/star/new_badge.svg" alt="AtomGit">
+  </a>
   &nbsp;&nbsp;
   <a href="https://trendshift.io/repositories/233391?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-233391" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/trendshift/repositories/233391/daily?language=JavaScript" alt="Xu123-Bob%2FBaize | Trendshift" width="250" height="55"/>
@@ -25,12 +26,6 @@
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
   </a>
-  <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
-    <img src="https://img.shields.io/github/issues-pr-closed/Xu123-Bob/Baize?style=flat-square&logo=github&label=Closed%20PRs" alt="GitHub Closed Pull Requests">
-  </a>
-  <a href="https://github.com/Xu123-Bob/Baize/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/Xu123-Bob/Baize?style=flat-square&logo=github&label=Contributors" alt="GitHub Contributors">
-  </a>
 </p>
 
 <p align="center">
@@ -39,10 +34,10 @@
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
-  <a href="image/抖音.png">
-    <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="Douyin">
   </a>
-  
+  <a href="image/抖音.png">
+    <img src="https://img.shields.io/badge/Douyin-Scan%20to%20Follow-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="Douyin">
+  </a>
 </p>
 
 <p align="center">
@@ -59,9 +54,9 @@
 
 ----------
 
-The Chinese mythical creature has transformed into VibeCoding, a security assistant for data analysis.
+A secure assistant for Vibe Coding and data analysis, inspired by the Chinese mythical beast Baize.
 
-**An open-source Coding Agent CLI with powerful privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / GLM / Qwen / Kimi / local Ollama) and provides a complete toolkit: tool invocation, skill loading, subagent delegation, context compression, secure sandbox, and more.**
+**An open-source Coding Agent CLI with strong privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Qwen / Kimi / Ollama local) and provides a complete set of capabilities including tool calling, skill loading, subagent delegation, context compression, and secure sandboxing.**
 
 ----------
 
@@ -69,24 +64,26 @@ The Chinese mythical creature has transformed into VibeCoding, a security assist
 
 ## Privacy Protection
 
-- **Bidirectional reversible privacy protection**: Before your sensitive information is sent to the LLM, it is replaced with placeholders; after the response is received, it is automatically restored. The whole process is transparent to you — the history, tool arguments, and final answers you see are always the original text, while what the LLM sees is always placeholders such as `[[PHONE_1]]` and `[[EMAIL_1]]`.
-- **Multiple ways to enable privacy protection**: You can enable it via natural language in the conversation, or use the more precise `/privacy` command.
-- **Localized agent**: This product has no remote database and runs completely locally. It does not collect user information.
+- **Bidirectional reversible privacy protection**: Sensitive information is replaced with placeholders before being sent to the LLM, and automatically restored after receiving the response. The whole process is transparent to the user — the history, tool parameters, and final answers you see are always the original text, while the LLM only ever sees random unguessable placeholders such as `«PZ_PHONE_a3f8b2c1d4e5f6a7»`.
+- **Full redaction at rest**: Session files, compressed transcripts, and audit logs are automatically redacted before being written to disk (enabled by default). Plaintext PII never appears on disk.
+- **Injection resistance**: Placeholders use 64-bit cryptographic random tokens, making them impossible to enumerate, forge, or replay. Old placeholders become invalid immediately after switching sessions.
+- **Multiple ways to enable privacy protection**: You can enable privacy protection by entering natural language in the command line, or use the more precise `/privacy` command.
+- **Local-first agent**: This product has no remote database and runs fully locally. It does not collect user information.
 
 ## Multilingual Interaction
 
-- **Supports nine languages**: 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
-- **Multiple ways to switch languages**: You can directly speak a language, for example `please speak with english`, to switch to English, or use `/lang ja` to switch to Japanese.
+- **Supports nine languages**: Chinese, English, Japanese, Korean, Spanish, French, German, Russian, Arabic.
+- **Multiple ways to switch languages**: You can directly say `please speak with english` to switch to English, or use `/lang ja` to switch to Japanese.
 
 # Features
 
-- **Multi-backend support**: DeepSeek, any OpenAI-compatible API (GLM / Qwen / Kimi / OpenAI), and local Ollama. Switch with one setting.
+- **Multi-backend support**: DeepSeek, any OpenAI-compatible endpoint (GLM / Qwen / Kimi / OpenAI), and local Ollama. One-click switching.
 
-- **Zero-config startup**: Automatically generates configuration files on first run. Users only need to enter the key once.
+- **Zero-config startup**: Automatically generates configuration files on first run. Users only need to fill in the key once.
 
-- **Privacy sanitization**: Automatically detects and masks phone numbers, emails, ID cards, bank cards, API keys and other PII before sending to the LLM, then restores them in the response. Supports standard / strict levels, switchable via natural language or `/privacy`.
+- **Privacy redaction**: Automatically identifies and redacts **30+ categories** of sensitive information before sending to the LLM (phone numbers, emails, ID cards, passports, bank cards, international numbers, API keys, JWTs, database connection strings, MAC addresses, etc.), and automatically restores them after receiving the response. **Redaction also applies at rest**, leaving no plaintext on disk. Supports Standard / Strict two-level modes, switchable via natural language or `/privacy`.
 
-- **Multilingual interaction**: Freely switch among Chinese / English / Japanese / Korean / Spanish / French / German / Russian / Arabic. Just say `English` or use `/lang ja`, and the AI thinks and replies in that language.
+- **Multilingual interaction**: Freely switch among Chinese / English / Japanese / Korean / Spanish / French / German / Russian / Arabic. Just say `English` or use `/lang ja`, and the AI will think and reply in the corresponding language throughout the session.
 
 - **Complete toolchain**: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, task and todo management.
 
@@ -94,15 +91,15 @@ The Chinese mythical creature has transformed into VibeCoding, a security assist
 
 - **Subagents**: Delegate complex tasks to subagents with independent contexts to avoid polluting the main session.
 
-- **Hooks**: Python or Shell hooks that support pre/post tool-call interception, audit logging, auto-formatting, and test gating.
+- **Hooks**: Python or Shell hooks. Supports pre/post tool-call interception, audit logs, automatic formatting, and test gating.
 
-- **MCP protocol**: Connect external tool servers (GitHub, Filesystem, etc.) via Model Context Protocol.
+- **MCP protocol**: Connect external tool servers through Model Context Protocol (GitHub, Filesystem, etc.).
 
-- **Context compression**: Two-level compression (tool result truncation + LLM summarization), supporting very long conversations.
+- **Context compression**: Two-level compression (tool result truncation + LLM summarization). Supports ultra-long conversations.
 
-- **Secure sandbox**: Command whitelist, path escape detection, dangerous command blocking, sensitive file protection, and script injection interception.
+- **Secure sandbox**: Command allowlist, path escape detection, dangerous command interception, sensitive file protection, and script injection interception.
 
-- **Black-gold themed CLI**: Adaptive Chinese width, code highlighting, Diff coloring, and thought collapsing.
+- **Black-gold themed CLI**: Adaptive Chinese width, code highlighting, diff coloring, and thinking folding.
 
 # Baize CLI Interface
 
@@ -114,110 +111,111 @@ Baize CLI startup screen
   <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
 </p>
 
-Baize CLI runtime screen -- 01
+<div align="center">
+Baize CLI running screen — 01
+</div>
 
 <p align="center">
-  <img src="image/clipage02.jpg" alt="Baize CLI runtime screen" width="800" />
+  <img src="image/clipage02.jpg" alt="Baize CLI running screen" width="800" />
 </p>
 
-Baize CLI runtime screen -- 02
+<div align="center">
+Baize CLI running screen — 02
+</div>
 
 <p align="center">
-  <img src="image/clipage03.jpg" alt="Baize CLI runtime screen" width="800" />
+  <img src="image/clipage03.jpg" alt="Baize CLI running screen" width="800" />
 </p>
 
 # Installation
 
 ## Prerequisites
 
-- Python 3.10+ (requires tomllib; built in on 3.11+; on 3.10 install tomli)
+- Python 3.10+ (requires tomllib, built into 3.11+; for 3.10 install tomli)
 
 - pip
 
 ## Install from Source
 
-### Two download methods
+### Two Download Methods
 
 1. `pip install https://github.com/Xu123-Bob/Baize.git`
 
-    bash -- Press Win+R and enter cmd, then type:
+    bash -- Press Win+R, enter `cmd`, then enter:
 
     baize
 
-2. On the repository page, click `<>Code` --> Download ZIP
+2. On the repository page, click `<> Code` --> `Download ZIP`
 
-(1) After unzipping, enter this file directory:
+(1) After unzipping, enter the file directory:
 
-    bash -- Press Win+R and enter cmd
+    bash -- Press Win+R, enter cmd
 
-    cd path/to/extracted/directory
+    cd path/to/extracted-directory
 
     pip install -r requirements.txt
 
     python -m Baize
 
-After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
+After installation, press Win+R, enter `cmd` to open the CLI, then enter `baize` to run.
 
-(2) After downloading the ZIP, install locally: unzip, enter the directory, and run:
+(2) Download the ZIP and install locally. After unzipping, enter the directory and run:
 
-    bash -- Press Win+R and enter cmd
+    bash -- Press Win+R, enter cmd
 
     pip install .
 
-After installation, press Win+R, enter cmd, open the CLI, type `baize`, and run it.
+After installation, press Win+R, enter `cmd` to open the CLI, then enter `baize` to run.
 
-### Optional: Install Data Access Dependencies
+### Optional: Install Data Access Dependencies (Important Tools for Data Analysis)
 
-If you need Baize to drive SPSS or SQL databases, install:
+If you need Baize to drive SPSS or SQL databases, install the extra dependencies:
 
 ```bash
 pip install -r requirements-data.txt
 ```
 
 `requirements-data.txt` includes:
-
 - `spss-studio-mcp`: SPSS statistical analysis MCP server (requires IBM SPSS Statistics installed locally)
 - `atengk-mcp-server-rdbms`: General relational database MCP server (PostgreSQL / MySQL / SQL Server / Oracle / DM, etc.)
 - `pyodbc`: ODBC Python binding required by SQL Server
 
-Or, if the project is installed via `pyproject.toml`, use extras:
+Alternatively, if the project is installed via `pyproject.toml`, you can also use extras:
 
 ```bash
-pip install -e ".[data]"          # Install all data access dependencies
-pip install -e ".[spss]"          # SPSS only
-pip install -e ".[sql]"           # General SQL only
-pip install -e ".[sql-mssql]"     # SQL Server only, including pyodbc
+pip install -e ".[data]"          # Install all data access dependencies at once
+pip install -e ".[spss]"          # Install only SPSS
+pip install -e ".[sql]"           # Install only general SQL
+pip install -e ".[sql-mssql]"     # SQL Server only (including pyodbc)
 ```
 
-- **⚠️ SQL Server users: `pyodbc` is only the Python binding. You also need Microsoft ODBC Driver 18 for SQL Server installed at the system level.**
-- **⚠️ SPSS users: `spss-studio-mcp` is only an MCP bridge. IBM SPSS Statistics (version 20–31) must be installed and licensed locally, and the environment variable `SPSS_INSTALL_PATH` must point to the SPSS installation directory. Full statistical analysis is mainly supported on Windows. On Linux/macOS, it can fall back to “file mode” (read `.sav`, inspect metadata, preview data, but no statistical analysis).**
+- **⚠️ SQL Server users: `pyodbc` is only the Python binding. You also need to install Microsoft ODBC Driver 18 for SQL Server at the system level.**
+- **⚠️ SPSS users: `spss-studio-mcp` is only an MCP bridge layer. IBM SPSS Statistics (version 20–31) must already be installed locally and properly licensed, and the `SPSS_INSTALL_PATH` environment variable must point to the SPSS installation directory. Currently, the SPSS engine mainly supports full analysis on Windows; on Linux/macOS it can fall back to "file mode" (read .sav files, view metadata, preview data, but no statistical analysis).**
 
 # Quick Start
 
-1. First run
+1. First Run
 
-    bash
-
-    baize
+```bash
+baize
+```
 
 On first run, Baize automatically generates two configuration files:
 
 ```
 ~/.baize/config.toml   # Backend configuration (choose DeepSeek / OpenAI / Ollama)
-
-~/.baize/.env          # Key file>
+~/.baize/.env          # Secrets file
 ```
 
-Windows path: `C:\Users\your-username\.baize\`.
+Windows path: `C:\Users\YourUserName\.baize\`.
 
-2. Choose a backend
+2. Choose a Backend
 
-Open `~/.baize/config.toml` and **modify `active_provider`**:
+Open `~/.baize/config.toml` and modify **active_provider** (must be modified):
 
 ```toml
-
-# Baize Configuration File
-# Modify the 'active_provider' to switch the backend  # Optional values: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+# Baize configuration file
+# Modify active_provider to switch backend  # Options: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
 active_provider = "deepseek"
 
@@ -252,200 +250,210 @@ env_key = "OPENAI_API_KEY"
 model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (本地)"
+name = "Ollama (local)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
 model = "qwen2.5:7b"
 ```
 
-3. Fill in the key
+3. Fill in the API Key
 
-Edit `~/.baize/.env`, **if you need to use a specific LLM, simply remove the `#` at the beginning and add `#` before other LLMs to lock the output of other LLM APIs. After entering the API Key, be sure to save it. Only after saving will it be effective**:
+Edit `~/.baize/.env`. **If you need to use a certain LLM, remove the leading `# ` for it, and add `# ` before other LLMs to lock their API output. After entering the API Key, be sure to save. It only takes effect after saving**:
 
 ```env
 # ============================================================
-# baize Key File
+# Baize secrets file
 # ============================================================
-# Fill in only the keys for the backend you are using. The rest can remain commented out.
-# The variable names must be consistent with the env_key field in config.toml.
+# Only fill in the key for the backend you use; keep others commented out.
+# Variable names must match the env_key field in config.toml.
 #
-# Location：
+# Location:
 #   Linux / macOS: ~/.baize/.env
-#   Windows:       C:\Users\Your username\.baize\.env
+#   Windows:       C:\Users\YourUserName\.baize\.env
 # ============================================================
 
-# ---------- DeepSeek（Default backend） ----------
-# Get the address:https://platform.deepseek.com/api_keys
+# ---------- DeepSeek (default backend) ----------
+# Get it at: https://platform.deepseek.com/api_keys
 DEEPSEEK_API_KEY=
 
-# ---------- OpenAI or any OpenAI-compatible interface (optional)  ----------
-# Applicable to Groq, Tongyi, Moonshot, Zhoushu, OpenAI, etc.
-# Note: The base_url is configured in the [model_providers.xxx] section of config.toml, not here.
+# ---------- OpenAI or any OpenAI-compatible endpoint (optional) ----------
+# For Groq, Qwen, Moonshot, Zhipu, OpenAI, etc.
+# Note: base_url is configured in config.toml under [model_providers.xxx], not here
 # OPENAI_API_KEY=
 
-# ---------- Qwen（optional） ----------
-# Get the address:https://dashscope.console.aliyun.com/
+# ---------- Qwen (optional) ----------
+# Get it at: https://dashscope.console.aliyun.com/
 # DASHSCOPE_API_KEY=
 
-# ---------- Kimi / Moonshot（optional） ----------
-# Get the address:https://platform.moonshot.cn/console/api-keys
+# ---------- Kimi / Moonshot (optional) ----------
+# Get it at: https://platform.moonshot.cn/console/api-keys
 # MOONSHOT_API_KEY=
 
-# ---------- GLM（optional） ----------
-# Get the address:https://open.bigmodel.cn/usercenter/apikeys
+# ---------- Zhipu GLM (optional) ----------
+# Get it at: https://open.bigmodel.cn/usercenter/apikeys
 # ZHIPUAI_API_KEY=
 
-# ---------- Custom Gateway（optional） ----------
+# ---------- Custom gateway (optional) ----------
 # CUSTOM_API_KEY=
 
-# ---------- Ollama（Local model, no need for key） ----------
-# Just make sure that Ollama is running on localhost:11434, and no further configuration is required.
+# ---------- Ollama (local model, no key required) ----------
+# Just make sure Ollama is running at localhost:11434. No configuration needed here.
 ```
 
 4. Restart
 
-    bash
+```bash
+baize
+```
 
-    baize
-
-If you see the black-gold logo and welcome message, startup succeeded.
+If you see the black-gold logo and welcome message, startup was successful.
 
 # Usage Examples
 
-After startup, describe your needs in natural language at the `>>> 降旨：` prompt:
+After startup, describe your needs in natural language at the `>>> Prompt:` prompt:
 
 ```
->>>降旨：Write a Python script to scrape Douban Top250 and save it as CSV
+>>> Prompt: Write a Python script to scrape Douban Top250 and save it as CSV
 
->>>降旨：Help me check type errors in all Python files under src/
+>>> Prompt: Help me check type errors in all Python files under src/
 
->>>降旨：Find all places in this repository that use requests and change them to httpx
+>>> Prompt: Find all places in this repository that use requests, and change them to httpx
 ```
 
 ## Multilingual Interaction
 
-Baize supports **nine languages**: 中文, English, 日本語, 한국어, Español, Français, deutsch, русский, العربية.
+Baize supports **nine languages**: Chinese, English, Japanese, Korean, Spanish, French, German, Russian, Arabic.
 
-Two ways to switch:
+There are two ways to switch:
 
-### Option 1: Just speak (auto-detect)
+### Option 1: Just Speak (Auto-detect)
 
-Baize automatically detects your input language and switches:
-
-```
->>> 降旨：Hello, help me write a Python script
-[system] Detected input language: English. Baize switched to English.
-(replies in English)
-
->>> 降旨：日本語で答えてください
-[system] Detected input language: 日本語. Baize switched to 日本語.
-(replies in Japanese)
-```
-
-### Option 2: Manual command
+Baize automatically detects the language of your input and switches:
 
 ```
->>> 降旨：/lang                # Show current language and available list
-[system] Current language: 中文 (zh)
-[system] Available:
-    zh    中文 ←
+>>> Prompt: Hello, help me write a Python script
+[System] Input language detected as English. Baize has switched to English interaction.
+(Baize replies in English)
+
+>>> Prompt: 日本語で答えてください
+[System] Input language detected as 日本語. Baize has switched to 日本語 interaction.
+(Baize replies in Japanese)
+```
+
+### Option 2: Manual Command
+
+```
+>>> Prompt: /lang                # View current language and available list
+[System] Current language: Chinese (zh)
+[System] Available languages:
+    zh    Chinese ←
     en    English
     ja    日本語
     ko    한국어
     es    Español
     fr    Français
-    de    Deutsch
-    ru    Русский
-    ar    العربية
 
->>> 降旨：/lang English        # Switch by language name
->>> 降旨：/lang ja             # Switch by language code
->>> 降旨：/lang 西班牙语        # Chinese names work too
+>>> Prompt: /lang English        # Switch by language name
+>>> Prompt: /lang ja             # Switch by language code
+>>> Prompt: /lang 西班牙语        # Chinese names are also supported
 ```
 
-Supports **language name / language code / Chinese name / native name**. To switch to English, any of `English`, `en`, `英语`, `英文` works.
+Supports four forms: **language name / language code / Chinese name / native name**. For example, to switch to English, any of `English`, `en`, `英语`, or `英文` works.
 
 ## Built-in Commands
 
-- `/exit`, `/quit` --> Exit Baize
-- `/clear` --> Clear conversation history, todos, thought records, and tool records
+- `/exit, /quit` --> Exit Baize
+- `/clear` --> Clear conversation history, todos, thinking records, and tool records
 - `/compact` --> Manually compress context (use when the conversation is too long)
 - `/commit` --> Save the current session and commit to Git (if inside a Git repository)
-- `/lang` → Show current language; `/lang en` switches to English (accepts code or name)
+- `/lang` --> View current language; `/lang en` switches to English (supports language code or language name)
 - `/skills` --> List all available skills
 - `/skills reload` --> Reload the user skills directory
 - `/unload` --> Unload the currently active skill
-- `/show thought` --> View the full thought record
+- `/show thought` --> View full thinking records
 - `/show tool` --> View tool call records
 - `/show all` --> View all session history
-- `/skill-name` --> Load the specified skill (supports fuzzy matching)
-- `/privacy` --> Privacy sanitization control (see "Privacy Sanitization" below)
+- `/技能名` --> Load the specified skill (supports fuzzy matching)
+- `/privacy` --> Privacy redaction control (on / off / strict / status / rules / test / clear)
+- `/privacy rule-off <name>` --> Disable a redaction rule (e.g. `/privacy rule-off phone_intl`)
+- `/privacy rule-on  <name>` --> Re-enable a rule
 
-# Ollama Local Models (Zero Cost)
+## Data Access Usage Examples
+
+After configuring SPSS / SQL, you can drive them directly with natural language:
+
+```text
+>>> Prompt: Use SPSS to open data.sav and tell me the variable list and sample size
+
+>>> Prompt: Run descriptive statistics on data.sav, then run a linear regression
+
+>>> Prompt: Query orders in the sales table with sales amount over 100,000 last month, grouped by customer
+
+>>> Prompt: Export the SPSS analysis results to CSV, then join with customer master data using SQL
+```
+
+# Local Ollama Models (Zero Cost)
 
 Don't want to use a cloud API? Use local Ollama:
 
-    bash
+```bash
+# 1. Install Ollama: https://ollama.com/download
+# 2. Pull a model
+ollama pull qwen2.5:7b
 
-    #1. Install Ollama: https://ollama.com/download
-    #2. Pull a model
-    ollama pull qwen2.5:7b
+# 3. Start the Ollama service
+ollama serve
 
-    #3. Start the Ollama service
-    ollama serve
+# 4. Modify ~/.baize/config.toml
+active_provider = "ollama"
 
-    #4. Modify ~/.baize/config.toml
-    active_provider = "ollama"
-
-    #5. Start Baize
-    baize
+# 5. Start Baize
+baize
+```
 
 Recommended models: `qwen2.5:7b` (strong Chinese), `llama3.1:8b`, `deepseek-r1:7b`.
 
 # Extension Mechanisms
 
-Baize supports four extension methods. Place them in the current working directory to take effect.
+Baize supports four extension methods. Put them in the current working directory and they will take effect.
 
 ## Skills
 
-Write domain knowledge in `./skills/skill-name/SKILL.md`. The AI will proactively load it when encountering complex tasks.
+Write domain knowledge in `./skills/skill-name/SKILL.md`. The AI will proactively load them when encountering complex tasks.
 
-markdown
+```markdown
+---
+name: pandas-eda
+description: Best practices for exploratory data analysis with pandas
+tags: data,python
+---
 
-    ---
-    name: pandas-eda
+# Pandas EDA Guide
 
-    description: Best practices for exploratory data analysis with pandas
-
-    tags: data,python
-    ---
-
-    # Pandas EDA Guide
-
-    ## Core Steps
-    1. Use df.info() to inspect field types and missing values
-    2. Use df.describe() for statistical description
-    ...
+## Core Steps
+1. Use df.info() to inspect field types and missing values
+2. Use df.describe() for descriptive statistics
+...
+```
 
 You can also manually load it in conversation with `/pandas-eda`.
 
 ## Subagents
 
-Define specialized subagents in `./subagent/role-name/AGENT.md`. The main agent can delegate tasks through the `agent` tool.
+Define dedicated subagents in `./subagent/role-name/AGENT.md`. The main agent can delegate tasks through the agent tool.
 
-markdown
+```markdown
+---
+name: code-reviewer
+description: Strict code reviewer
+---
 
-    ---
-    name: code-reviewer
-
-    description: A strict code reviewer
-    ---
-
-    You are a senior code reviewer. During review, prioritize:
-    1. Boundary conditions and exception handling
-    2. Resource leaks
-    3. Concurrency safety
-    ...
+You are a senior code reviewer. When reviewing, prioritize:
+1. Boundary conditions and exception handling
+2. Resource leaks
+3. Concurrency safety
+...
+```
 
 ## Hooks
 
@@ -455,7 +463,7 @@ Place the following under `./hooks/`:
 - `PostToolUse-*.sh`
 - `Stop-*.sh`
 
-They receive JSON input and return a decision:
+They receive JSON input and return decisions:
 
 ```bash
 #!/bin/bash
@@ -475,128 +483,203 @@ Python hooks can directly call built-in APIs (see the `hook_*` functions in `Bai
 
 Configure external tool servers in `./MCP/mcp_config.json`:
 
-json
-
+```json
+{
+  "mcpServers": [
     {
-      "mcpServers": [
-        {
-          "name": "filesystem",
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-          "env": {},
-          "enabled": true
-        }
-      ]
+      "name": "filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "env": {},
+      "enabled": true
     }
+  ]
+}
+```
 
-# Security Design
+# Security Design (Core)
 
 Baize enables the following security mechanisms by default:
 
-- **Command whitelist**: Only common commands such as `ls`, `cat`, `grep`, `git`, `python3`, etc. are allowed.
+- **Command allowlist**: Only common commands such as `ls`, `cat`, `grep`, `git`, `python3`, etc. are allowed.
 - **Path escape detection**: All file operations are restricted to the current working directory and `/tmp`.
-- **Dangerous command blocking**: Blocks patterns such as `rm -rf /`, fork bombs, `curl | sh`, `git push --force`, etc.
-- **Sensitive file protection**: Prohibits modifying `.env`, `.ssh/`, `id_rsa`, `*.pem`, etc.
+- **Dangerous command interception**: Intercepts patterns such as `rm -rf /`, fork bombs, `curl | sh`, `git push --force`, etc.
+- **Sensitive file protection**: Prohibits modification of `.env`, `.ssh/`, `id_rsa`, `*.pem`, etc.
 - **Script injection interception**: Detects bypasses such as `python -c "os.system(...)"`.
-- **Process resource limits**: On Linux/macOS, limits CPU, memory, and process count.
+- **Process resource limits**: Limits CPU, memory, and process count on Linux/macOS.
+- **Privacy redaction (bidirectional reversible)**: PII is replaced with random placeholders outbound and restored inbound; independent redaction at rest.
+- **Placeholder injection resistance**: 64-bit cryptographic random tokens + input-side neutralization + session isolation.
+- **Audit log redaction**: `hook_audit_log` redacts before writing to disk + truncates + refuses to write on failure.
 
-If you need to relax restrictions in a trusted project, modify `ALLOWED_COMMANDS` and `FORBIDDEN_PATH_PATTERNS` in `Baize.py`.
+If you need to relax restrictions in trusted projects, you can modify `ALLOWED_COMMANDS` and `FORBIDDEN_PATH_PATTERNS` in `Baize.py`.
 
-# Privacy Sanitization
+# Privacy Redaction (Core)
 
-Baize ships with a **bidirectional, reversible** privacy sanitization mechanism. Sensitive information is replaced with placeholders before being sent to the LLM, and restored automatically in the response — completely transparent to you. What you see (history, tool arguments, final answer) is always the original text; what the LLM sees is always `[[PHONE_1]]`, `[[EMAIL_1]]`, etc.
+Baize has a built-in **bidirectional reversible + at-rest redaction** privacy protection mechanism, covering the full path from input to disk:
 
-**Off by default.** Enable when needed.
+- **Outbound**: Before sending to the LLM, PII is replaced with unguessable placeholders
+- **Inbound**: Placeholders in LLM responses are restored to the original text
+- **At rest**: Session files, compressed transcripts, and audit logs are **independently redacted** before being written to disk. No plaintext remains on disk
 
-## Two ways to enable
+**Disabled by default**, enable when needed.
 
-### Option 1: Natural language
+## Two Ways to Enable
+
+### Option 1: Natural Language
+
+Say directly in the conversation:
 
 ```
->>>降旨：enable privacy sanitization
-[system] Privacy sanitization enabled (standard mode).
+>>> Prompt: Enable privacy redaction
+[System] Privacy redaction enabled (Standard mode).
 
->>>降旨：enable strict sanitization
-[system] Privacy sanitization enabled (strict mode).
+>>> Prompt: Enable strict redaction
+[System] Privacy redaction enabled (Strict mode).
 
->>>降旨：disable privacy protection
-[system] Privacy sanitization disabled.
+>>> Prompt: Disable privacy protection
+[System] Privacy redaction disabled.
 ```
 
-### Option 2: Slash commands
+### Option 2: Slash Commands
 
-- `/privacy on` Enable standard mode
-- `/privacy strict` Enable strict mode (adds names, license plates, QQ, WeChat)
+- `/privacy on` Enable Standard mode
+- `/privacy strict` Enable Strict mode
 - `/privacy off` Disable
-- `/privacy status` Show current state and statistics
-- `/privacy rules` List all rules
-- `/privacy test` <text> Test sanitization
-- `/privacy clear` Clear the placeholder map
+- `/privacy status` View status, session ID, rule count, LRU/TTL statistics
+- `/privacy rules` List all rules (including enabled status)
+- `/privacy rule-off <name>` Disable a rule
+- `/privacy rule-on  <name>` Re-enable a rule
+- `/privacy test <text>` Test redaction effect
+- `/privacy clear` Clear placeholder mapping and **rotate session ID**
 
-## Two levels
+## Two Levels
 
-**Standard**: Mainland China phone numbers, ID cards, bank cards (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials
+**Standard**: Mainland China mobile phone numbers, ID card numbers, bank card numbers (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials.
 
-**Strict**: All of standard + Chinese names, QQ numbers, WeChat IDs, Mainland China license plates
+**Strict**: Everything in Standard + Chinese names, QQ numbers, WeChat IDs, Mainland China license plate numbers.
 
-## How it works
+## How It Works
 
-User input (with real PII) → messages store original text
+User input (containing real PII) → messages store original text
 
-↓ sanitize_messages()
+↓ `sanitize_messages()`
 
-What the LLM sees: [[PHONE_1]], [[EMAIL_1]]
+What is sent to the LLM is `[[PHONE_1]]`, `[[EMAIL_1]]`
 
 ↓ LLM response
 
-Placeholders → restore_message()
+Returned placeholders → `restore_message()`
 
-Restored to original → stored / displayed / executed
+Restored to original text → written to disk / displayed / tool execution
 
-**Same original text reuses the same placeholder**, so one phone number stays as `[[PHONE_1]]` throughout a session.
+- **Privacy redaction (bidirectional reversible)**: PII is replaced with random placeholders outbound and restored inbound; independent redaction at rest.
+- **Placeholder injection resistance**: 64-bit cryptographic random tokens + input-side neutralization + session isolation.
+- **Audit log redaction**: `hook_audit_log` redacts before writing to disk + truncates + refuses to write on failure.
 
-**Tool arguments are graded by sensitivity**: text-only tools like `todo`, `ask_user_question`, `task_*` have their arguments sanitized; path/command/URL tools like `run_read`, `run_bash`, `run_webfetch` are left alone (otherwise they would fail because the path was replaced).
+## Smart Grading of Tool Parameters
 
-**Subagents are protected too**: tasks delegated from the main agent go through the same sanitize/restore pipeline.
+**Will be redacted** (plain text parameters, not involved in actual execution):
+- `todo`, `ask_user_question`, `task_create`, `task_update`
+
+**Not redacted** (paths/commands/URLs are actually used):
+- `run_read` / `run_write` / `run_edit` / `run_glob` / `run_grep` (paths are used for IO)
+- `run_bash` / `background_run` (commands are executed)
+- `run_webfetch` / `web_search` (URLs are actually sent to the network)
+- `set_workspace` (path is used for `chdir`)
+- `load_skills` (skill names are enumerations)
+- `agent` (subagent context is independently redacted)
+- `mcp_*` (unknown semantics, handled conservatively)
+
+**All redacted when persisted** (because persisted content will not be re-executed; security first).
+
+## Redaction at Rest
+
+**Enabled by default**, independent of in-memory redaction. Even if `/privacy off` is used (no in-memory redaction), at-rest redaction still follows at least the Standard rules.
+
+**Key features**:
+- At-rest redaction uses an **independent, one-time mapping table** — placeholders written to disk **cannot be restored**, because the mapping table is discarded
+- If at-rest redaction **fails, it refuses to write plaintext** (no downgrade, no silent skip)
+- If old session files contain plaintext, they are automatically redacted and rewritten on first save
+
+**How to disable** (not recommended): Modify `PERSIST_REDACT_ENABLED = False` in `Baize.py`.
 
 ## Example
 
 ```
->>>降旨：/privacy test My phone is 13812345678, email a@b.com
-Original: My phone is 13812345678, email a@b.com
-Masked : My phone is [[PHONE_1]], email [[EMAIL_1]]
-Restored: My phone is 13812345678, email a@b.com
+>>> Prompt: /privacy test My phone number is 13812345678, email is a@b.com
+Original: My phone number is 13812345678, email is a@b.com
+Redacted: My phone number is [[PHONE_1]], email is [[EMAIL_1]]
+Restored: My phone number is 13812345678, email is a@b.com
 
->>>降旨：/privacy status
-[Privacy Sanitization]
-Current mode : standard
-Active rules : 15 / 19
-Placeholders : 2
-Sanitize calls: 3
-Restore calls : 3
+>>> Prompt: /privacy status
+[Privacy Redaction]
+Current mode : Standard mode (standard)
+Session ID : 7d2f5e91
+Enabled rules : 34 / 41
+Active placeholders : 2
+Mapping capacity : 2 / 2000
+TTL : 86400 seconds
+LRU evictions : 0
+TTL evictions : 0
+Redaction calls: 3
+Restore calls: 3
+
+>>> Prompt: /privacy rules
+[Privacy Redaction Rule List] Total 41
+[Standard + Strict]
+[✓] phone_cn Mainland China mobile phone number (standard,strict)
+[✓] id_card_cn Mainland China ID card number (standard,strict)
+[✓] jwt JWT Token (standard,strict)
+...
+[Strict only]
+[✓] name_cn Chinese name (strict)
+[✓] address_cn Chinese detailed address (strict)
+...
+Usage:
+/privacy rule-off <name> Disable a rule
+/privacy rule-on <name> Re-enable a rule
 ```
-# Data Access
 
-Baize connects to enterprise data analysis software through **MCP (Model Context Protocol)**. The main program does not need any modification—just register the server in `MCP/mcp_config.json`.
+### Test Examples
+
+<div align="center">
+Privacy protection test screen — 01
+</div>
+
+<p align="center">
+  <img src="image/privary01.jpg" alt="Privacy protection test screen" width="800" />
+</p>
+
+<div align="center">
+Privacy protection test screen — 02
+</div>
+
+<p align="center">
+  <img src="image/privary02.jpg" alt="Privacy protection test screen" width="800" />
+</p>
+
+# Data Access (Core)
+
+Baize connects to enterprise data analysis software through **MCP (Model Context Protocol)**. The main program requires no modification — simply register the server in `MCP/mcp_config.json`.
 
 ## SPSS Integration
 
 ### Prerequisites
 
-- IBM SPSS Statistics installed locally (version 20–31, Windows recommended)
+- IBM SPSS Statistics installed locally (version 20–31; Windows recommended)
 - SPSS is licensed and can start normally
 
 ### Configuration Steps
 
-1. **Find the SPSS installation directory:** the default path is usually `C:\Program Files\IBM\SPSS Statistics\` followed by the version number, such as `31`.
+1. **Find the SPSS installation directory:** The default path is usually `C:\Program Files\IBM\SPSS Statistics\` followed by the version number (e.g. 31).
 
-2. **Set the environment variable** in `.env` or system environment variables:
+2. **Set the environment variable** (can be in `.env` or system environment variables):
 
 ```text
 SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
 ```
 
-3. **Verify the status:**
+3. **Verify status**:
 
 ```bash
 spss-studio-mcp status
@@ -611,7 +694,7 @@ pandas     : OK v3.0.2
 SPSS batch : OK
 ```
 
-4. **Register it in `MCP/mcp_config.json`:**
+4. **Register in `MCP/mcp_config.json`**:
 
 ```json
 {
@@ -631,12 +714,12 @@ SPSS batch : OK
 
 ### If `SPSS batch: NOT FOUND`
 
-It means `spss-studio-mcp` did not find the SPSS engine, but `pyreadstat` + `pandas` are working. In this case, Baize enters **file mode**:
+This means `spss-studio-mcp` did not find the SPSS engine, but `pyreadstat` + `pandas` are working. In this case it enters **file mode**:
 
-- Can read `.sav`, inspect metadata, preview data, and convert CSV ↔ SAV
-- Cannot run statistics such as t-tests, regression, ANOVA, etc.
+- Can read `.sav`, view metadata, preview data, and convert CSV ↔ SAV
+- Cannot run statistics (t-test, regression, ANOVA, etc.)
 
-Solution: correctly set `SPSS_INSTALL_PATH` in `MCP/mcp_config.json`, or accept the file mode fallback.
+Solution: correctly set `SPSS_INSTALL_PATH` in `MCP/mcp_config.json`, or accept file mode fallback.
 
 ## SQL Integration
 
@@ -653,14 +736,14 @@ CREATE USER baize_ro WITH PASSWORD 'xxx';
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 ```
 
-2. **Prepare the connection string:**
+2. **Prepare the connection string**:
 
 - PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
 - MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
 - SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
 - Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
 
-3. **Register it in `MCP/mcp_config.json`:**
+3. **Register in `MCP/mcp_config.json`**:
 
 ```json
 {
@@ -678,18 +761,18 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 }
 ```
 
-### Built-in Security Guardrails
+### Security Guardrails (Built-in)
 
 `atengk-mcp-server-rdbms` provides multiple layers of protection:
 
-- **AST-level SELECT guard**: uses `sqlglot` to parse the syntax tree and physically blocks write operations such as `DELETE/UPDATE/DROP/TRUNCATE`.
-- **Automatic LIMIT injection**: queries without a specified row count are forced to append `LIMIT 100`, preventing full-table pulls from causing memory overflow.
-- **Read-only by default**: write operations require explicit authorization via `--allow-dml` / `--allow-ddl`.
-- **SQL injection blocking**: malicious statements built by string concatenation are rejected at the AST level.
+- **AST-level SELECT guard**: Parses the syntax tree with `sqlglot` and physically blocks write operations such as `DELETE/UPDATE/DROP/TRUNCATE`.
+- **Automatic LIMIT injection**: Queries without a specified row count are forced to append `LIMIT 100` to prevent full-table scans from causing memory overflow.
+- **Read-only by default**: Write operations must be explicitly authorized via `--allow-dml` / `--allow-ddl`.
+- **SQL injection interception**: Rejects malicious statements constructed through string concatenation at the AST layer.
 
 ### Configure Multiple Databases at Once
 
-If you want to connect multiple databases at the same time, register multiple servers:
+If you want to connect to multiple databases at the same time, register multiple servers:
 
 ```json
 {
@@ -712,15 +795,17 @@ If you want to connect multiple databases at the same time, register multiple se
 }
 ```
 
-Baize automatically merges all their tools into `MATERTOOLS`, and the LLM selects the appropriate tool based on the task.
+Baize will automatically merge all their tools into `MATERTOOLS`, and the LLM will automatically choose based on the task.
 
 # Directory Structure
 
 ```
 baize-agent/
 ├── pyproject.toml              # Packaging configuration
+├── requirements-data.txt       # Data access dependencies (optional)
+├── requirements-data           # Data access dependencies
 ├── README.md
-├── tests/                      # Tests (not shipped with the package)
+├── tests/                      # Tests (not published with the package)
 |   ├── __init__.py
 |   ├── test_history.py
 |   └── test_skill_loader.py
@@ -737,8 +822,8 @@ baize-agent/
     ├── subagent/               # Built-in subagents
     ├── core/                   # Core logic (side-effect free, unit-testable)
     |   ├── __init__.py
-    |   ├── history.py          # Session history cleaning / token estimation / compression
-    |   └── privacy.py          # Privacy sanitization: PII detection / placeholder 
+    |   ├── history.py          # Session history cleanup / token estimation / compression
+    |   └── privacy.py          # Privacy redaction: PII detection / placeholder replacement / reversible restore
     ├── hooks/                  # Built-in hooks
     └── MCP/                    # MCP client and configuration
         ├── __init__.py
@@ -746,43 +831,55 @@ baize-agent/
         └── mcp_config.json
 ```
 
-# Environment Variable Reference
+# Environment Variables Reference
 
-- Variable: `DEEPSEEK_API_KEY`  Description: DeepSeek API  Default: key  —
-- Variable: `DEEPSEEK_BASE_URL`  Description: DeepSeek endpoint  Default: `https://api.deepseek.com`
-- Variable: `OPENAI_API_KEY`  Description: OpenAI  Default: compatible API key  —
-- Variable: `OPENAI_BASE_URL`  Description: OpenAI-compatible endpoint  Default: `https://api.openai.com/v1`
-- Variable: `OLLAMA_BASE_URL`  Description: Ollama service address  Default: `http://localhost:11434`
+| Variable | Description | Default |
+| --- | --- | --- |
+| `DEEPSEEK_API_KEY` | DeepSeek API key | — |
+| `DEEPSEEK_BASE_URL` | DeepSeek endpoint | `https://api.deepseek.com` |
+| `OPENAI_API_KEY` | OpenAI-compatible endpoint key | — |
+| `OPENAI_BASE_URL` | OpenAI-compatible endpoint | `https://api.openai.com/v1` |
+| `OLLAMA_BASE_URL` | Ollama service address | `http://localhost:11434` |
 
-Write variables to `~/.baize/.env`; there is no need to modify shell config files.
+**Write the above variables into `~/.baize/.env`; no need to modify shell configuration files.**
 
-- Data analysis variable: `SPSS_INSTALL_PATH` Description: IBM SPSS Statistics installation directory Default: — (falls back to file mode if not set)
-- Data analysis variable: `DATABASE_URL` Description: Database connection string for SQL MCP Default: — (read by the MCP server)
+Data analysis variables:
 
-Write these variables to `MCP/mcp_config.json`.
+| Variable | Description | Default |
+| --- | --- | --- |
+| `SPSS_INSTALL_PATH` | IBM SPSS Statistics installation directory | — (falls back to file mode if unset) |
+| `DATABASE_URL` | Database connection string for SQL MCP | — (read by the MCP server) |
+
+**Write the above variables into `MCP/mcp_config.json`.**
 
 # Development
 
-## Running Tests
+## Run Tests
 
-This project uses pytest. Before development, install the package in editable mode with dev dependencies:
+This project uses pytest. Before development, install the package in editable mode with development dependencies:
 
-    pip install -e ".[dev]"
+```bash
+pip install -e ".[dev]"
+```
 
 Run all tests:
 
-    python -m pytest tests/ -v
+```bash
+python -m pytest tests/ -v
+```
 
 Run a single file:
 
-    python -m pytest tests/test_history.py -v
+```bash
+python -m pytest tests/test_history.py -v
+```
 
 ## Code Structure Conventions
 
-- `agent/`: The main package shipped with the package. All runtime logic and resources (skills, subagent, hooks, MCP) are here.
-- `agent/core/`: Pure logic modules with no external side effects. **They must be independently testable.** Put new logic of this kind here and add tests.
-- `tests/`: Corresponds one-to-one with source files under `agent/`, named `test_<module>.py`.
-- Any function with external dependencies (network, disk, global state) should have dependencies injected via parameters to make replacement easy in tests.
+- `agent/`: The main package published with the package. All runtime logic and resources (skills, subagent, hooks, MCP) are here.
+- `agent/core/`: Pure logic modules with no external side effects. **They must be independently testable.** Add new logic of this kind here, with tests.
+- `tests/`: One-to-one correspondence with source files under `agent/`, named `test_<module>.py`.
+- Any function with external dependencies (network, disk, global state) should inject dependencies through parameters so they can be replaced in tests.
 
 # ❓ FAQ
 
@@ -790,57 +887,57 @@ Run a single file:
 
 A: `~/.baize/.env`, not the `.env` in the project root.
 
-- Q: Do I need to reinstall after switching backends?
+- Q: Do I need to reinstall when switching backends?
 
 A: No. Just change `active_provider` in `~/.baize/config.toml`.
 
 - Q: Does local Ollama require an API key?
 
-A: No. Select `active_provider = "ollama"` and leave `env_key` empty.
+A: No. Set `active_provider = "ollama"` and leave `env_key` empty.
 
 - Q: How do I switch the working directory?
 
-A: Just say "switch to /path/to/project" in the conversation, and Baize will call the `set_workspace` tool.
+A: In conversation, directly say "switch to /path/to/project", and Baize will call the `set_workspace` tool.
 
-- Q: What happens when the context gets too long?
+- Q: What happens when the context is too long?
 
-A: Baize automatically performs two-level compression: first truncating old tool results, then requesting the LLM to generate a summary. You can also manually run `/compact`.
+A: Baize automatically performs two-level compression: first truncates old tool results, then requests the LLM to generate a summary. You can also manually use `/compact`.
 
 - Q: Will it accidentally delete my files?
 
-A: The default command whitelist blocks dangerous operations such as `rm -rf /`; before writing files, it shows a Diff and asks for confirmation.
+A: The default command allowlist intercepts dangerous operations such as `rm -rf /`; before writing files, it shows a Diff and requests confirmation.
 
-- Q: How can I make Baize connect to SPSS?
+- Q: How do I let Baize connect to SPSS?
 
-A: 1. Install `pip install -r requirements-data.txt`; 2. Set the environment variable `SPSS_INSTALL_PATH` to the SPSS installation directory; 3. Enable the SPSS server in `MCP/mcp_config.json`. See the "Data Access" section for details.
+A: 1. Install `pip install -r requirements-data.txt`; 2. Set the `SPSS_INSTALL_PATH` environment variable to point to the SPSS installation directory; 3. Enable the spss server in `MCP/mcp_config.json`. See the "Data Access (SPSS / SQL)" section for details.
 
-- Q: What should I do if `SPSS batch: NOT FOUND` appears?
+- Q: What should I do about `SPSS batch: NOT FOUND`?
 
 A: This means the SPSS engine was not found. Check whether `SPSS_INSTALL_PATH` correctly points to the directory containing `stats.exe`; if you only process `.sav` files, you can ignore this warning (it will fall back to file mode).
 
-- Q: What else do I need to install to connect to SQL databases?
+- Q: What extra things do I need to install to connect to a SQL database?
 
-A: Install `atengk-mcp-server-rdbms` at the Python level (automatically done by `pip install`). **SQL Server users also need to install Microsoft ODBC Driver 18 at the system level**, which cannot be installed via pip.
+A: At the Python level, install `atengk-mcp-server-rdbms` (`pip install` handles it automatically). **SQL Server users also need to install Microsoft ODBC Driver 18 at the system level**, which cannot be installed with pip.
 
 - Q: Will Baize accidentally delete my database data?
 
-A: No. SQL MCP only allows SELECT by default, and all write operations are blocked at the AST syntax tree level. It is still strongly recommended to create a separate **read-only database account** for Baize as a double safeguard.
+A: No. SQL MCP only allows SELECT by default, and blocks all write operations at the AST syntax-tree level. It is still strongly recommended to create a separate **read-only database account** for Baize as a double safeguard.
 
-- Q: Will data in SPSS analysis results leak to the LLM?
+- Q: Will data in SPSS analysis results be leaked to the LLM?
 
-A: If privacy sanitization is enabled (`/privacy on`), tool return results are automatically sanitized for phone numbers, emails, ID cards and other PII before being sent to the LLM. **However, it is recommended to also use a read-only database account + data sampling** (query only necessary fields) to reduce risk.
+A: If privacy redaction is enabled (`/privacy on`), tool return results are automatically redacted for PII such as phone numbers, emails, and ID cards before being sent to the LLM. **However, it is recommended to also use a read-only database account + data sampling** (query only necessary fields) to reduce risk.
 
-- Q: Why does Baize become slower and use more tokens after adding SPSS/SQL?
+- Q: Why does Baize become slower and use more tokens in every conversation after adding SPSS/SQL?
 
-A: Because the tool definitions exposed by the MCP server are sent to the LLM with every conversation turn. SPSS has 60+ tools, adding about 6000–12000 tokens of fixed overhead. If your common workflow does not involve SPSS, you can set its `enabled` to `false` and turn it on when needed.
+A: Because the tool definitions exposed by MCP servers are sent to the LLM with every round of conversation. SPSS has 60+ tools, adding about 6,000–12,000 tokens of fixed overhead. If your common workflow does not involve SPSS, you can set its `enabled` to `false` and turn it on when needed.
 
 # 🤝 Contributing
 
-Welcome to submit Issues and pull requests. It is recommended to read the contents in CONTRIBUTOR.md before submitting a pull request.
+Issues and PRs are welcome. It is recommended to read `CONTRIBUTOR.md` before submitting a PR.
 
 ### Thank you for every Contributor to Submit PR
 
-- GitHub Contributor:
+- GitHub Contributors:
 [@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
@@ -852,39 +949,39 @@ MIT License
 
 # Acknowledgements
 
-- This project is hosted on AtomGit in China: https://atomgit.com/Com_Xu/Baize
+- This project is hosted on AtomGit in China. Project link: https://atomgit.com/Com_Xu/Baize
 
-- Thanks to AtomGit for including this project in the G-star incubation program
+- Thanks to AtomGit for including this project in the G-star incubation program.
 
-- Thanks to PR contributors, Douyin followers, and students who follow me
+- Thanks to PR contributors, Douyin followers, and students who follow me.
 
-- Inspired by excellent AI Coding tools such as Claude Code and Codex
+- Inspired by excellent AI Coding tools such as Claude Code and Codex.
 
-- Built on DeepSeek, OpenAI SDK, and MCP
+- Built on DeepSeek, OpenAI SDK, and MCP.
 
-- Thanks to all developers walking the Vibe Coding path together
+- Thanks to all developers walking the Vibe Coding path together.
 
-# ☕ Support
+# ☕ Sponsor
 
-If Baize is useful to you, you’re welcome to sponsor or tip. Independent development also takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
+If Baize is useful to you, welcome to sponsor and support. Independent development also takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
 
 <p align="center">
-  <img src="image/support.jpg" alt="WeChat QR" width="200" />
+  <img src="image/support.jpg" alt="WeChat QR code" width="200" />
 </p>
 
 # Contact Me
 
-- If you are interested in Baize, want to participate in open-source collaboration, or want to keep up with my updates, you can contact me through
-- **Currently, I am also in the job-hunting process. I have experience in market research and user research, and I have some knowledge of Agents. If my skills meet your requirements, I would also like to work with you (Desired Position: AI product operation / user research / market research)**
+- If you are interested in Baize, or want to participate in open-source collaboration, you can contact me through the following ways.
+- **Currently, I am job hunting. I have worked in market research and user research, and I also have some understanding of Agents. If my abilities match your needs, I hope to work with you (target roles: AI Product Operations / User Research / Market Research).**
 
 <p align="center">
   <img src="image/weixin.jpg" alt="WeChat QR code" width="200" />
 </p>
 
-<p align="center">Scan the QR code with WeChat. Please indicate "Baize Open Source Cooperation" or "Corporate Recruitment".</p>
+<p align="center">Scan the WeChat QR code. Please indicate Baize open-source collaboration or corporate recruitment.</p>
 
 <p align="center">
   <img src="image/抖音.png" alt="Douyin QR code" width="200" />
 </p>
 
-<p align="center">Scan with Douyin to follow</p>
+<p align="center">Scan the Douyin QR code to follow.</p>

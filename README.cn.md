@@ -4,7 +4,7 @@
 
 # 白泽 Baize
 
-**知无不言**
+**知无不言，守口如瓶**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -25,12 +25,6 @@
   </a>
   <a href="https://github.com/Xu123-Bob/Baize/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Xu123-Bob/Baize?style=flat-square" alt="License">
-  </a>
-    <a href="https://github.com/Xu123-Bob/Baize/pulls?q=is%3Apr+is%3Aclosed">
-    <img src="https://img.shields.io/github/issues-pr-closed/Xu123-Bob/Baize?style=flat-square&logo=github&label=Closed%20PRs" alt="GitHub Closed Pull Requests">
-  </a>
-  <a href="https://github.com/Xu123-Bob/Baize/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/Xu123-Bob/Baize?style=flat-square&logo=github&label=Contributors" alt="GitHub Contributors">
   </a>
 </p>
 
@@ -69,7 +63,9 @@
 # 核心优势
 
 ## 隐私保护
-- **双向可逆隐私保护**：保护你的敏感信息在发送给 LLM 之前就被替换为占位符，收到响应后再自动还原。整个过程对用户无感——你看到的历史、工具参数、最终答案始终是原文，而 LLM 看到的永远是 `[[PHONE_1]]`、`[[EMAIL_1]]` 这样的占位符。
+- **双向可逆隐私保护**：保护你的敏感信息在发送给 LLM 之前就被替换为占位符，收到响应后再自动还原。整个过程对用户无感——你看到的历史、工具参数、最终答案始终是原文，而 LLM 看到的永远是 `«PZ_PHONE_a3f8b2c1d4e5f6a7»` 这样的**随机不可猜测占位符**。
+- **落盘全面脱敏**：会话文件、压缩转录、审计日志在写盘前自动脱敏（默认开启），磁盘上永远不出现明文 PII。
+- **抗注入**：占位符使用 64 位密码学随机 token，无法枚举、无法伪造、无法重放；会话切换后旧占位符立即失效。
 - **多种方式开启隐私保护**：可以通过命令行输入自然语言，同时支持使用更精准的`/privacy`命令开启隐私保护模式
 - **agent本地化**：本产品无远程数据库，完全本地化运行，不会收集用户信息
 
@@ -84,7 +80,7 @@
 
 - **零配置启动**：首次运行自动生成配置文件，用户只需填一次密钥。
 
-- **隐私脱敏**：发送给 LLM 前自动识别并脱敏手机号、邮箱、身份证、银行卡、API Key 等敏感信息，收到响应后自动还原；支持标准 / 严格两级模式，可用自然语言或 `/privacy` 命令切换。
+- **隐私脱敏**：发送给 LLM 前自动识别并脱敏 **30+ 类**敏感信息（手机号、邮箱、身份证、护照、银行卡、国际号码、API Key、JWT、数据库连接串、MAC 地址……），收到响应后自动还原；**落盘时同样脱敏**，磁盘不留明文；支持标准 / 严格两级模式，可用自然语言或 `/privacy` 命令切换。
 
 - **多语言交互**：中/英/日/韩/西/法/德/俄/阿 九种语言自由切换，说一句 `English` 或 `/lang ja` 即可，AI 全程用对应语言思考与回复。
 
@@ -113,6 +109,7 @@
   <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
 
+<div align="center">
 白泽 CLI 运行界面--01
 </div>
 
@@ -120,6 +117,7 @@
   <img src="image/clipage02.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
 
+<div align="center">
 白泽 CLI 运行界面--02
 </div>
 
@@ -377,7 +375,9 @@ baize
 - `/show tool`	--> 查看工具调用记录
 - `/show all`	--> 查看全部会话历史
 - `/技能名`	--> 加载指定技能（支持模糊匹配）
-- `/privacy`	--> 隐私脱敏控制（详见下方"隐私脱敏"章节）
+- `/privacy`	--> 隐私脱敏控制（on / off / strict / status / rules / test / clear）
+- `/privacy rule-off <name>`	--> 禁用某条脱敏规则（如 `/privacy rule-off phone_intl`）
+- `/privacy rule-on  <name>`	--> 重新启用某条规则
 
 ## 数据接入使用示例
 配置好 SPSS / SQL 后，可以直接用自然语言驱动：
@@ -496,27 +496,29 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
       ]
      }
 
-# 安全设计
+# 安全设计（核心）
 
 白泽默认启用以下安全机制：
 
 - **命令白名单**：仅允许 ls、cat、grep、git、python3 等常用命令。
-
 - **路径逃逸检测**：所有文件操作限制在当前工作目录和 /tmp 内。
-
 - **危险命令拦截**：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
-
 - **敏感文件保护**：禁止修改 .env、.ssh/、id_rsa、*.pem 等。
-
 - **脚本注入拦截**：检测 python -c "os.system(...)" 类绕过。
-
 - **进程资源限制**：Linux/macOS 下限制 CPU、内存、进程数。
+- **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
+- **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
+- **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
 
 如果你需要在受信任的项目中放宽限制，可修改 Baize.py 中的 ALLOWED_COMMANDS 和 FORBIDDEN_PATH_PATTERNS。
 
-# 隐私脱敏
+# 隐私脱敏（核心）
 
-白泽内置**双向可逆**的隐私脱敏机制，保护你的敏感信息在发送给 LLM 之前就被替换为占位符，收到响应后再自动还原。整个过程对用户无感——你看到的历史、工具参数、最终答案始终是原文，而 LLM 看到的永远是 `[[PHONE_1]]`、`[[EMAIL_1]]` 这样的占位符。
+白泽内置**双向可逆 + 落盘脱敏**的隐私保护机制，覆盖从输入到磁盘的完整链路：
+
+- **出站**：发给 LLM 之前，PII 被替换为不可猜测的占位符
+- **入站**：LLM 响应里的占位符被还原为原文
+- **落盘**：会话文件、压缩转录、审计日志写盘前**独立脱敏**，磁盘不留明文
 
 **默认关闭**，需要时开启。
 
@@ -540,12 +542,14 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 ### 方式二：斜杠命令
 
 - `/privacy on` 开启标准模式
-- `/privacy strict` 开启严格模式（额外覆盖姓名、车牌、QQ、微信）
+- `/privacy strict` 开启严格模式
 - `/privacy off` 关闭
-- `/privacy status` 查看当前状态与统计
-- `/privacy rules` 列出全部脱敏规则
-- `/privacy test` <文本> 测试脱敏效果
-- `/privacy clear` 清空占位符映射
+- `/privacy status` 查看状态、会话 ID、规则数、LRU/TTL 统计
+- `/privacy rules` 列出全部规则（含启用状态）
+- `/privacy rule-off <name>` 禁用某条规则
+- `/privacy rule-on  <name>` 重新启用
+- `/privacy test <文本>` 测试脱敏效果
+- `/privacy clear` 清空占位符映射并**轮换会话 ID**
 
 ## 两级模式
 **标准** ：中国大陆手机号、身份证号、银行卡号（Luhn 校验）、邮箱、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、私钥块、密码字段、URL 凭证 
@@ -566,11 +570,36 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
 还原为原文 → 落盘 / 显示 / 工具执行
 
-**同一原文复用同一占位符**，同一手机号在一轮对话中始终是 `[[PHONE_1]]`。
+- **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
+- **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
+- **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
 
-**工具参数智能分级**：`todo`、`ask_user_question`、`task_*` 等纯文本工具的参数会被脱敏；`run_read`、`run_bash`、`run_webfetch` 等涉及路径 / 命令 / URL 的工具参数不脱敏（否则会因路径被替换而执行失败）。
+## 工具参数智能分级
 
-**子代理同样受保护**：主代理委派给子代理的任务，其上下文也经过同样的脱敏 / 还原流程。
+**会被脱敏**（纯文本参数，不参与实际执行）：
+- `todo`、`ask_user_question`、`task_create`、`task_update`
+
+**不脱敏**（路径/命令/URL 会被实际使用）：
+- `run_read` / `run_write` / `run_edit` / `run_glob` / `run_grep`（路径要用于 IO）
+- `run_bash` / `background_run`（命令要被执行）
+- `run_webfetch` / `web_search`（URL 要真的发到网络）
+- `set_workspace`（路径要 `chdir`）
+- `load_skills`（技能名是枚举）
+- `agent`（子代理上下文独立脱敏）
+- `mcp_*`（未知语义，保守处理）
+
+**落盘时全部脱敏**（因为落盘内容不会被重新执行，安全性优先）。
+
+## 落盘脱敏
+
+**默认开启**，独立于内存脱敏。即使 `/privacy off`（内存不脱敏），落盘仍至少走标准规则。
+
+**关键特性**：
+- 落盘脱敏使用**独立的、一次性的映射表**——落盘后的占位符**无法被还原**，因为映射表已丢弃
+- 落盘脱敏**失败时拒绝写出明文**（不降级、不静默跳过）
+- 若旧版 session 文件含明文，首次保存时自动脱敏重写
+
+**关闭方式**（不推荐）：修改 `Baize.py` 里的 `PERSIST_REDACT_ENABLED = False`。
 
 ## 示例
 ```
@@ -582,13 +611,50 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 >>>降旨：/privacy status
 [隐私脱敏]
 当前模式 : 标准模式 (standard)
-启用规则数 : 15 / 19
+会话 ID : 7d2f5e91
+启用规则数 : 34 / 41
 活跃占位符 : 2
+映射容量 : 2 / 2000
+TTL : 86400 秒
+LRU 淘汰 : 0
+TTL 淘汰 : 0
 脱敏调用次数: 3
 还原调用次数: 3
-```
 
-# 数据接入
+>>>降旨：/privacy rules
+[隐私脱敏规则清单] 共 41 条
+【标准+严格】
+[✓] phone_cn 中国大陆手机号 (standard,strict)
+[✓] id_card_cn 中国大陆身份证号 (standard,strict)
+[✓] jwt JWT Token (standard,strict)
+...
+【仅严格】
+[✓] name_cn 中文姓名 (strict)
+[✓] address_cn 中文详细地址 (strict)
+...
+用法：
+/privacy rule-off <name> 禁用某条规则
+/privacy rule-on <name> 重新启用
+```
+### 测试实例
+<div align="center">
+隐私保护测试界面--01
+</div>
+
+<p align="center">
+  <img src="image/privary01.jpg" alt="隐私保护测试界面" width="800" />
+</p>
+
+<div align="center">
+隐私保护测试界面--02
+</div>
+
+<p align="center">
+  <img src="image/privary02.jpg" alt="隐私保护测试界面" width="800" />
+</p>
+
+
+# 数据接入（核心）
 白泽通过**MCP（Model Context Protocol）**与企业数据分析软件对接，主程序无需任何修改——只要在 `MCP/mcp_config.json`里登记 server 即可。
 
 ## SPSS 接入
