@@ -69,9 +69,6 @@
 - **多种方式开启隐私保护**：可以通过命令行输入自然语言，同时支持使用更精准的`/privacy`命令开启隐私保护模式
 - **agent本地化**：本产品无远程数据库，完全本地化运行，不会收集用户信息
 
-## 多语种交互
-- **支持九种语言交互**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
-- **多种方式转换语种**：可以直接输入语种，比如`please speak with english`即可切换为英语，也可以通过输入`/lang ja`切换为日语
 
 
 # 特性
@@ -100,6 +97,8 @@
 
 - **黑金主题 CLI**：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
 
+
+
 # 白泽CLI界面
 <div align="center">
 白泽 CLI 启动界面
@@ -124,6 +123,7 @@
 <p align="center">
   <img src="image/clipage03.jpg" alt="白泽 CLI 启动界面" width="800" />
 </p>
+
 
 
 # 安装
@@ -187,17 +187,15 @@ pip install -e ".[sql-mssql]"     # SQL Server 专用（含 pyodbc）
 - **⚠️ SQL Server 用户注意：pyodbc 只是 Python 绑定，系统层还需安装 Microsoft ODBC Driver 18 for SQL Server。**
 - **⚠️ SPSS 用户注意：spss-studio-mcp 只是 MCP 桥接层，必须本机已安装 IBM SPSS Statistics（版本 20–31）并处于已授权状态，并且设置环境变量 SPSS_INSTALL_PATH 指向 SPSS 安装目录。目前 SPSS 引擎主要在 Windows 上支持完整分析功能；Linux/macOS 下可以降级为"文件模式"（读取 .sav 文件、查看元数据、预览数据，但不支持统计分析）。**
 
+
+
 # 快速开始
+## LLM API接入运行
 1. 首次运行
-
 ```bash
-
 baize
-
 ```
-
 首次运行时，白泽会自动生成两个配置文件：
-
 ```
 ~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
 
@@ -205,11 +203,8 @@ baize
 ```
 Windows 用户路径为 `C:\Users\你的用户名\.baize\`。
 
-
-2. 选择后端
-
+**2. 选择后端**
 打开` ~/.baize/config.toml`，修改 **active_provider**（一定要修改）：
-
 ```toml
 # 白泽配置文件
 # 修改 active_provider 切换后端  # 可选值："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
@@ -253,12 +248,9 @@ env_key = ""
 model = "qwen2.5:7b"
 ```
 
-3. 填入密钥
-
+**3. 填入密钥**
 编辑` ~/.baize/.env`，**如果需要使用哪个LLM，即可把前面的` # `删除，并在其它LLM前面加上` # `，锁住其它LLM API的输出，输入API Key之后，一定记得保存，只有保存之后才有效**：
-
-env
-```
+```env
 # ============================================================
 # 白泽密钥文件
 # ============================================================
@@ -299,20 +291,35 @@ DEEPSEEK_API_KEY=
 ```
 
 4. 重新启动
-
 ```bash
-
 baize
-
 ```
-
 看到黑金 Logo 和欢迎信息即启动成功。
 
 
+## Ollama 本地模型（零成本）
+不想用云 API？用本地 Ollama：
+
+    bash
+
+    #1. 安装 Ollama：https://ollama.com/download
+    #2. 拉取模型
+    ollama pull qwen2.5:7b
+
+    #3. 启动 Ollama 服务
+    ollama serve
+
+    #4. 修改 ~/.baize/config.toml
+    active_provider = "ollama"
+
+    #5. 启动白泽
+    baize
+推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
+
+
+
 # 使用示例
-
 启动后在 >>> 降旨： 提示符下用自然语言描述需求即可：
-
 ```
 >>>降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
 
@@ -320,17 +327,12 @@ baize
 
 >>>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
 ```
-
 ## 多语言交互
-
 白泽支持**九种语言**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
 
 有两种切换方式：
-
 ### 方式一：直接说话（自动检测）
-
 白泽会自动识别你输入的语言并切换：
-
 ```
 >>> 降旨：Hello, help me write a Python script
 [系统] 已检测到输入语言为 English，白泽已切换为 English 交互。
@@ -340,9 +342,7 @@ baize
 [系统] 已检测到输入语言为 日本語，白泽已切换为 日本語 交互。
 （白泽用日文回复）
 ```
-
 ### 方式二：手动命令
-
 ```
 >>> 降旨：/lang                # 查看当前语言和可用列表
 [系统] 当前语言：中文 (zh)
@@ -358,7 +358,6 @@ baize
 >>> 降旨：/lang ja             # 用语言代码切换
 >>> 降旨：/lang 西班牙语        # 中文名也可以
 ```
-
 支持**语言名 / 语言代码 / 中文名 / 原文名**四种写法。例如切换英文时，`English`、`en`、`英语`、`英文` 任意一种都可以。
 
 
@@ -379,6 +378,7 @@ baize
 - `/privacy rule-off <name>`	--> 禁用某条脱敏规则（如 `/privacy rule-off phone_intl`）
 - `/privacy rule-on  <name>`	--> 重新启用某条规则
 
+
 ## 数据接入使用示例
 配置好 SPSS / SQL 后，可以直接用自然语言驱动：
 ```text
@@ -391,32 +391,10 @@ baize
 >>>降旨：把 SPSS 分析结果导出成 CSV，再用 SQL 关联客户主数据
 ```
 
-# Ollama 本地模型（零成本）
-
-不想用云 API？用本地 Ollama：
-
-    bash
-
-    #1. 安装 Ollama：https://ollama.com/download
-    #2. 拉取模型
-    ollama pull qwen2.5:7b
-
-    #3. 启动 Ollama 服务
-    ollama serve
-
-    #4. 修改 ~/.baize/config.toml
-    active_provider = "ollama"
-
-    #5. 启动白泽
-    baize
-
-推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
 
 
 # 扩展机制
-
 白泽支持四种扩展方式，全部放在当前工作目录下即可生效。
-
 ## 技能（Skills）
 在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
 
@@ -440,7 +418,6 @@ baize
 
 
 ## 子代理（Subagents）
-
 在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
 
     markdown
@@ -459,29 +436,23 @@ baize
 
 
 ## 钩子（Hooks）
-
 在 ./hooks/ 下放置 
 - PreToolUse-*.
 - sh、PostToolUse-*.
 - sh、Stop-*.sh
 接收 JSON 输入，返回决策：
-
 ```bash
 #!/bin/bash
-
 # PreToolUse-guard.sh
-
 read -r input
-
 if echo "$input" | grep -q "rm -rf"; then
   echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
 fi
 ```
-
 Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
-## MCP 服务器
 
+## MCP 服务器
 在 ./MCP/mcp_config.json 中配置外部工具服务器：
     json
     {
@@ -496,10 +467,11 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
       ]
      }
 
+
+
+
 # 安全设计（核心）
-
 白泽默认启用以下安全机制：
-
 - **命令白名单**：仅允许 ls、cat、grep、git、python3 等常用命令。
 - **路径逃逸检测**：所有文件操作限制在当前工作目录和 /tmp 内。
 - **危险命令拦截**：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
@@ -509,25 +481,19 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 - **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
 - **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
 - **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
-
 如果你需要在受信任的项目中放宽限制，可修改 Baize.py 中的 ALLOWED_COMMANDS 和 FORBIDDEN_PATH_PATTERNS。
 
+
+
 # 隐私脱敏（核心）
-
 白泽内置**双向可逆 + 落盘脱敏**的隐私保护机制，覆盖从输入到磁盘的完整链路：
-
 - **出站**：发给 LLM 之前，PII 被替换为不可猜测的占位符
 - **入站**：LLM 响应里的占位符被还原为原文
 - **落盘**：会话文件、压缩转录、审计日志写盘前**独立脱敏**，磁盘不留明文
-
 **默认关闭**，需要时开启。
-
 ## 两种开启方式
-
 ### 方式一：自然语言
-
 直接在对话中说：
-
 ```
 >>>降旨：开启隐私脱敏
 [系统] 隐私脱敏已开启（标准模式）。
@@ -540,7 +506,6 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 ```
 
 ### 方式二：斜杠命令
-
 - `/privacy on` 开启标准模式
 - `/privacy strict` 开启严格模式
 - `/privacy off` 关闭
@@ -551,13 +516,12 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 - `/privacy test <文本>` 测试脱敏效果
 - `/privacy clear` 清空占位符映射并**轮换会话 ID**
 
+
 ## 两级模式
 **标准** ：中国大陆手机号、身份证号、银行卡号（Luhn 校验）、邮箱、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、私钥块、密码字段、URL 凭证 
 
 **严格** ： 标准模式全部 + 中文姓名、QQ 号、微信号、中国大陆车牌号 
-
 ## 工作原理
-
 用户输入（含真实 PII）→ messages 存原文
 
 ↓  sanitize_messages()
@@ -569,16 +533,14 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 返回的占位符 → restore_message()
 
 还原为原文 → 落盘 / 显示 / 工具执行
-
 - **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
 - **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
 - **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
 
-## 工具参数智能分级
 
+## 工具参数智能分级
 **会被脱敏**（纯文本参数，不参与实际执行）：
 - `todo`、`ask_user_question`、`task_create`、`task_update`
-
 **不脱敏**（路径/命令/URL 会被实际使用）：
 - `run_read` / `run_write` / `run_edit` / `run_glob` / `run_grep`（路径要用于 IO）
 - `run_bash` / `background_run`（命令要被执行）
@@ -587,19 +549,18 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 - `load_skills`（技能名是枚举）
 - `agent`（子代理上下文独立脱敏）
 - `mcp_*`（未知语义，保守处理）
-
 **落盘时全部脱敏**（因为落盘内容不会被重新执行，安全性优先）。
 
-## 落盘脱敏
 
+## 落盘脱敏
 **默认开启**，独立于内存脱敏。即使 `/privacy off`（内存不脱敏），落盘仍至少走标准规则。
 
 **关键特性**：
 - 落盘脱敏使用**独立的、一次性的映射表**——落盘后的占位符**无法被还原**，因为映射表已丢弃
 - 落盘脱敏**失败时拒绝写出明文**（不降级、不静默跳过）
 - 若旧版 session 文件含明文，首次保存时自动脱敏重写
-
 **关闭方式**（不推荐）：修改 `Baize.py` 里的 `PERSIST_REDACT_ENABLED = False`。
+
 
 ## 示例
 ```
@@ -636,6 +597,7 @@ TTL 淘汰 : 0
 /privacy rule-off <name> 禁用某条规则
 /privacy rule-on <name> 重新启用
 ```
+
 ### 测试实例
 <div align="center">
 隐私保护测试界面--01
@@ -654,9 +616,9 @@ TTL 淘汰 : 0
 </p>
 
 
+
 # 数据接入（核心）
 白泽通过**MCP（Model Context Protocol）**与企业数据分析软件对接，主程序无需任何修改——只要在 `MCP/mcp_config.json`里登记 server 即可。
-
 ## SPSS 接入
 ### 前置条件
 - 本机已安装 IBM SPSS Statistics（版本 20–31，Windows 推荐）
@@ -666,25 +628,19 @@ TTL 淘汰 : 0
 
 2.**设置环境变量**（可在 .env 或系统环境变量中）：
 ```text
-
 SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
-
 ```
 
 3.**验证状态**：
 ```bash
-
 spss-studio-mcp status
-
 ```
 期望输出：
 ```text
-
 === SPSS MCP Capability Status ===
 pyreadstat : OK v1.3.6
 pandas     : OK v3.0.2
 SPSS batch : OK
-
 ```
 4.**在`MCP/mcp_config.json`中登记**：
 ```json
@@ -702,11 +658,13 @@ SPSS batch : OK
   ]
 }
 ```
+
 ### 如果 `SPSS batch: NOT FOUND`
 说明`spss-studio-mcp`没找到 SPSS 引擎，但`pyreadstat`+`pandas`正常，此时进入**文件模式**：
 - 可读`.sav`、查看元数据、预览数据、CSV ↔ SAV 转换
 - 不能跑统计（t 检验、回归、ANOVA 等）
 解决办法：正确设置`MCP/mcp_config.json`中的`SPSS_INSTALL_PATH`，或接受文件模式降级。
+
 
 ## SQL 接入
 ### 支持的数据库
@@ -715,18 +673,14 @@ PostgreSQL、MySQL、MariaDB、SQL Server、Oracle、达梦、人大金仓、TiD
 ### 配置步骤
 1.**准备只读数据库账号**（强烈建议）：
 ```sql
-
 CREATE USER baize_ro WITH PASSWORD 'xxx';
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
-
 ```
-
 2.**准备连接字符串**：
 - PostgreSQL --> postgresql+psycopg://user:pwd@host:5432/db
 - MySQL --> mysql+pymysql://user:pwd@host:3306/db
 - SQL Server --> mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server
 - Oracle --> oracle+oracledb://user:pwd@host:1521/?service_name=ORCL
-
 3.**在`MCP/mcp_config.json`中登记**：
 ```json
 {
@@ -775,6 +729,8 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 ```
 白泽会自动把它们的所有工具合并进`MATERTOOLS`，LLM 会根据任务自动选择。
 
+
+
 # 目录结构
 ```
     baize-agent/
@@ -789,7 +745,9 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
     ├── .env.example                # 环境变量示例
     ├── .gitignore
     └── agent/                      # 主包
-        ├── __init__.py
+        ├── logo_*                  # 登录界面logo
+        ├── LOGO和启动交互界面       # 登录界面logo图
+        ├── __init__.py             # 版本
         ├── Baize.py                # 主程序与 Agent Loop
         ├── config.py               # 多后端配置加载
         ├── ui_theme.py             # CLI 渲染主题
@@ -804,47 +762,43 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
         ├── hooks/                  # 内置钩子
         └── MCP/                    # MCP 客户端与配置
             ├── __init__.py
-            ├── mcp_client.py
-            └── mcp_config.json
+            ├── mcp_client.py       # MCP客户端
+            └── mcp_config.json     # MCP配置
 ```
 
+
+
 # 环境变量参考
-		
 - 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
 - 变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
 - 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
 - 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
 - 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
-
 **上述变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。**
-
 - 数据分析变量：SPSS_INSTALL_PATH 说明：IBM SPSS Statistics 安装目录 默认值：—（未设置则降级为文件模式）
 - 数据分析变量：DATABASE_URL 说明：SQL MCP 的数据库连接串 默认值：—（由 MCP server 读取）
-
 **上述变量写入 MCP/mcp_config.json 即可。**
 
+
+
 # 开发
-
 ## 运行测试
-
 本项目使用 pytest。开发前请以可编辑模式安装包与开发依赖：
-
     pip install -e ".[dev]"
-
 运行全部测试：
-
     python -m pytest tests/ -v
-
 只跑单个文件：
-
     python -m pytest tests/test_history.py -v
 
-## 代码结构约定
 
+## 代码结构约定
 - `agent/`：随包发布的主包。所有运行时逻辑与资源（skills、subagent、hooks、MCP）都在这里。
 - `agent/core/`：纯逻辑模块，无外部副作用，**必须能被单独测试**。新增此类逻辑请放这里，并配套测试。
 - `tests/`：与 `agent/` 下的源文件一一对应，命名为 `test_<模块名>.py`。
 - 任何有外部依赖（网络、磁盘、全局状态）的函数，请通过参数注入依赖，便于在测试中替换。
+
+
+
 
 # ❓ 常见问题
 - Q：密钥应该填在哪里？
@@ -895,36 +849,41 @@ A：如果开启了隐私脱敏（`/privacy on`），工具返回结果在发往
 
 A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。SPSS 有 60+ 工具，约增加 6000–12000 token 固定开销。如果常用工作流不涉及 SPSS，可以把它的`enabled`设为`false`，需要时再打开。
 
+
+
 # 🤝 贡献
 欢迎提交 Issue 和 PR。建议先阅读CONTRIBUTOR.md中的内容再提交PR。
-### Thank you for every Contributor to Submit PR
+**Thank you for every Contributor to Submit PR**
 - Github Contributor：
 [@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
+
+
 # 许可证
 MIT License
 
+
+
 # 致谢
 - 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
-
 - 感谢AtomGit将本项目已纳入G-star孵化项目
-
 - 感谢PR的贡献者、抖音的粉丝、关注我的学生们
-
 - 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
-
 - 基于 DeepSeek、OpenAI SDK、MCP 构建
-
 - 感谢所有在 Vibe Coding 路上同行的开发者
+
+
 
 # ☕ 赞助支持
 如果白泽对你有用，欢迎赞助打赏。独立开发也花费很多时间，赞助不会改变产品更新的排期，谢谢支持！
 <p align="center">
   <img src="image/support.jpg" alt="微信二维码" width="200" />
 </p>
+
+
 
 # 联系我
 - 如果你对白泽感兴趣，或者想参与开源合作，可以通过以下方式联系我
