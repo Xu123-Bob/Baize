@@ -847,16 +847,19 @@ Baize fusionará automáticamente todas sus herramientas en `MATERTOOLS`, y el L
 ## Ejecutar pruebas
 
 Este proyecto usa pytest. Antes de desarrollar, instala el paquete en modo editable con las dependencias de desarrollo:
-
+```
     pip install -e ".[dev]"
+```
 
 Ejecutar todas las pruebas:
-
+```
     python -m pytest tests/ -v
+```
 
 Ejecutar un solo archivo:
-
+```
     python -m pytest tests/test_history.py -v
+```
 
 ## Convenciones de estructura del código
 

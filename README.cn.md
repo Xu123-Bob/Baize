@@ -454,7 +454,7 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
 ## MCP 服务器
 在 ./MCP/mcp_config.json 中配置外部工具服务器：
-    json
+```json
     {
       "mcpServers": [
         {
@@ -466,7 +466,7 @@ Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
         }
       ]
      }
-
+```
 
 
 
@@ -774,9 +774,11 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 - 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
 - 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
 - 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
+
 **上述变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。**
 - 数据分析变量：SPSS_INSTALL_PATH 说明：IBM SPSS Statistics 安装目录 默认值：—（未设置则降级为文件模式）
 - 数据分析变量：DATABASE_URL 说明：SQL MCP 的数据库连接串 默认值：—（由 MCP server 读取）
+
 **上述变量写入 MCP/mcp_config.json 即可。**
 
 
@@ -784,11 +786,17 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 # 开发
 ## 运行测试
 本项目使用 pytest。开发前请以可编辑模式安装包与开发依赖：
+```
     pip install -e ".[dev]"
+```
 运行全部测试：
+```
     python -m pytest tests/ -v
+```
 只跑单个文件：
+```
     python -m pytest tests/test_history.py -v
+```
 
 
 ## 代码结构约定
@@ -853,6 +861,7 @@ A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。
 
 # 🤝 贡献
 欢迎提交 Issue 和 PR。建议先阅读CONTRIBUTOR.md中的内容再提交PR。
+
 **Thank you for every Contributor to Submit PR**
 - Github Contributor：
 [@anupamme](https://github.com/anupamme)

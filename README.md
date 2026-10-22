@@ -848,16 +848,19 @@ Baize will automatically merge all their tools into `MATERTOOLS`, and the LLM wi
 ## Running Tests
 
 This project uses pytest. Before development, install the package in editable mode with development dependencies:
-
+```
     pip install -e ".[dev]"
+```
 
 Run all tests:
-
+```
     python -m pytest tests/ -v
+```
 
 Run a single file:
-
+```
     python -m pytest tests/test_history.py -v
+```
 
 ## Code Structure Conventions
 

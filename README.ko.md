@@ -847,17 +847,17 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 ## 테스트 실행
 
 본 프로젝트는 pytest를 사용합니다. 개발 전에 패키지와 개발 의존성을 편집 가능 모드로 설치하세요:
-
+```
     pip install -e ".[dev]"
-
+```
 모든 테스트 실행:
-
+```
     python -m pytest tests/ -v
-
+```
 단일 파일만:
-
+```
     python -m pytest tests/test_history.py -v
-
+```
 ## 코드 구조 규칙
 
 - `agent/`: 패키지로 배포되는 메인 패키지. 모든 런타임 로직과 리소스(skills, subagent, hooks, MCP)가 여기에 있습니다.

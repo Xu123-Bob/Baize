@@ -848,17 +848,17 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 ## テスト実行
 
 本プロジェクトは pytest を使用します。開発前にパッケージと開発依存関係を編集可能モードでインストールしてください：
-
+```
     pip install -e ".[dev]"
-
+```
 すべてのテストを実行：
-
+```
     python -m pytest tests/ -v
-
+```
 単一ファイルのみ：
-
+```
     python -m pytest tests/test_history.py -v
-
+```
 ## コード構造規約
 
 - `agent/`：パッケージとして配布されるメインパッケージ。すべての実行時ロジックとリソース（skills、subagent、hooks、MCP）はここにあります。

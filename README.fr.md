@@ -847,17 +847,17 @@ Baize fusionnera automatiquement tous leurs outils dans `MATERTOOLS`, et le LLM 
 ## Exécution des tests
 
 Ce projet utilise pytest. Avant de développer, installez le paquet en mode éditable avec les dépendances de développement :
-
+```
     pip install -e ".[dev]"
-
+```
 Exécuter tous les tests :
-
+```
     python -m pytest tests/ -v
-
+```
 Exécuter un seul fichier :
-
+```
     python -m pytest tests/test_history.py -v
-
+```
 ## Conventions de structure du code
 
 - `agent/` : Le paquet principal distribué avec le paquet. Toute la logique d'exécution et les ressources (skills, subagent, hooks, MCP) se trouvent ici.
