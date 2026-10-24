@@ -3027,7 +3027,7 @@ def main():
     '''CLI主入口'''
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
-    print(f"\033[90m◈ 白泽 · 灵械核心 v2.7.0  |  链接《山海经》数据流 ...\033[0m")
+    print(f"\033[90m◈ 白泽 · 灵械核心 v2.7.1  |  链接《山海经》数据流 ...\033[0m")
     print(f"\033[90m◈ 工作目录: {CURRENT_WORKDIR}\033[0m\n")
     # ===== 关闭 utils 中的详细打印 =====
     utils.PRINT_DETAILS = False
@@ -3156,7 +3156,7 @@ def main():
         f"{GOLD}{BOLD}◈ 天机录{RESET}",
         f"{GRAY}  增加SPSS与SQL的MCP配置{RESET}",
         f"{GRAY}  提供隐私脱敏模式，方便用户使用{RESET}",
-        f"{GRAY}  沙箱路径漏洞已修复{RESET}"
+        f"{GRAY}  优化后端配置{RESET}"
     ]
     for line in welcome_lines:
         if line == "":

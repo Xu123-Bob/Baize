@@ -56,7 +56,7 @@ DEFAULT_CONFIG = {
             "name": "DeepSeek",
             "base_url": "https://api.deepseek.com",
             "env_key": "DEEPSEEK_API_KEY",
-            "model": "deepseek-v4-pro",
+            "model": "deepseek-flash",
         },
         "openai": {
             "name": "OpenAI",
@@ -66,21 +66,21 @@ DEFAULT_CONFIG = {
         },
         "qwen": {
             "name": "Qwen",
-            "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+            "base_url": "https://cn-beijing.maas.qianwenaiapi.com/compatible-mode/v1",
             "env_key": "DASHSCOPE_API_KEY",
-            "model": "qwen-plus",
+            "model": "qwen3.8-flash",
         },
         "kimi": {
             "name": "Kimi",
             "base_url": "https://api.moonshot.cn/v1",
             "env_key": "MOONSHOT_API_KEY",
-            "model": "moonshot-v1-8k",
+            "model": "kimi-k2.7-code",
         },
         "glm": {
             "name": "GLM",
             "base_url": "https://open.bigmodel.cn/api/paas/v4",
             "env_key": "ZHIPUAI_API_KEY",
-            "model": "glm-4-plus",
+            "model": "glm-5.3-flash",
         },
         "ollama": {
             "name": "Ollama (本地)",
