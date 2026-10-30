@@ -302,10 +302,12 @@ def send_messages(messages, tools,*, sanitize: bool = True):
         #     否则 API 会返回 400：
         #     "The `reasoning_content` in the thinking mode must be passed back to the API."
         #     典型触发源：agent_loop 里手工 append 的 "Noted background results." 等消息。
-        if has_reasoning and is_deepseek:
+        if is_deepseek and tools:
             for m in messages:
-                if isinstance(m, dict) and m.get("role") == "assistant" \
-                        and "reasoning_content" not in m:
+                if not isinstance(m, dict) or m.get("role") != "assistant":
+                    continue
+                # 键缺失，或键存在但值为 None，都视为"未携带"
+                if m.get("reasoning_content") is None:
                     m["reasoning_content"] = ""
         # ↑↑↑
 
