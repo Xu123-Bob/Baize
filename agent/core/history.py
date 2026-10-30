@@ -174,6 +174,7 @@ def auto_compact(
     transcript_dir: Path,
     hook_trigger: Optional[Callable] = None,
     callback: Optional[Callable] = None,
+    redact_messages_fn: Optional[Callable[[list], list]] = None,
 ) -> list:
     """
     把对话压缩为一段摘要，并把完整对话落盘到 transcript_dir。
@@ -191,21 +192,50 @@ def auto_compact(
             print(content)
 
     _emit("system", "[压缩] 开始压缩对话上下文...")
-
+    # ---------- 1) 拆分 system 消息与非 system 消息 ----------
     system_msgs = [m for m in messages
                    if (m.get("role") if isinstance(m, dict)
                        else getattr(m, "role", None)) == "system"]
     other_msgs = [m for m in messages
                   if (m.get("role") if isinstance(m, dict)
                       else getattr(m, "role", None)) != "system"]
-
+    # ---------- 2) 落盘 transcript（含可选脱敏）----------
     transcript_dir.mkdir(parents=True, exist_ok=True)
     transcript_path = transcript_dir / f"transcript_{int(time.time())}.jsonl"
-    with open(transcript_path, "w", encoding="utf-8") as f:
-        for msg in messages:
-            f.write(json.dumps(_msg_to_dict(msg), default=str) + "\n")
-    _emit("system", f"[transcript saved: {transcript_path}]")
+    # 2.1) 若注入了脱敏函数，则对消息列表做一次脱敏（返回新列表）
+    #      注意：脱敏失败时必须拒绝写出明文，绝不能"降级到明文落盘"
+    disk_messages = messages
+    redact_failed = False
+    if redact_messages_fn is not None:
+        try:
+            disk_messages = redact_messages_fn(messages)
+            # 防御性检查：脱敏函数应返回 list
+            if not isinstance(disk_messages, list):
+                raise TypeError(
+                    f"redact_messages_fn 返回类型错误：{type(disk_messages).__name__}，期望 list"
+                )
+        except Exception as e:
+            redact_failed = True
+            disk_messages = None
+            _emit("system",
+                  f"[压缩] 落盘脱敏失败：{e}，跳过 transcript 写入（不写明文）。")
+    # 2.2) 写盘（仅在未失败时）
 
+    if not redact_failed and disk_messages is not None:
+        # 只有成功才写
+        try:
+            with open(transcript_path, "w", encoding="utf-8") as f:
+                for msg in disk_messages:
+                    f.write(json.dumps(_msg_to_dict(msg), default=str) + "\n")
+            _emit("system", f"[transcript saved: {transcript_path}]")
+        except Exception as e:
+            # 写盘失败不阻断压缩流程，只是没有 transcript 文件
+            _emit("system", f"[压缩] transcript 写入失败：{e}，继续压缩。")
+            transcript_path = None
+    else:
+        # 脱敏失败 → 不写盘；后续摘要里也不应引用 transcript 路径
+        transcript_path = None   # 标记为"未保存"，避免后续引用一个不存在的路径
+    # ---------- 3) 构造摘要请求 ----------
     conversation_text = json.dumps(
         [_msg_to_dict(m) for m in other_msgs], default=str
     )[:80000]
@@ -215,7 +245,7 @@ Be concise but preserve critical details.
 
 {conversation_text}
 """
-
+    # ---------- 4) 调用 LLM 生成摘要 ----------
     _emit("system", "[压缩] 正在请求 LLM 生成摘要...")
     try:
         response = send_fn([{"role": "user", "content": summary_prompt}], tools=[])
@@ -224,13 +254,21 @@ Be concise but preserve critical details.
     except Exception as e:
         _emit("system", f"[压缩] 失败：{e}，跳过压缩。")
         return messages
+    # ---------- 5) 组装新消息列表 ----------
+    # transcript 路径可能为 None（脱敏失败/写盘失败），此时给出降级提示
+    if transcript_path is not None:
+        ref_line = f"[Conversation compressed. Transcript: {transcript_path}]"
+    else:
+        ref_line = "[Conversation compressed. Transcript: (not saved)]"
 
     new_messages = system_msgs + [
         {"role": "user",
-         "content": f"[Conversation compressed. Transcript: {transcript_path}]\n\n{summary}"},
+        "content": f"{ref_line}\n\n{summary}"},
         {"role": "assistant",
-         "content": "Understood. I have the context from the summary. Continuing."},
+        "content": "Understood. I have the context from the summary. Continuing.",
+        "reasoning_content": ""},
     ]
+    # ---------- 6) 触发钩子 + 返回 ----------
     if hook_trigger:
         hook_trigger("compact_end", new_messages)
     _emit("system", "[压缩] 上下文已替换为摘要，对话继续。")
