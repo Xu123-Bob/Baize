@@ -270,6 +270,11 @@ def send_messages(messages, tools,*, sanitize: bool = True):
         避免 DeepSeek 返回 400 "Messages with role 'tool' must be a
         response to a preceding message with 'tool_calls'"。
 
+        另外，在 DeepSeek thinking 模式下（检测到历史中存在
+        reasoning_content 时），还会为所有缺字段的 assistant 消息
+        补上 "reasoning_content": ""，避免 400
+        "The `reasoning_content` in the thinking mode must be passed back to the API."
+
         如果你持有 messages 的引用，并依赖它**不被修改**，
         请传 sanitize=False，并自行在调用前处理。
 
@@ -292,6 +297,17 @@ def send_messages(messages, tools,*, sanitize: bool = True):
         )
         # 判断是否为 DeepSeek 后端，决定是否加 reasoning_split
         is_deepseek = "deepseek" in ACTIVE_PROVIDER.lower() or "deepseek" in DEFAULT_MODEL.lower()
+
+        # ↓↓↓ 新增兜底：DeepSeek thinking 模式下，所有 assistant 消息都必须携带 reasoning_content
+        #     否则 API 会返回 400：
+        #     "The `reasoning_content` in the thinking mode must be passed back to the API."
+        #     典型触发源：agent_loop 里手工 append 的 "Noted background results." 等消息。
+        if has_reasoning and is_deepseek:
+            for m in messages:
+                if isinstance(m, dict) and m.get("role") == "assistant" \
+                        and "reasoning_content" not in m:
+                    m["reasoning_content"] = ""
+        # ↑↑↑
 
         extra_body = {"reasoning_split": True} if (has_reasoning and is_deepseek) else {}
 
@@ -318,7 +334,7 @@ def send_messages(messages, tools,*, sanitize: bool = True):
 
 # 基础工具（不含 todo，供子代理使用）
 BASE_TOOLS = [
-     {"type": "function", "function": {"name": "run_bash", "description": "使用该工具执行bash命令",
+    {"type": "function", "function": {"name": "run_bash", "description": "使用该工具执行bash命令",
      "parameters": {"type": "object", "properties": {"command": {"type": "string", "description": "bash命令"}}, "required": ["command"]}}},
     {"type": "function", "function": {"name": "run_read", "description": "使用该工具读取文件",
      "parameters": {"type": "object", "properties": {"path": {"type": "string", "description": "文件路径"}, "limit": {"type": "integer", "description": "限制读取的行数"}}, "required": ["path", "limit"]}}},
@@ -2547,7 +2563,7 @@ def agent_loop(messages, output_callback=None):
                     f"[bg:{n['task_id']}] {n['status']}: {n['result']}" for n in notifs
                 )
                 messages.append({"role": "user", "content": f"<background-results>\n{notif_text}\n</background-results>"})
-                messages.append({"role": "assistant", "content": "Noted background results."})
+                messages.append({"role": "assistant", "content": "Noted background results.","reasoning_content": ""})
 
             # 每次循环开始时进行压缩，micro_compact一级压缩
             micro_compact(messages, keep_recent=KEEP_RECENT)
@@ -2571,7 +2587,7 @@ def agent_loop(messages, output_callback=None):
                 if end_decision and end_decision.get('decision') == 'block':
                     error_msg = f"达到最大轮数但测试失败：{end_decision.get('reason')}"
                     messages.append({"role": "user", "content": error_msg})
-                    messages.append({"role": "assistant", "content": "收到，我将修复测试问题。"})
+                    messages.append({"role": "assistant", "content": "收到，我将修复测试问题。","reasoning_content": ""})
                     continue
                 else:
                     # 达到最大轮数时的退出提示
@@ -2708,7 +2724,7 @@ def agent_loop(messages, output_callback=None):
                     print("[HOOK DEBUG] Stop hook blocked, continuing loop")
                     error_msg = f"Stop blocked by shell hook: {shell_decision.get('reason')}"
                     messages.append({"role": "user", "content": error_msg})
-                    messages.append({"role": "assistant", "content": "收到，我将修复问题。"})
+                    messages.append({"role": "assistant", "content": "收到，我将修复问题。", "reasoning_content": ""})
                     continue  # 继续循环
                 # 尝试结束前钩子（如测试门控）
                 end_decision = HOOK.trigger('agent_loop_end', messages)
