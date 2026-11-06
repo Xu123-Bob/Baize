@@ -55,6 +55,8 @@ A security assistant for Vibe Coding and data analysis, inspired by a Chinese my
 
 **An open-source Coding Agent CLI with strong privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Tongyi / Kimi / local Ollama) and provides full capabilities such as tool calling, skill loading, subagent delegation, context compression, and a secure sandbox.**
 
+This project has been put to the test in practice by me at the Beijing 2026 AI Youth Hackathon.
+
 ----------
 
 # Core Advantages
