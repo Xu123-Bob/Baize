@@ -43,7 +43,6 @@ agent = [
     "logo.txt",
     "logo_*.txt",
     "logo_text.txt",
-    "MCP/*.json",
 ]
 
 [tool.pytest.ini_options]
