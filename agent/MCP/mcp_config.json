@@ -4,9 +4,7 @@
       "name": "github",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github@0.6.2"],
-      "env": {
-        "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
-      },
+      "env": { "GITHUB_TOKEN": "<YOUR_GITHUB_TOKEN>" },
       "enabled": false
     },
     {
@@ -20,18 +18,14 @@
       "name": "spss",
       "command": "spss-studio-mcp",
       "args": ["serve", "--transport", "stdio"],
-      "env": {
-        "SPSS_INSTALL_PATH":  "C:\\Program Files\\IBM\\SPSS Statistics\\31"
-      },
+      "env": { "SPSS_INSTALL_PATH": "<YOUR_SPSS_PATH>" },
       "enabled": false
     },
     {
       "name": "sql",
       "command": "atengk-mcp-server-rdbms",
       "args": ["--transport", "stdio"],
-      "env": {
-        "DATABASE_URL": "mssql+pyodbc://readonly_user:password@localhost:1433/your_db?driver=ODBC+Driver+17+for+SQL+Server"
-      },
+      "env": { "DATABASE_URL": "<YOUR_DATABASE_URL>" },
       "enabled": false
     }
   ]
