@@ -71,3 +71,7 @@ tests/_output/
 
 # macOS
 .DS_Store
+
+# 本地 MCP 配置含密钥，不进版本库
+**/mcp_config.json
+!agent/MCP/mcp_config.example.json
