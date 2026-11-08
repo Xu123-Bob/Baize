@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="image/logopage02.png" alt="白泽 Baize Logo" width="320" />
+<img src="image/logopage02.png" alt="Baize Logo" width="320" />
 
-# 白泽 Baize
+# Baize
 
-**知无不言，守口如瓶**
+**Speak freely, keep secrets sealed**
 
 <p align="center">
   <a href="https://atomgit.com/Com_Xu/Baize">
@@ -35,7 +35,6 @@
   <a href="image/抖音.png">
     <img src="https://img.shields.io/badge/抖音-扫码关注-FE2C55?style=flat-square&logo=douyin&logoColor=white" alt="抖音">
   </a>
-  
 </p>
 
 <p align="center">
@@ -52,168 +51,168 @@
 
 ----------
 
-中国神兽化身VibeCoding与数据分析的安全助手。
+A security assistant for Vibe Coding and data analysis, inspired by a Chinese mythical beast.
 
-**一个开源的Coding Agent CLI，具有强大的隐私保护与多语种交互的功能，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。**
+**An open-source Coding Agent CLI with strong privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Tongyi / Kimi / local Ollama) and provides full capabilities such as tool calling, skill loading, subagent delegation, context compression, and a secure sandbox.**
 
-**已增加部署docker的版本，已在release中添加Zip文件**
+**The deployment version of Docker has been updated, and the Zip file has been added in the release**
 
-本项目已经在北京2026年AI青年黑客松比赛中被本人用于实战检验。
+This project has been put to the test in practice by me at the Beijing 2026 AI Youth Hackathon.
 
 ----------
 
-# 核心优势
+# Core Advantages
 
-## 隐私保护
-- **双向可逆隐私保护**：保护你的敏感信息在发送给 LLM 之前就被替换为占位符，收到响应后再自动还原。整个过程对用户无感——你看到的历史、工具参数、最终答案始终是原文，而 LLM 看到的永远是 `«PZ_PHONE_a3f8b2c1d4e5f6a7»` 这样的**随机不可猜测占位符**。
-- **落盘全面脱敏**：会话文件、压缩转录、审计日志在写盘前自动脱敏（默认开启），磁盘上永远不出现明文 PII。
-- **抗注入**：占位符使用 64 位密码学随机 token，无法枚举、无法伪造、无法重放；会话切换后旧占位符立即失效。
-- **多种方式开启隐私保护**：可以通过命令行输入自然语言，同时支持使用更精准的`/privacy`命令开启隐私保护模式
-- **agent本地化**：本产品无远程数据库，完全本地化运行，不会收集用户信息
+## Privacy Protection
 
+- **Bidirectional reversible privacy protection**: Sensitive information is replaced with placeholders before being sent to the LLM, and automatically restored after the response is received. The entire process is invisible to users: the history, tool parameters, and final answers you see always contain the original text, while the LLM always sees random, unguessable placeholders such as `«PZ_PHONE_a3f8b2c1d4e5f6a7»`.
+- **Comprehensive redaction on disk**: Session files, compressed transcripts, and audit logs are automatically redacted before being written to disk (enabled by default). Plaintext PII never appears on disk.
+- **Injection resistance**: Placeholders use 64-bit cryptographic random tokens and cannot be enumerated, forged, or replayed. Old placeholders become invalid immediately after switching sessions.
+- **Multiple ways to enable privacy protection**: You can enable it through natural language input in the CLI, or use the more precise `/privacy` command.
+- **Local-first agent**: This product has no remote database and runs fully locally. It does not collect user information.
 
+# Features
 
-# 特性
+- **Multi-backend support**: DeepSeek, any OpenAI-compatible endpoint (GLM / Qwen / Kimi / OpenAI), and local Ollama. Switch with one configuration change.
 
-- **多后端支持**：DeepSeek、任意 OpenAI 兼容接口（GLM / Qwen / Kimi/ OpenAI）、本地 Ollama，一键切换。
+- **Zero-configuration startup**: Configuration files are generated automatically on first run. Users only need to enter their API key once.
 
-- **零配置启动**：首次运行自动生成配置文件，用户只需填一次密钥。
+- **Privacy redaction**: Automatically identifies and redacts **30+ types** of sensitive information before sending to the LLM (phone numbers, emails, ID cards, passports, bank cards, international numbers, API keys, JWTs, database connection strings, MAC addresses, etc.), and restores them after receiving the response. **The same redaction is applied when writing to disk**, so no plaintext is left on disk. Supports standard and strict modes, switchable via natural language or the `/privacy` command.
 
-- **隐私脱敏**：发送给 LLM 前自动识别并脱敏 **30+ 类**敏感信息（手机号、邮箱、身份证、护照、银行卡、国际号码、API Key、JWT、数据库连接串、MAC 地址……），收到响应后自动还原；**落盘时同样脱敏**，磁盘不留明文；支持标准 / 严格两级模式，可用自然语言或 `/privacy` 命令切换。
+- **Multilingual interaction**: Freely switch among nine languages: Chinese, English, Japanese, Korean, Spanish, French, German, Russian, and Arabic. Say `English` or use `/lang ja`, and the AI will think and reply in the corresponding language throughout the session.
 
-- **多语言交互**：中/英/日/韩/西/法/德/俄/阿 九种语言自由切换，说一句 `English` 或 `/lang ja` 即可，AI 全程用对应语言思考与回复。
+- **Complete toolchain**: bash execution, file read/write/edit, glob/grep search, web search and fetch, background tasks, and task/todo management.
 
-- **完整工具链**：bash 执行、文件读写编辑、glob/grep 搜索、网页搜索抓取、后台任务、任务与待办管理。
+- **Skill system (Skills)**: Load domain knowledge on demand (`SKILL.md`) so the AI can be more professional in specific scenarios.
 
-- **技能系统（Skills）**：按需加载领域知识（SKILL.md），让 AI 在特定场景下更专业。
+- **Subagents**: Delegate complex tasks to subagents with independent contexts to avoid polluting the main session.
 
-- **子代理（Subagents）**：把复杂任务委派给独立上下文的子代理，避免污染主会话。
+- **Hooks**: Python or Shell hooks that support pre/post tool-call interception, audit logs, automatic formatting, and test gating.
 
-- **钩子（Hooks）**：Python 或 Shell 钩子，支持工具调用前后拦截、审计日志、自动格式化、测试门控。
+- **MCP protocol**: Connect to external tool servers (GitHub, Filesystem, etc.) through the Model Context Protocol.
 
-- **MCP 协议**：通过 Model Context Protocol 接入外部工具服务器（GitHub、Filesystem 等）。
+- **Context compression**: Two-level compression (tool-result truncation + LLM summarization) supports very long conversations.
 
-- **上下文压缩**：两级压缩（工具结果截断 + LLM 摘要），支持超长对话。
+- **Secure sandbox**: Command allowlist, path-escape detection, dangerous-command blocking, sensitive-file protection, and script-injection interception.
 
-- **安全沙箱**：命令白名单、路径逃逸检测、危险命令拦截、敏感文件保护、脚本注入拦截。
+- **Black-gold themed CLI**: Chinese-width adaptation, syntax highlighting, diff coloring, and collapsible thinking.
 
-- **黑金主题 CLI**：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
+- **Deployable Online**: Release the Docker deployment version v3.0.0. It can be deployed on the public network by delegating to a cloud server.
 
-- **线上可部署**：发布docker部署版本，可通过委托云端服务器，实现公网部署
+# Baize CLI Interface
 
-
-
-# 白泽CLI界面
 <div align="center">
-白泽 CLI 启动界面
+Baize CLI startup screen
 </div>
 
 <p align="center">
-  <img src="image/clipage01.jpg" alt="白泽 CLI 启动界面" width="800" />
+  <img src="image/clipage01.jpg" alt="Baize CLI startup screen" width="800" />
 </p>
 
 <div align="center">
-白泽 CLI 运行界面--01
+Baize CLI running screen -- 01
 </div>
 
 <p align="center">
-  <img src="image/clipage02.jpg" alt="白泽 CLI 启动界面" width="800" />
+  <img src="image/clipage02.jpg" alt="Baize CLI running screen" width="800" />
 </p>
 
 <div align="center">
-白泽 CLI 运行界面--02
+Baize CLI running screen -- 02
 </div>
 
 <p align="center">
-  <img src="image/clipage03.jpg" alt="白泽 CLI 启动界面" width="800" />
+  <img src="image/clipage03.jpg" alt="Baize CLI running screen" width="800" />
 </p>
 
+# Installation
 
+## Prerequisites
 
-# 安装
-
-## 前置要求
-
-- Python 3.10+（需要 tomllib，3.11+ 内置；3.10 需安装 tomli）
-
+- Python 3.10+ (requires `tomllib`; built in on 3.11+; on 3.10 install `tomli`)
 - pip
 
-## 从源码安装
-### 下载方式两个
-1.pip install https://github.com/Xu123-Bob/Baize.git
+## Install from Source
 
-    bash  --win+R 输入cmd，然后输入：
+### Two download methods
+
+1. `pip install https://github.com/Xu123-Bob/Baize.git`
+
+    bash -- press Win+R, enter `cmd`, then run:
 
     baize
 
-2、在仓库页面点击 <>Code  --> Download ZIP
+2. On the repository page, click `<> Code` --> `Download ZIP`.
 
-(1)解压后进入本文件目录：
+(1) After extracting, enter the directory:
 
-    bash  --win+R 输入cmd
+    bash -- press Win+R, enter cmd
 
-    cd 解压后的目录
+    cd path\to\extracted\directory
 
-    pip install -r requirements.txt    
+    pip install -r requirements.txt
 
-    python -m Baize             
+    python -m Baize
 
-下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
+After installation, press Win+R, enter `cmd`, open the CLI, type `baize`, and run it.
 
-(2)下载 ZIP 后本地安装，解压后进入目录，执行：
+(2) After downloading the ZIP, install locally. Extract it, enter the directory, and run:
 
-    bash --win+R 输入cmd
+    bash -- press Win+R, enter cmd
 
     pip install .
 
-下载完成后win+R 输入cmd，打开CLI界面，输入baize，即可运行
+After installation, press Win+R, enter `cmd`, open the CLI, type `baize`, and run it.
 
-### 可选：安装数据接入依赖（数据分析重要工具）
-如果你需要让白泽驱动 SPSS 或 SQL 数据库，额外安装：
+### Optional: Install Data Access Dependencies (Important for Data Analysis)
+
+If you need Baize to drive SPSS or SQL databases, install the additional dependencies:
 
 ```bash
-
 pip install -r requirements-data.txt
-
 ```
-`requirements-data.txt` 包含：
-- `spss-studio-mcp`：SPSS 统计分析 MCP server（需要本机已安装 IBM SPSS Statistics）
-- `atengk-mcp-server-rdbms`：通用关系型数据库 MCP server（PostgreSQL / MySQL / SQL Server / Oracle / 达梦等）
-- `pyodbc`：SQL Server 所需的 ODBC Python 绑定
 
-或者，如果项目已通过 `pyproject.toml` 安装，也可以用 extras：
+`requirements-data.txt` includes:
+
+- `spss-studio-mcp`: SPSS statistical analysis MCP server (requires IBM SPSS Statistics installed locally)
+- `atengk-mcp-server-rdbms`: General relational database MCP server (PostgreSQL / MySQL / SQL Server / Oracle / Dameng, etc.)
+- `pyodbc`: ODBC Python binding required by SQL Server
+
+Alternatively, if the project is installed via `pyproject.toml`, you can use extras:
+
 ```bash
-pip install -e ".[data]"          # 一键安装全部数据接入依赖
-pip install -e ".[spss]"          # 只装 SPSS
-pip install -e ".[sql]"           # 只装通用 SQL
-pip install -e ".[sql-mssql]"     # SQL Server 专用（含 pyodbc）
+pip install -e ".[data]"          # Install all data access dependencies
+pip install -e ".[spss]"          # SPSS only
+pip install -e ".[sql]"           # General SQL only
+pip install -e ".[sql-mssql]"     # SQL Server only (includes pyodbc)
 ```
-- **⚠️ SQL Server 用户注意：pyodbc 只是 Python 绑定，系统层还需安装 Microsoft ODBC Driver 18 for SQL Server。**
-- **⚠️ SPSS 用户注意：spss-studio-mcp 只是 MCP 桥接层，必须本机已安装 IBM SPSS Statistics（版本 20–31）并处于已授权状态，并且设置环境变量 SPSS_INSTALL_PATH 指向 SPSS 安装目录。目前 SPSS 引擎主要在 Windows 上支持完整分析功能；Linux/macOS 下可以降级为"文件模式"（读取 .sav 文件、查看元数据、预览数据，但不支持统计分析）。**
 
-### 可选：线上部署
-1、Docker镜像搭载
-- 下载Docker Desktop（Windows / macOS）或 Docker Engine（Docker CE）---linux服务器
-- 下载网址：https://docs.docker.com/get-started/get-docker/
-- Linux 快速安装可使用通用脚本：
+- **⚠️ SQL Server users: `pyodbc` is only the Python binding. You also need Microsoft ODBC Driver 18 for SQL Server installed at the system level.**
+- **⚠️ SPSS users: `spss-studio-mcp` is only an MCP bridge. IBM SPSS Statistics (versions 20–31) must be installed locally and properly licensed, and the `SPSS_INSTALL_PATH` environment variable must point to the SPSS installation directory. Full statistical analysis with the SPSS engine is mainly supported on Windows. On Linux/macOS, it can fall back to "file mode" (read `.sav` files, inspect metadata, preview data, but no statistical analysis).**
+
+### Optional: Online Deployment
+1、Docker Image Setup
+- Download Docker Desktop (Windows / macOS) or Docker Engine (Docker CE) --- for Linux servers
+- Download URL: https://docs.docker.com/get-started/get-docker/
+- For quick installation on Linux, you can use the universal script:
 ```bash
 curl -fsSL https://get.docker.com | sh
 sudo systemctl start docker
 sudo systemctl enable docker
 ```
-- 具体使用，可在AI指导下完成
+- For specific usage, complete it under AI guidance
 
-2、部署原则
-- 最小侵入改造，实现了本地 CLI 与 Web 环境的物理隔离
-- 让 CLI 和 Web 的 API Key、聊天记录完全隔离，我们在 `config.py` 中引入了 `BAIZE_HOME` 环境变量
-- 本地 Docker 容器化与全栈开发，后端采用FastAPI 框架，会话状态通过 `asyncio.to_thread` 将同步的 `agent_loop` 放入后台线程，安全鉴权采用REST API和WebSocket
-- docker基础镜像若拉取缓慢，可替换为`docker.m.daocloud.io`
-- 通过 `docker-compose.yml` 挂载 `baize-config`、`baize-workspace`、`baize-sessions`、`baize-logs` 四个数据卷，实现数据持久化
-- 服务器推荐配置：2核4G 及以上（2核2G 属于紧平衡，Agent 执行复杂任务易 OOM）
+2、Deployment Principles
+- Minimal-intrusion modification, achieving physical isolation between the local CLI and Web environments
+- To fully isolate the API Keys and chat histories of CLI and Web, we introduced the `BAIZE_HOME` environment variable in `config.py`
+- Local Docker containerization and full-stack development; the backend uses the FastAPI framework; session state uses `asyncio.to_thread` to place the synchronous `agent_loop` in a background thread; secure authentication uses REST API and WebSocket
+- If pulling the Docker base image is slow, replace it with `docker.m.daocloud.io`
+- Mount the four data volumes `baize-config`, `baize-workspace`, `baize-sessions`, and `baize-logs` via `docker-compose.yml` to achieve data persistence
+- Recommended server configuration: 2 cores and 4 GB or above (2 cores and 2 GB is a tight balance; the Agent is prone to OOM when executing complex tasks)
 
-3、部署展示
+3、Deployment Preview
 <div align="center">
-白泽 Web 启动界面
+BaiZe Web startup interface
 </div>
 
 <p align="center">
@@ -221,25 +220,34 @@ sudo systemctl enable docker
 </p>
 
 
-# 快速开始
-## LLM API接入运行
-1. 首次运行
+# Quick Start
+
+## Run with an LLM API
+
+1. First run
+
 ```bash
 baize
 ```
-首次运行时，白泽会自动生成两个配置文件：
-```
-~/.baize/config.toml   # 后端配置（选 DeepSeek / OpenAI / Ollama）
 
-~/.baize/.env          # 密钥文件>
-```
-Windows 用户路径为 `C:\Users\你的用户名\.baize\`。
+On first run, Baize automatically generates two configuration files:
 
-**2. 选择后端**
-打开` ~/.baize/config.toml`，修改 **active_provider**（一定要修改）：
+```
+~/.baize/config.toml   # Backend configuration (choose DeepSeek / OpenAI / Ollama)
+
+~/.baize/.env          # Key file
+```
+
+On Windows, the path is `C:\Users\YourUserName\.baize\`.
+
+**2. Choose a backend**
+
+Open `~/.baize/config.toml` and modify **active_provider** (this step is required):
+
 ```toml
-# 白泽配置文件
-# 修改 active_provider 切换后端  # 可选值："deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
+# Baize configuration file
+# Modify active_provider to switch backends
+# Possible values: "deepseek" / "qwen" / "kimi" / "glm" / "openai" / "ollama"
 
 active_provider = "deepseek"
 
@@ -274,205 +282,218 @@ env_key = "OPENAI_API_KEY"
 model = "gpt-4o"
 
 [model_providers.ollama]
-name = "Ollama (本地)"
+name = "Ollama (local)"
 base_url = "http://localhost:11434/v1"
 env_key = ""
 model = "qwen2.5:7b"
 ```
 
-**3. 填入密钥**
-编辑` ~/.baize/.env`，**如果需要使用哪个LLM，即可把前面的` # `删除，并在其它LLM前面加上` # `，锁住其它LLM API的输出，输入API Key之后，一定记得保存，只有保存之后才有效**：
+**3. Enter your API key**
+
+Edit `~/.baize/.env`. **If you need to use a particular LLM, remove the leading `#` from that provider's key line, add `#` in front of the other LLM keys to lock their output, enter the API key, and make sure to save the file. It takes effect only after saving**:
+
 ```env
 # ============================================================
-# 白泽密钥文件
+# Baize key file
 # ============================================================
-# 只填你要用的后端的密钥，其余保持注释即可。
-# 变量名必须与 config.toml 中的 env_key 字段一致。
+# Only fill in the key for the backend you want to use; keep the rest commented out.
+# Variable names must match the env_key fields in config.toml.
 #
-# 位置：
+# Location:
 #   Linux / macOS: ~/.baize/.env
-#   Windows:       C:\Users\你的用户名\.baize\.env
+#   Windows:       C:\Users\YourUserName\.baize\.env
 # ============================================================
 
-# ---------- DeepSeek（默认后端） ----------
-# 获取地址：https://platform.deepseek.com/api_keys
+# ---------- DeepSeek (default backend) ----------
+# Get it at: https://platform.deepseek.com/api_keys
 DEEPSEEK_API_KEY=
 
-# ---------- OpenAI 或任意 OpenAI 兼容接口（可选） ----------
-# 适用于 Groq、通义、Moonshot、智谱、OpenAI 等
-# 注意：base_url 在 config.toml 的 [model_providers.xxx] 里配置，不在此处
+# ---------- OpenAI or any OpenAI-compatible endpoint (optional) ----------
+# Suitable for Groq, Tongyi, Moonshot, Zhipu, OpenAI, etc.
+# Note: base_url is configured in [model_providers.xxx] in config.toml, not here.
 # OPENAI_API_KEY=
 
-# ---------- 通义千问（可选） ----------
-# 获取地址：https://dashscope.console.aliyun.com/
+# ---------- Tongyi Qianwen (optional) ----------
+# Get it at: https://dashscope.console.aliyun.com/
 # DASHSCOPE_API_KEY=
 
-# ---------- Kimi / Moonshot（可选） ----------
-# 获取地址：https://platform.moonshot.cn/console/api-keys
+# ---------- Kimi / Moonshot (optional) ----------
+# Get it at: https://platform.moonshot.cn/console/api-keys
 # MOONSHOT_API_KEY=
 
-# ---------- 智谱 GLM（可选） ----------
-# 获取地址：https://open.bigmodel.cn/usercenter/apikeys
+# ---------- Zhipu GLM (optional) ----------
+# Get it at: https://open.bigmodel.cn/usercenter/apikeys
 # ZHIPUAI_API_KEY=
 
-# ---------- 自定义网关（可选） ----------
+# ---------- Custom gateway (optional) ----------
 # CUSTOM_API_KEY=
 
-# ---------- Ollama（本地模型，无需密钥） ----------
-# 只需确保 Ollama 已在 localhost:11434 运行即可，无需在此配置
+# ---------- Ollama (local model, no key required) ----------
+# Just make sure Ollama is running on localhost:11434. No configuration is needed here.
 ```
 
-4. 重新启动
+4. Restart
+
 ```bash
 baize
 ```
-看到黑金 Logo 和欢迎信息即启动成功。
 
+If you see the black-gold logo and welcome message, startup succeeded.
 
-## Ollama 本地模型（零成本）
-不想用云 API？用本地 Ollama：
+## Ollama Local Models (Zero Cost)
+
+Don't want to use a cloud API? Use local Ollama:
 
     bash
 
-    #1. 安装 Ollama：https://ollama.com/download
-    #2. 拉取模型
+    # 1. Install Ollama: https://ollama.com/download
+    # 2. Pull a model
     ollama pull qwen2.5:7b
 
-    #3. 启动 Ollama 服务
+    # 3. Start the Ollama service
     ollama serve
 
-    #4. 修改 ~/.baize/config.toml
+    # 4. Modify ~/.baize/config.toml
     active_provider = "ollama"
 
-    #5. 启动白泽
+    # 5. Start Baize
     baize
-推荐模型：qwen2.5:7b（中文强）、llama3.1:8b、deepseek-r1:7b。
 
+Recommended models: `qwen2.5:7b` (strong Chinese), `llama3.1:8b`, `deepseek-r1:7b`.
 
+# Usage Examples
 
-# 使用示例
-启动后在 >>> 降旨： 提示符下用自然语言描述需求即可：
+After startup, describe your needs in natural language at the `>>> Decree:` prompt:
+
 ```
->>>降旨：用 Python 写一个爬取豆瓣 Top250 的脚本，保存为 CSV
+>>> Decree: Write a Python script to scrape Douban Top250 and save it as CSV
 
->>>降旨：帮我检查 src/ 下所有 Python 文件的类型错误
+>>> Decree: Help me check type errors in all Python files under src/
 
->>>降旨：在这个仓库里找一下所有用到 requests 的地方，改成 httpx
+>>> Decree: Find all places in this repository that use requests and change them to httpx
 ```
-## 多语言交互
-白泽支持**九种语言**：中文、English、日本語、한국어、Español、Français、deutsch、русский、العربية。
 
-有两种切换方式：
-### 方式一：直接说话（自动检测）
-白泽会自动识别你输入的语言并切换：
-```
->>> 降旨：Hello, help me write a Python script
-[系统] 已检测到输入语言为 English，白泽已切换为 English 交互。
-（白泽用英文回复）
+## Multilingual Interaction
 
->>> 降旨：日本語で答えてください
-[系统] 已检测到输入语言为 日本語，白泽已切换为 日本語 交互。
-（白泽用日文回复）
+Baize supports **nine languages**: Chinese, English, Japanese, Korean, Spanish, French, German, Russian, and Arabic.
+
+There are two ways to switch:
+
+### Method 1: Just Speak (Automatic Detection)
+
+Baize automatically detects the language of your input and switches:
+
 ```
-### 方式二：手动命令
+>>> Decree: Hello, help me write a Python script
+[System] Detected input language: English. Baize has switched to English interaction.
+(Baize replies in English)
+
+>>> Decree: 日本語で答えてください
+[System] Detected input language: Japanese. Baize has switched to Japanese interaction.
+(Baize replies in Japanese)
 ```
->>> 降旨：/lang                # 查看当前语言和可用列表
-[系统] 当前语言：中文 (zh)
-[系统] 可用语言：
-    zh    中文 ←
+
+### Method 2: Manual Command
+
+```
+>>> Decree: /lang                # Show current language and available list
+[System] Current language: Chinese (zh)
+[System] Available languages:
+    zh    Chinese ←
     en    English
     ja    日本語
     ko    한국어
     es    Español
     fr    Français
 
->>> 降旨：/lang English        # 用语言名切换
->>> 降旨：/lang ja             # 用语言代码切换
->>> 降旨：/lang 西班牙语        # 中文名也可以
+>>> Decree: /lang English        # Switch by language name
+>>> Decree: /lang ja             # Switch by language code
+>>> Decree: /lang 西班牙语        # Chinese name also works
 ```
-支持**语言名 / 语言代码 / 中文名 / 原文名**四种写法。例如切换英文时，`English`、`en`、`英语`、`英文` 任意一种都可以。
 
+Supports **language name / language code / Chinese name / native name**. For example, to switch to English, any of `English`, `en`, `英语`, or `英文` works.
 
-## 内置命令
-- `/exit、/quit` --> 退出白泽
-- `/clear`	--> 清空对话历史、待办、思考记录和工具记录
-- `/compact`	--> 手动压缩上下文（对话过长时使用）
-- `/commit`	--> 保存当前会话并提交到 Git（若在 Git 仓库内）
-- `/lang` → 查看当前语言；/lang en 切换为英文（支持语言代码或语言名）
-- `/skills`	--> 列出所有可用技能
-- `/skills reload`	--> 重新加载用户技能目录
-- `/unload`	--> 卸载当前激活的技能
-- `/show thought`	--> 查看完整思考记录
-- `/show tool`	--> 查看工具调用记录
-- `/show all`	--> 查看全部会话历史
-- `/技能名`	--> 加载指定技能（支持模糊匹配）
-- `/privacy`	--> 隐私脱敏控制（on / off / strict / status / rules / test / clear）
-- `/privacy rule-off <name>`	--> 禁用某条脱敏规则（如 `/privacy rule-off phone_intl`）
-- `/privacy rule-on  <name>`	--> 重新启用某条规则
+## Built-in Commands
 
+- `/exit`, `/quit` --> Exit Baize
+- `/clear` --> Clear conversation history, todos, thinking records, and tool records
+- `/compact` --> Manually compress context (use when the conversation is too long)
+- `/commit` --> Save the current session and commit to Git (if inside a Git repository)
+- `/lang` --> Show the current language; `/lang en` switches to English (supports language codes or names)
+- `/skills` --> List all available skills
+- `/skills reload` --> Reload the user skills directory
+- `/unload` --> Unload the currently active skill
+- `/show thought` --> Show the full thinking record
+- `/show tool` --> Show tool-call records
+- `/show all` --> Show all session history
+- `/skill-name` --> Load a specified skill (supports fuzzy matching)
+- `/privacy` --> Privacy redaction control (`on / off / strict / status / rules / test / clear`)
+- `/privacy rule-off <name>` --> Disable a redaction rule (e.g. `/privacy rule-off phone_intl`)
+- `/privacy rule-on <name>` --> Re-enable a rule
 
-## 数据接入使用示例
-配置好 SPSS / SQL 后，可以直接用自然语言驱动：
+## Data Access Usage Examples
+
+After configuring SPSS / SQL, you can drive them directly with natural language:
+
 ```text
->>>降旨：用 SPSS 打开 data.sav，告诉我变量列表和样本量
+>>> Decree: Use SPSS to open data.sav and tell me the variable list and sample size
 
->>>降旨：对 data.sav 做描述性统计，然后跑一个线性回归
+>>> Decree: Run descriptive statistics on data.sav, then run a linear regression
 
->>>降旨：查一下 sales 表里上个月销售额超过 10 万的订单，按客户分组
+>>> Decree: Query the sales table for orders with sales amount over 100,000 last month, grouped by customer
 
->>>降旨：把 SPSS 分析结果导出成 CSV，再用 SQL 关联客户主数据
+>>> Decree: Export the SPSS analysis results to CSV, then join them with customer master data using SQL
 ```
 
+# Extension Mechanisms
 
+Baize supports four extension mechanisms. Place them in the current working directory and they take effect.
 
-# 扩展机制
-白泽支持四种扩展方式，全部放在当前工作目录下即可生效。
-## 技能（Skills）
-在 ./skills/技能名/SKILL.md 中编写领域知识，AI 遇到复杂任务时会主动加载。
+## Skills
+
+Write domain knowledge in `./skills/<skill-name>/SKILL.md`. The AI will proactively load it when encountering complex tasks.
 
     markdown
 
     ---
     name: pandas-eda
 
-    description: 使用 pandas 进行探索性数据分析的最佳实践
+    description: Best practices for exploratory data analysis with pandas
 
     tags: data,python
     ---
 
-    #Pandas EDA 指南
+    # Pandas EDA Guide
 
-    ##核心步骤
-    1. df.info() 查看字段类型和缺失
-    2. df.describe() 统计描述
+    ## Core Steps
+    1. df.info() to inspect field types and missing values
+    2. df.describe() for statistical description
     ...
-    也可以在对话中用 /pandas-eda 手动加载。
 
+You can also manually load it in the conversation with `/pandas-eda`.
 
-## 子代理（Subagents）
-在 ./subagent/角色名/AGENT.md 中定义专用子代理，主代理可通过 agent 工具委派任务。
+## Subagents
+
+Define specialized subagents in `./subagent/<role-name>/AGENT.md`. The main agent can delegate tasks through the `agent` tool.
 
     markdown
 
     ---
     name: code-reviewer
 
-    description: 严格的代码审查员
+    description: Strict code reviewer
     ---
 
-    你是资深代码审查员。审查时优先关注：
-    1. 边界条件与异常处理
-    2. 资源泄漏
-    3. 并发安全
+    You are a senior code reviewer. During review, prioritize:
+    1. Boundary conditions and exception handling
+    2. Resource leaks
+    3. Concurrency safety
     ...
 
+## Hooks
 
-## 钩子（Hooks）
-在 ./hooks/ 下放置 
-- PreToolUse-*.
-- sh、PostToolUse-*.
-- sh、Stop-*.sh
-接收 JSON 输入，返回决策：
+Place `PreToolUse-*.sh`, `PostToolUse-*.sh`, and `Stop-*.sh` under `./hooks/`. They receive JSON input and return a decision:
+
 ```bash
 #!/bin/bash
 # PreToolUse-guard.sh
@@ -481,201 +502,229 @@ if echo "$input" | grep -q "rm -rf"; then
   echo '{"hookSpecificOutput":{"permissionDecision":"block","permissionDecisionReason":"Deletion prohibited"}}'
 fi
 ```
-Python 钩子可直接调用内置 API（见 Baize.py 中的 hook_* 函数）。
 
+Python hooks can directly call built-in APIs (see `hook_*` functions in `Baize.py`).
 
-## MCP 服务器
-在 ./MCP/mcp_config.json 中配置外部工具服务器：
+## MCP Servers
+
+Configure external tool servers in `./MCP/mcp_config.json`:
 
 ```json
+{
+  "mcpServers": [
     {
-      "mcpServers": [
-        {
-          "name": "filesystem",
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
-          "env": {},
-          "enabled": true
-        }
-      ]
-     }
+      "name": "filesystem",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "env": {},
+      "enabled": true
+    }
+  ]
+}
 ```
 
+# Security Design (Core)
 
+Baize enables the following security mechanisms by default:
 
-# 安全设计（核心）
-白泽默认启用以下安全机制：
-- **命令白名单**：仅允许 ls、cat、grep、git、python3 等常用命令。
-- **路径逃逸检测**：所有文件操作限制在当前工作目录和 /tmp 内。
-- **危险命令拦截**：拦截 rm -rf /、fork bomb、curl | sh、git push --force 等模式。
-- **敏感文件保护**：禁止修改 .env、.ssh/、id_rsa、*.pem 等。
-- **脚本注入拦截**：检测 python -c "os.system(...)" 类绕过。
-- **进程资源限制**：Linux/macOS 下限制 CPU、内存、进程数。
-- **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
-- **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
-- **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
-如果你需要在受信任的项目中放宽限制，可修改 Baize.py 中的 ALLOWED_COMMANDS 和 FORBIDDEN_PATH_PATTERNS。
+- **Command allowlist**: Only common commands such as `ls`, `cat`, `grep`, `git`, and `python3` are allowed.
+- **Path escape detection**: All file operations are restricted to the current working directory and `/tmp`.
+- **Dangerous command blocking**: Blocks patterns such as `rm -rf /`, fork bombs, `curl | sh`, and `git push --force`.
+- **Sensitive file protection**: Prohibits modification of `.env`, `.ssh/`, `id_rsa`, `*.pem`, etc.
+- **Script injection interception**: Detects bypasses such as `python -c "os.system(...)"`.
+- **Process resource limits**: Limits CPU, memory, and process count on Linux/macOS.
+- **Privacy redaction (bidirectional reversible)**: PII is replaced with random placeholders outbound and restored inbound; disk writes are independently redacted.
+- **Placeholder injection resistance**: 64-bit cryptographic random tokens + input-side neutralization + session isolation.
+- **Audit log redaction**: `hook_audit_log` redacts before writing, truncates, and refuses to write on failure.
 
+If you need to relax restrictions in trusted projects, you can modify `ALLOWED_COMMANDS` and `FORBIDDEN_PATH_PATTERNS` in `Baize.py`.
 
+# Privacy Redaction (Core)
 
-# 隐私脱敏（核心）
-白泽内置**双向可逆 + 落盘脱敏**的隐私保护机制，覆盖从输入到磁盘的完整链路：
-- **出站**：发给 LLM 之前，PII 被替换为不可猜测的占位符
-- **入站**：LLM 响应里的占位符被还原为原文
-- **落盘**：会话文件、压缩转录、审计日志写盘前**独立脱敏**，磁盘不留明文
-**默认关闭**，需要时开启。
-## 两种开启方式
-### 方式一：自然语言
-直接在对话中说：
+Baize includes a built-in **bidirectional reversible + disk redaction** privacy protection mechanism covering the full path from input to disk:
+
+- **Outbound**: Before sending to the LLM, PII is replaced with unguessable placeholders.
+- **Inbound**: Placeholders in LLM responses are restored to the original text.
+- **Disk writes**: Session files, compressed transcripts, and audit logs are **independently redacted** before being written to disk. No plaintext remains on disk.
+
+**Disabled by default**; enable it when needed.
+
+## Two Ways to Enable
+
+### Method 1: Natural Language
+
+Say directly in the conversation:
+
 ```
->>>降旨：开启隐私脱敏
-[系统] 隐私脱敏已开启（标准模式）。
+>>> Decree: Enable privacy redaction
+[System] Privacy redaction enabled (standard mode).
 
->>>降旨：开启严格脱敏
-[系统] 隐私脱敏已开启（严格模式）。
+>>> Decree: Enable strict redaction
+[System] Privacy redaction enabled (strict mode).
 
->>>降旨：关闭隐私保护
-[系统] 隐私脱敏已关闭。
+>>> Decree: Disable privacy protection
+[System] Privacy redaction disabled.
 ```
 
-### 方式二：斜杠命令
-- `/privacy on` 开启标准模式
-- `/privacy strict` 开启严格模式
-- `/privacy off` 关闭
-- `/privacy status` 查看状态、会话 ID、规则数、LRU/TTL 统计
-- `/privacy rules` 列出全部规则（含启用状态）
-- `/privacy rule-off <name>` 禁用某条规则
-- `/privacy rule-on  <name>` 重新启用
-- `/privacy test <文本>` 测试脱敏效果
-- `/privacy clear` 清空占位符映射并**轮换会话 ID**
+### Method 2: Slash Commands
 
+- `/privacy on` enables standard mode
+- `/privacy strict` enables strict mode
+- `/privacy off` disables it
+- `/privacy status` shows status, session ID, rule count, and LRU/TTL statistics
+- `/privacy rules` lists all rules (including enabled status)
+- `/privacy rule-off <name>` disables a rule
+- `/privacy rule-on <name>` re-enables it
+- `/privacy test <text>` tests redaction results
+- `/privacy clear` clears the placeholder mapping and **rotates the session ID**
 
-## 两级模式
-**标准** ：中国大陆手机号、身份证号、银行卡号（Luhn 校验）、邮箱、IPv4/IPv6、OpenAI/Anthropic/GitHub/AWS API Key、Bearer Token、私钥块、密码字段、URL 凭证 
+## Two Modes
 
-**严格** ： 标准模式全部 + 中文姓名、QQ 号、微信号、中国大陆车牌号 
-## 工作原理
-用户输入（含真实 PII）→ messages 存原文
+**Standard**: Mainland China mobile numbers, ID card numbers, bank card numbers (Luhn check), emails, IPv4/IPv6, OpenAI/Anthropic/GitHub/AWS API keys, Bearer tokens, private key blocks, password fields, URL credentials.
 
-↓  sanitize_messages()
+**Strict**: All standard rules + Chinese names, QQ numbers, WeChat IDs, mainland China license plate numbers.
 
-发给 LLM 的是 [[PHONE_1]]、[[EMAIL_1]]
+## How It Works
 
-↓  LLM 响应
+User input (with real PII) → messages store the original text
 
-返回的占位符 → restore_message()
+↓ `sanitize_messages()`
 
-还原为原文 → 落盘 / 显示 / 工具执行
-- **隐私脱敏（双向可逆）**：出站时 PII 替换为随机占位符，入站时还原；落盘时独立脱敏。
-- **占位符抗注入**：64 位密码学随机 token + 输入侧中和 + 会话隔离。
-- **审计日志脱敏**：`hook_audit_log` 写盘前脱敏 + 截断 + 失败拒写。
+What is sent to the LLM is `[[PHONE_1]]`, `[[EMAIL_1]]`
 
+↓ LLM response
 
-## 工具参数智能分级
-**会被脱敏**（纯文本参数，不参与实际执行）：
-- `todo`、`ask_user_question`、`task_create`、`task_update`
-**不脱敏**（路径/命令/URL 会被实际使用）：
-- `run_read` / `run_write` / `run_edit` / `run_glob` / `run_grep`（路径要用于 IO）
-- `run_bash` / `background_run`（命令要被执行）
-- `run_webfetch` / `web_search`（URL 要真的发到网络）
-- `set_workspace`（路径要 `chdir`）
-- `load_skills`（技能名是枚举）
-- `agent`（子代理上下文独立脱敏）
-- `mcp_*`（未知语义，保守处理）
-**落盘时全部脱敏**（因为落盘内容不会被重新执行，安全性优先）。
+Returned placeholders → `restore_message()`
 
+Restored to original text → disk write / display / tool execution
 
-## 落盘脱敏
-**默认开启**，独立于内存脱敏。即使 `/privacy off`（内存不脱敏），落盘仍至少走标准规则。
+- **Privacy redaction (bidirectional reversible)**: PII is replaced with random placeholders outbound and restored inbound; disk writes are independently redacted.
+- **Placeholder injection resistance**: 64-bit cryptographic random tokens + input-side neutralization + session isolation.
+- **Audit log redaction**: `hook_audit_log` redacts before writing, truncates, and refuses to write on failure.
 
-**关键特性**：
-- 落盘脱敏使用**独立的、一次性的映射表**——落盘后的占位符**无法被还原**，因为映射表已丢弃
-- 落盘脱敏**失败时拒绝写出明文**（不降级、不静默跳过）
-- 若旧版 session 文件含明文，首次保存时自动脱敏重写
-**关闭方式**（不推荐）：修改 `Baize.py` 里的 `PERSIST_REDACT_ENABLED = False`。
+## Intelligent Grading of Tool Parameters
 
+**Redacted** (plain-text parameters that do not participate in actual execution):
 
-## 示例
+- `todo`, `ask_user_question`, `task_create`, `task_update`
+
+**Not redacted** (paths/commands/URLs are actually used):
+
+- `run_read` / `run_write` / `run_edit` / `run_glob` / `run_grep` (paths are used for IO)
+- `run_bash` / `background_run` (commands are executed)
+- `run_webfetch` / `web_search` (URLs are actually sent to the network)
+- `set_workspace` (path is used for `chdir`)
+- `load_skills` (skill names are enumerated)
+- `agent` (subagent context is independently redacted)
+- `mcp_*` (unknown semantics; handled conservatively)
+
+**All redacted on disk write** (because disk content is not re-executed, security first).
+
+## Disk Redaction
+
+**Enabled by default**, independent of in-memory redaction. Even if `/privacy off` is used (no in-memory redaction), disk writes still go through at least the standard rules.
+
+**Key characteristics**:
+
+- Disk redaction uses an **independent, one-time mapping table**. Placeholders written to disk **cannot be restored**, because the mapping table is discarded.
+- If disk redaction **fails, Baize refuses to write plaintext** (no downgrade, no silent skip).
+- If an old session file contains plaintext, it will be automatically redacted and rewritten the first time it is saved.
+
+**How to disable** (not recommended): Set `PERSIST_REDACT_ENABLED = False` in `Baize.py`.
+
+## Example
+
 ```
->>>降旨：/privacy test 我的手机号 13812345678，邮箱 a@b.com
-原文：我的手机号 13812345678，邮箱 a@b.com
-脱敏：我的手机号 [[PHONE_1]]，邮箱 [[EMAIL_1]]
-还原：我的手机号 13812345678，邮箱 a@b.com
+>>> Decree: /privacy test My phone number is 13812345678, email a@b.com
+Original: My phone number is 13812345678, email a@b.com
+Redacted: My phone number is [[PHONE_1]], email [[EMAIL_1]]
+Restored: My phone number is 13812345678, email a@b.com
 
->>>降旨：/privacy status
-[隐私脱敏]
-当前模式 : 标准模式 (standard)
-会话 ID : 7d2f5e91
-启用规则数 : 34 / 41
-活跃占位符 : 2
-映射容量 : 2 / 2000
-TTL : 86400 秒
-LRU 淘汰 : 0
-TTL 淘汰 : 0
-脱敏调用次数: 3
-还原调用次数: 3
+>>> Decree: /privacy status
+[Privacy Redaction]
+Current mode : Standard mode (standard)
+Session ID : 7d2f5e91
+Enabled rules : 34 / 41
+Active placeholders : 2
+Mapping capacity : 2 / 2000
+TTL : 86400 seconds
+LRU evictions : 0
+TTL evictions : 0
+Sanitize calls: 3
+Restore calls: 3
 
->>>降旨：/privacy rules
-[隐私脱敏规则清单] 共 41 条
-【标准+严格】
-[✓] phone_cn 中国大陆手机号 (standard,strict)
-[✓] id_card_cn 中国大陆身份证号 (standard,strict)
+>>> Decree: /privacy rules
+[Privacy Redaction Rule List] 41 rules in total
+[Standard + Strict]
+[✓] phone_cn Mainland China mobile number (standard,strict)
+[✓] id_card_cn Mainland China ID card number (standard,strict)
 [✓] jwt JWT Token (standard,strict)
 ...
-【仅严格】
-[✓] name_cn 中文姓名 (strict)
-[✓] address_cn 中文详细地址 (strict)
+[Strict only]
+[✓] name_cn Chinese name (strict)
+[✓] address_cn Chinese detailed address (strict)
 ...
-用法：
-/privacy rule-off <name> 禁用某条规则
-/privacy rule-on <name> 重新启用
+Usage:
+/privacy rule-off <name> disable a rule
+/privacy rule-on <name> re-enable a rule
 ```
 
-### 测试实例
+### Test Screenshots
+
 <div align="center">
-隐私保护测试界面--01
+Privacy protection test screen -- 01
 </div>
 
 <p align="center">
-  <img src="image/privary01.jpg" alt="隐私保护测试界面" width="800" />
+  <img src="image/privary01.jpg" alt="Privacy protection test screen" width="800" />
 </p>
 
 <div align="center">
-隐私保护测试界面--02
+Privacy protection test screen -- 02
 </div>
 
 <p align="center">
-  <img src="image/privary02.jpg" alt="隐私保护测试界面" width="800" />
+  <img src="image/privary02.jpg" alt="Privacy protection test screen" width="800" />
 </p>
 
+# Data Access (Core)
 
+Baize connects to enterprise data analysis software through **MCP (Model Context Protocol)**. The main program requires no modification—just register the server in `MCP/mcp_config.json`.
 
-# 数据接入（核心）
-白泽通过**MCP（Model Context Protocol）**与企业数据分析软件对接，主程序无需任何修改——只要在 `MCP/mcp_config.json`里登记 server 即可。
-## SPSS 接入
-### 前置条件
-- 本机已安装 IBM SPSS Statistics（版本 20–31，Windows 推荐）
-- SPSS 已授权可正常启动
-### 配置步骤
-1.**找到 SPSS 安装目录：**默认路径通常是 `C:\Program Files\IBM\SPSS Statistics\` 后面跟版本号（如 31）。
+## SPSS Integration
 
-2.**设置环境变量**（可在 .env 或系统环境变量中）：
+### Prerequisites
+
+- IBM SPSS Statistics installed locally (versions 20–31; Windows recommended)
+- SPSS licensed and able to start normally
+
+### Configuration Steps
+
+1. **Find the SPSS installation directory**: The default path is usually `C:\Program Files\IBM\SPSS Statistics\` followed by the version number (e.g. `31`).
+
+2. **Set the environment variable** (in `.env` or system environment variables):
+
 ```text
 SPSS_INSTALL_PATH=C:\Program Files\IBM\SPSS Statistics\31
 ```
 
-3.**验证状态**：
+3. **Verify status**:
+
 ```bash
 spss-studio-mcp status
 ```
-期望输出：
+
+Expected output:
+
 ```text
 === SPSS MCP Capability Status ===
 pyreadstat : OK v1.3.6
 pandas     : OK v3.0.2
 SPSS batch : OK
 ```
-4.**在`MCP/mcp_config.json`中登记**：
+
+4. **Register it in `MCP/mcp_config.json`**:
+
 ```json
 {
   "mcpServers": [
@@ -692,29 +741,39 @@ SPSS batch : OK
 }
 ```
 
-### 如果 `SPSS batch: NOT FOUND`
-说明`spss-studio-mcp`没找到 SPSS 引擎，但`pyreadstat`+`pandas`正常，此时进入**文件模式**：
-- 可读`.sav`、查看元数据、预览数据、CSV ↔ SAV 转换
-- 不能跑统计（t 检验、回归、ANOVA 等）
-解决办法：正确设置`MCP/mcp_config.json`中的`SPSS_INSTALL_PATH`，或接受文件模式降级。
+### If `SPSS batch: NOT FOUND`
 
+This means `spss-studio-mcp` did not find the SPSS engine, but `pyreadstat` + `pandas` are working. In this case, it enters **file mode**:
 
-## SQL 接入
-### 支持的数据库
-PostgreSQL、MySQL、MariaDB、SQL Server、Oracle、达梦、人大金仓、TiDB、OceanBase 等（基于 SQLAlchemy 2.0 驱动）。
+- Can read `.sav`, inspect metadata, preview data, and convert CSV ↔ SAV
+- Cannot run statistics (t-test, regression, ANOVA, etc.)
 
-### 配置步骤
-1.**准备只读数据库账号**（强烈建议）：
+Solution: Set `SPSS_INSTALL_PATH` correctly in `MCP/mcp_config.json`, or accept file-mode degradation.
+
+## SQL Integration
+
+### Supported Databases
+
+PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, Dameng, Kingbase, TiDB, OceanBase, etc. (based on SQLAlchemy 2.0 drivers).
+
+### Configuration Steps
+
+1. **Prepare a read-only database account** (strongly recommended):
+
 ```sql
 CREATE USER baize_ro WITH PASSWORD 'xxx';
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 ```
-2.**准备连接字符串**：
-- PostgreSQL --> postgresql+psycopg://user:pwd@host:5432/db
-- MySQL --> mysql+pymysql://user:pwd@host:3306/db
-- SQL Server --> mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server
-- Oracle --> oracle+oracledb://user:pwd@host:1521/?service_name=ORCL
-3.**在`MCP/mcp_config.json`中登记**：
+
+2. **Prepare the connection string**:
+
+- PostgreSQL --> `postgresql+psycopg://user:pwd@host:5432/db`
+- MySQL --> `mysql+pymysql://user:pwd@host:3306/db`
+- SQL Server --> `mssql+pyodbc://user:pwd@host:1433/db?driver=ODBC+Driver+18+for+SQL+Server`
+- Oracle --> `oracle+oracledb://user:pwd@host:1521/?service_name=ORCL`
+
+3. **Register it in `MCP/mcp_config.json`**:
+
 ```json
 {
   "mcpServers": [
@@ -731,15 +790,19 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
 }
 ```
 
-### 安全护栏（内置）
-`atengk-mcp-server-rdbms` 提供多层防护：
-- **AST 级 SELECT 守卫**：基于`sqlglot`解析语法树，物理拦截`DELETE/UPDATE/DROP/TRUNCATE`等写操作。
-- **自动 LIMIT 注入**：未指定行数的查询强制追加`LIMIT 100`，防止全表拉取导致内存溢出。
-- **只读默认**：写操作必须通过`--allow-dml`/`--allow-ddl`显式授权。
-- **SQL 注入拦截**：AST 层拒绝字符串拼接构造的恶意语句。
+### Built-in Security Guardrails
 
-### 一次配置多个数据库
-如果想同时连多个库，可以注册多个 server：
+`atengk-mcp-server-rdbms` provides multiple layers of protection:
+
+- **AST-level SELECT guard**: Uses `sqlglot` to parse the syntax tree and physically block write operations such as `DELETE/UPDATE/DROP/TRUNCATE`.
+- **Automatic LIMIT injection**: Queries without a specified row count are forced to append `LIMIT 100` to prevent full-table pulls from causing memory exhaustion.
+- **Read-only by default**: Write operations must be explicitly authorized via `--allow-dml` / `--allow-ddl`.
+- **SQL injection interception**: Rejects malicious statements constructed by string concatenation at the AST layer.
+
+### Configure Multiple Databases at Once
+
+If you want to connect to multiple databases simultaneously, register multiple servers:
+
 ```json
 {
   "mcpServers": [
@@ -760,185 +823,182 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO baize_ro;
   ]
 }
 ```
-白泽会自动把它们的所有工具合并进`MATERTOOLS`，LLM 会根据任务自动选择。
 
+Baize will automatically merge all their tools into `MATERTOOLS`, and the LLM will select the appropriate one based on the task.
 
+# Directory Structure
 
-# 目录结构
 ```
     baize-agent/
-    ├── pyproject.toml              # 打包配置
-    ├── requirements-data.txt       # 数据接入依赖（可选）
-    ├── requirements-data           # 接入依赖
+    ├── pyproject.toml              # Packaging configuration
+    ├── requirements-data.txt       # Data access dependencies (optional)
+    ├── requirements-data           # Access dependencies
     ├── README.md
-    ├── tests/                      # 测试（不随包发布）
+    ├── tests/                      # Tests (not shipped with the package)
     |   ├── __init__.py
     |   ├── test_history.py
-    |   └── test_skill_loader.py 
-    ├── .env.example                # 环境变量示例
+    |   └── test_skill_loader.py
+    ├── .env.example                # Environment variable example
     ├── .gitignore
-    └── agent/                      # 主包
-        ├── logo_*                  # 登录界面logo
-        ├── LOGO和启动交互界面       # 登录界面logo图
-        ├── __init__.py             # 版本
-        ├── Baize.py                # 主程序与 Agent Loop
-        ├── config.py               # 多后端配置加载
-        ├── ui_theme.py             # CLI 渲染主题
-        ├── utils.py                # 通用工具
+    └── agent/                      # Main package
+        ├── logo_*                  # Login screen logo
+        ├── LOGO和启动交互界面       # Login screen logo image
+        ├── __init__.py             # Version
+        ├── Baize.py                # Main program and Agent Loop
+        ├── config.py               # Multi-backend configuration loading
+        ├── ui_theme.py             # CLI rendering theme
+        ├── utils.py                # General utilities
         ├── logo.txt
-        ├── skills/                 # 内置技能
-        ├── subagent/               # 内置子代理
-        ├── core/                   # 核心逻辑（无副作用，可单测）
+        ├── skills/                 # Built-in skills
+        ├── subagent/               # Built-in subagents
+        ├── core/                   # Core logic (side-effect free, unit-testable)
         |   ├── __init__.py
-        |   ├── history.py          # 会话历史清洗 / token 估算 / 压缩
-        |   └── privacy.py          # 隐私脱敏：PII 识别 / 占位符替换 / 可逆还原
-        ├── hooks/                  # 内置钩子
-        └── MCP/                    # MCP 客户端与配置
+        |   ├── history.py          # Session history cleaning / token estimation / compression
+        |   └── privacy.py          # Privacy redaction: PII detection / placeholder replacement / reversible restore
+        ├── hooks/                  # Built-in hooks
+        └── MCP/                    # MCP client and configuration
             ├── __init__.py
-            ├── mcp_client.py       # MCP客户端
-            └── mcp_config.json     # MCP配置
+            ├── mcp_client.py       # MCP client
+            └── mcp_config.json     # MCP configuration
 ```
 
+# Environment Variables Reference
 
+- Variable: `DEEPSEEK_API_KEY` — Description: DeepSeek API key — Default: — (secret)
+- Variable: `DEEPSEEK_BASE_URL` — Description: DeepSeek endpoint URL — Default: `https://api.deepseek.com`
+- Variable: `OPENAI_API_KEY` — Description: OpenAI-compatible API key — Default: — (secret)
+- Variable: `OPENAI_BASE_URL` — Description: OpenAI-compatible endpoint URL — Default: `https://api.openai.com/v1`
+- Variable: `OLLAMA_BASE_URL` — Description: Ollama service URL — Default: `http://localhost:11434`
 
-# 环境变量参考
-- 变量：DEEPSEEK_API_KEY  说明：DeepSeek API  默认值：密钥	—
-- 变量：DEEPSEEK_BASE_URL  说明：DeepSeek 接口地址  默认值：https://api.deepseek.com
-- 变量：OPENAI_API_KEY  说明：OpenAI  默认值：兼容接口密钥	—
-- 变量：OPENAI_BASE_URL	 说明：OpenAI 兼容接口地址	 默认值：https://api.openai.com/v1
-- 变量：OLLAMA_BASE_URL	 说明：Ollama 服务地址	 默认值：http://localhost:11434
+**Write the above variables to `~/.baize/.env`; no shell configuration file changes are needed.**
 
-**上述变量写入 ~/.baize/.env 即可，无需修改 shell 配置文件。**
-- 数据分析变量：SPSS_INSTALL_PATH 说明：IBM SPSS Statistics 安装目录 默认值：—（未设置则降级为文件模式）
-- 数据分析变量：DATABASE_URL 说明：SQL MCP 的数据库连接串 默认值：—（由 MCP server 读取）
+- Data analysis variable: `SPSS_INSTALL_PATH` — Description: IBM SPSS Statistics installation directory — Default: — (falls back to file mode if unset)
+- Data analysis variable: `DATABASE_URL` — Description: Database connection string for SQL MCP — Default: — (read by the MCP server)
 
-**上述变量写入 MCP/mcp_config.json 即可。**
+**Write the above variables to `MCP/mcp_config.json`.**
 
+# Development
 
+## Running Tests
 
-# 开发
-## 运行测试
-本项目使用 pytest。开发前请以可编辑模式安装包与开发依赖：
+This project uses pytest. Before development, install the package in editable mode with development dependencies:
 ```
     pip install -e ".[dev]"
 ```
-运行全部测试：
+
+Run all tests:
 ```
     python -m pytest tests/ -v
 ```
-只跑单个文件：
+
+Run a single file:
 ```
     python -m pytest tests/test_history.py -v
 ```
 
+## Code Structure Conventions
 
-## 代码结构约定
-- `agent/`：随包发布的主包。所有运行时逻辑与资源（skills、subagent、hooks、MCP）都在这里。
-- `agent/core/`：纯逻辑模块，无外部副作用，**必须能被单独测试**。新增此类逻辑请放这里，并配套测试。
-- `tests/`：与 `agent/` 下的源文件一一对应，命名为 `test_<模块名>.py`。
-- 任何有外部依赖（网络、磁盘、全局状态）的函数，请通过参数注入依赖，便于在测试中替换。
+- `agent/`: The main package shipped with the package. All runtime logic and resources (skills, subagent, hooks, MCP) live here.
+- `agent/core/`: Pure logic modules with no external side effects. **They must be independently testable.** Add new logic of this kind here and include tests.
+- `tests/`: Corresponds one-to-one with source files under `agent/`, named `test_<module>.py`.
+- Any function with external dependencies (network, disk, global state) should inject dependencies through parameters so they can be replaced in tests.
 
+# FAQ
 
+- Q: Where should I put the API key?
 
+A: In `~/.baize/.env`, not the `.env` in the project root.
 
-# ❓ 常见问题
-- Q：密钥应该填在哪里？
+- Q: Do I need to reinstall after changing the backend?
 
-A：~/.baize/.env，不是项目根目录的 .env。
+A: No. Just change `active_provider` in `~/.baize/config.toml`.
 
-- Q：换了后端要重装吗？
+- Q: Does local Ollama require an API key?
 
-A：不用。改 ~/.baize/config.toml 里的 active_provider 即可。
+A: No. Set `active_provider = "ollama"` and leave `env_key` empty.
 
-- Q：本地 Ollama 需要填密钥吗？
+- Q: How do I switch the working directory?
 
-A：不需要。选 active_provider = "ollama" 即可，env_key 留空。
+A: In the conversation, simply say "switch to /path/to/project", and Baize will call the `set_workspace` tool.
 
-- Q：如何切换工作目录？
+- Q: What happens if the context gets too long?
 
-A：在对话中直接说"切换到 /path/to/project"，白泽会调用 set_workspace 工具。
+A: Baize automatically performs two-level compression: first truncating old tool results, then requesting an LLM summary. You can also manually use `/compact`.
 
-- Q：上下文太长会怎样？
+- Q: Will it accidentally delete my files?
 
-A：白泽会自动两级压缩：先截断旧工具结果，再请求 LLM 生成摘要。也可手动 /compact。
+A: The default command allowlist blocks dangerous operations such as `rm -rf /`; before writing files, it shows a diff and asks for confirmation.
 
-- Q：会误删我的文件吗？
+- Q: How do I connect Baize to SPSS?
 
-A：默认命令白名单会拦截 rm -rf / 等危险操作；写文件前会显示 Diff 并请求确认。
+A: 1. Install `pip install -r requirements-data.txt`; 2. Set the `SPSS_INSTALL_PATH` environment variable to point to the SPSS installation directory; 3. Enable the `spss` server in `MCP/mcp_config.json`. See the "Data Access (SPSS / SQL)" section for details.
 
-- Q：如何让白泽连接 SPSS？
+- Q: What should I do about `SPSS batch: NOT FOUND`?
 
-A：1、安装`pip install -r requirements-data.txt`；2、设置环境变量`SPSS_INSTALL_PATH`指向 SPSS 安装目录；3、在`MCP/mcp_config.json`里启用spss server。详见"数据接入（SPSS / SQL）"章节。
+A: This means the SPSS engine was not found. Check whether `SPSS_INSTALL_PATH` correctly points to the directory containing `stats.exe`; if you only process `.sav` files, you can ignore this warning (it will fall back to file mode).
 
-- Q：`SPSS batch: NOT FOUND`怎么办？
+- Q: What extra things do I need to install to connect to a SQL database?
 
-A：这表示没找到SPSS引擎。检查`SPSS_INSTALL_PATH`是否正确指向包含`stats.exe`的目录；若你只是处理`.sav`文件，也可以忽略此警告（会降级为文件模式）。
+A: Install `atengk-mcp-server-rdbms` at the Python layer (`pip install` handles it). **SQL Server users also need to install Microsoft ODBC Driver 18 at the system level**, which cannot be installed via pip.
 
-- Q：连接 SQL 数据库需要装什么额外的东西？
+- Q: Will Baize accidentally delete my database data?
 
-A：Python 层装`atengk-mcp-server-rdbms`（`pip install` 自动完成）。**SQL Server 用户还需在系统层安装 Microsoft ODBC Driver 18**，这个不能用 pip 装。
+A: No. SQL MCP only allows SELECT by default and blocks all write operations at the AST syntax-tree level. It is still strongly recommended to create a **read-only database account** for Baize as a second safeguard.
 
-- Q：白泽会误删我的数据库数据吗？
+- Q: Will data in SPSS analysis results leak to the LLM?
 
-A：不会。SQL MCP 默认只允许 SELECT，AST 语法树级拦截所有写操作。仍强烈建议为白泽单独创建**只读数据库账号**做双保险。
+A: If privacy redaction is enabled (`/privacy on`), tool results are automatically redacted for phone numbers, emails, ID cards, and other PII before being sent to the LLM. **However, it is recommended to also use a read-only database account + data sampling** (query only necessary fields) to reduce risk.
 
-- Q：SPSS 分析结果里的数据会不会泄露给 LLM？
+- Q: Why does Baize become slower and use more tokens in every conversation after adding SPSS/SQL?
 
-A：如果开启了隐私脱敏（`/privacy on`），工具返回结果在发往 LLM 前会自动脱敏手机号、邮箱、身份证等 PII。**但建议同时用只读数据库账号 + 数据采样**（只查必要字段）来降低风险。
+A: Because the tool definitions exposed by MCP servers are sent to the LLM with every conversation turn. SPSS has 60+ tools, adding a fixed overhead of about 6,000–12,000 tokens. If your common workflow does not involve SPSS, you can set its `enabled` to `false` and turn it on when needed.
 
-- Q：为什么加了 SPSS/SQL 后，白泽每次对话都变慢了、token 也变多了？
+# Contributing
 
-A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。SPSS 有 60+ 工具，约增加 6000–12000 token 固定开销。如果常用工作流不涉及 SPSS，可以把它的`enabled`设为`false`，需要时再打开。
+Issues and PRs are welcome. Please read `CONTRIBUTOR.md` before submitting a PR.
 
+**Thank you to every contributor who submits a PR.**
 
-
-# 🤝 贡献
-欢迎提交 Issue 和 PR。建议先阅读CONTRIBUTOR.md中的内容再提交PR。
-
-**Thank you for every Contributor to Submit PR**
-- Github Contributor：
+- GitHub Contributors:
 [@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
 
+# License
 
-
-# 许可证
 MIT License
 
+# Acknowledgements
 
+- This project is hosted on AtomGit in China: https://atomgit.com/Com_Xu/Baize
+- Thanks to AtomGit for including this project in the G-star incubation program.
+- Thanks to PR contributors, Douyin followers, and students who follow me.
+- Inspired by excellent AI coding tools such as Claude Code and Codex.
+- Built on DeepSeek, OpenAI SDK, and MCP.
+- Thanks to all developers walking the Vibe Coding path together.
 
-# 致谢
-- 本项目在国内AtomGit托管，项目链接：https://atomgit.com/Com_Xu/Baize
-- 感谢AtomGit将本项目已纳入G-star孵化项目
-- 感谢PR的贡献者、抖音的粉丝、关注我的学生们
-- 灵感来自 Claude Code、Codex 等优秀 AI Coding 工具
-- 基于 DeepSeek、OpenAI SDK、MCP 构建
-- 感谢所有在 Vibe Coding 路上同行的开发者
+# ☕ Sponsor
 
-
-
-# ☕ 赞助支持
-如果白泽对你有用，欢迎赞助打赏。独立开发也花费很多时间，赞助不会改变产品更新的排期，谢谢支持！
-<p align="center">
-  <img src="image/support.jpg" alt="微信二维码" width="200" />
-</p>
-
-
-
-# 联系我
-- 如果你对白泽感兴趣，或者想参与开源合作，可以通过以下方式联系我
-- **目前，本人在求职状态，本人从事过市场研究与用户研究工作，对Agent也有一定了解，如果我的能力符合您的需求，也希望与您共事（意向岗位：AI产品运营/用户研究/市场调研）**
+If Baize is useful to you, you are welcome to sponsor and support it. Independent development takes a lot of time. Sponsorship will not change the product update schedule. Thank you for your support!
 
 <p align="center">
-  <img src="image/weixin.jpg" alt="微信二维码" width="200" />
+  <img src="image/support.jpg" alt="WeChat QR code" width="200" />
 </p>
 
-<p align="center">微信扫码，请注明Baize开源合作或者企业招聘</p>
+# Contact Me
+
+- If you are interested in Baize or want to participate in open-source collaboration, you can contact me through the following channels.
+- **I am currently looking for job opportunities. I have experience in market research and user research, and I also have some understanding of Agents. If my abilities match your needs, I hope to work with you (target roles: AI Product Operations / User Research / Market Research).**
 
 <p align="center">
-  <img src="image/抖音.png" alt="抖音二维码" width="200" />
+  <img src="image/weixin.jpg" alt="WeChat QR code" width="200" />
 </p>
 
-<p align="center">抖音扫码关注</p>
+<p align="center">Scan the WeChat QR code and note "Baize open-source collaboration" or "corporate recruitment".</p>
+
+<p align="center">
+  <img src="image/抖音.png" alt="Douyin QR code" width="200" />
+</p>
+
+<p align="center">Scan the Douyin QR code to follow.</p>
