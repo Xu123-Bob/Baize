@@ -1,77 +1,115 @@
-# ===== 密钥与配置 =====
-.env
-.env.*
-!.env.example
-!.env.template
-*.pem
-*.key
-*.p12
-*.pfx
-id_rsa
-id_ed25519
-credentials.json
-secrets.yaml
-secrets.yml
-config.local.*
-MCP/mcp_config.json
-!MCP/mcp_config.example.json
+# =========================
+# 操作系统生成的文件
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
 
-# ===== Baize 会话与运行时数据 =====
-.baize_session.json
-.baize_session.json.*
-.transcripts/
-.tasks/
-.claude/
-logs/
-*.log
-
-# ===== Python =====
-__pycache__/
-*.py[cod]
-*.egg-info/
-.eggs/
-dist/
-build/
+# =========================
+# 虚拟环境
+# =========================
 .venv/
 venv/
 env/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# =========================
+# Python 编译产物与缓存
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# =========================
+# 测试与代码质量工具
+# =========================
 .pytest_cache/
-.mypy_cache/
-.ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
+.tox/
+.nox/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
-# ===== Node（如果用到 hooks / prettier / eslint） =====
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ===== 数据库与临时文件 =====
-*.sqlite
-*.sqlite3
-*.db
-*.tmp
-*.temp
-tmp/
-temp/
-*.bak
-*.backup
-
-# ===== IDE / OS =====
+# =========================
+# IDE / 编辑器配置
+# =========================
 .vscode/
 .idea/
 *.swp
-.DS_Store
-Thumbs.db
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
 
-# ===== 测试输出（不要忽略真实测试代码） =====
-test-output/
-tests/_output/
+# =========================
+# 环境变量与敏感信息
+# 注意：.env.example 是需要保留的，所以不要忽略它
+# =========================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
 
-# macOS
-.DS_Store
+# =========================
+# 白泽 (Baize) 运行时生成的数据
+# =========================
+.baize_session.json
+.transcripts/
+.tasks/
+.claude/
+*.log
+logs/
 
-# 本地 MCP 配置含密钥，不进版本库
-**/mcp_config.json
-!agent/MCP/mcp_config.example.json
+# =========================
+# 项目媒体文件（图片、视频等）
+# 注意：如果完全忽略 image/，README.md 中的图片将无法显示
+# =========================
+image/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
+*.svg
+*.mp4
+!agent/logo_*.txt
+!agent/logo_text.txt
+
+# =========================
+# 依赖锁定文件 (可根据需要保留或忽略)
+# =========================
+# poetry.lock
+# Pipfile.lock
