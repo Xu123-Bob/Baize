@@ -55,6 +55,8 @@ Un assistant de sécurité pour le Vibe Coding et l'analyse de données, inspir�
 
 **Une CLI de Coding Agent open source dotée d'une forte protection de la vie privée et d'une interaction multilingue. Elle prend en charge plusieurs backends (DeepSeek / compatible OpenAI / Zhipu / Tongyi / Kimi / Ollama local) et offre des capacités complètes telles que l'appel d'outils, le chargement de compétences, la délégation à des sous-agents, la compression de contexte et un bac à sable sécurisé.**
 
+**La version avec déploiement Docker a été ajoutée, le fichier Zip est désormais inclus dans la release.**
+
 Ce projet a déjà été utilisé par moi-même lors de la compétition Beijing 2026 du Hackathon Jeunes IA pour une évaluation pratique.
 
 ----------
@@ -94,6 +96,8 @@ Ce projet a déjà été utilisé par moi-même lors de la compétition Beijing 
 - **Bac à sable sécurisé** : Liste blanche de commandes, détection d'évasion de chemin, blocage des commandes dangereuses, protection des fichiers sensibles et interception d'injection de scripts.
 
 - **CLI à thème noir et or** : Adaptation automatique de la largeur des caractères chinois, coloration syntaxique, coloration des diffs et repli de la réflexion.
+
+- **Déployable en ligne** : version v3.0.0 de déploiement Docker publiée, permettant un déploiement sur le réseau public via une instance cloud déléguée.
 
 # Interface de la CLI Baize
 
@@ -184,6 +188,35 @@ pip install -e ".[sql-mssql]"     # SQL Server uniquement (inclut pyodbc)
 
 - **⚠️ Utilisateurs de SQL Server : `pyodbc` n'est que la liaison Python. Vous devez également installer Microsoft ODBC Driver 18 for SQL Server au niveau du système.**
 - **⚠️ Utilisateurs de SPSS : `spss-studio-mcp` n'est qu'une couche de pont MCP. IBM SPSS Statistics (versions 20–31) doit être installé localement et sous licence active, et la variable d'environnement `SPSS_INSTALL_PATH` doit pointer vers le répertoire d'installation de SPSS. L'analyse statistique complète avec le moteur SPSS est principalement prise en charge sous Windows. Sous Linux/macOS, il peut basculer en « mode fichier » (lire des fichiers `.sav`, inspecter les métadonnées, prévisualiser les données, mais sans analyse statistique).**
+
+### Optionnel : déploiement en ligne
+1、Intégration de l’image Docker
+- Téléchargez Docker Desktop (Windows / macOS) ou Docker Engine (Docker CE) --- pour serveur Linux
+- URL de téléchargement : https://docs.docker.com/get-started/get-docker/
+- Pour une installation rapide sous Linux, vous pouvez utiliser le script universel :
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+- Pour l’utilisation concrète, elle peut être réalisée sous la guidance de l’IA
+
+2、Principes de déploiement
+- Modification à intrusion minimale, réalisant une isolation physique entre l’environnement CLI local et l’environnement Web
+- Pour isoler complètement les API Key et les historiques de chat du CLI et du Web, nous avons introduit la variable d’environnement `BAIZE_HOME` dans `config.py`
+- Conteneurisation Docker locale et développement full-stack ; le backend utilise le framework FastAPI ; l’état de session utilise `asyncio.to_thread` pour placer le `agent_loop` synchrone dans un thread d’arrière-plan ; l’authentification sécurisée utilise REST API et WebSocket
+- Si le téléchargement de l’image Docker de base est lent, remplacez-la par `docker.m.daocloud.io`
+- Monter les quatre volumes de données `baize-config`, `baize-workspace`, `baize-sessions` et `baize-logs` via `docker-compose.yml` pour assurer la persistance des données
+- Configuration serveur recommandée : 2 cœurs et 4 Go ou plus (2 cœurs et 2 Go est un équilibre serré ; l’Agent peut facilement subir un OOM lors de l’exécution de tâches complexes)
+
+3、Aperçu du déploiement
+<div align="center">
+Interface de démarrage de BaiZe Web
+</div>
+
+<p align="center">
+  <img src="image/baize-docker-可部署云端服务器.jpg" alt="白泽 web 启动界面" width="800" />
+</p>
 
 # Démarrage rapide
 

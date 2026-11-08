@@ -56,6 +56,8 @@
 
 **一个开源的Coding Agent CLI，具有强大的隐私保护与多语种交互的功能，支持多后端（DeepSeek / OpenAI 兼容 / 智谱 / 通义 / Kimi/ Ollama 本地），具备工具调用、技能加载、子代理委派、上下文压缩、安全沙箱等完整能力。**
 
+**已增加部署docker的版本，已在release中添加Zip文件**
+
 本项目已经在北京2026年AI青年黑客松比赛中被本人用于实战检验
 
 ----------
@@ -96,6 +98,8 @@
 - **安全沙箱**：命令白名单、路径逃逸检测、危险命令拦截、敏感文件保护、脚本注入拦截。
 
 - **黑金主题 CLI**：中文宽度自适应，代码高亮、Diff 着色、思考折叠。
+
+- **线上可部署**：发布docker部署版本v3.0.0，可通过委托云端服务器，实现公网部署
 
 
 
@@ -187,6 +191,34 @@ pip install -e ".[sql-mssql]"     # SQL Server 专用（含 pyodbc）
 - **⚠️ SQL Server 用户注意：pyodbc 只是 Python 绑定，系统层还需安装 Microsoft ODBC Driver 18 for SQL Server。**
 - **⚠️ SPSS 用户注意：spss-studio-mcp 只是 MCP 桥接层，必须本机已安装 IBM SPSS Statistics（版本 20–31）并处于已授权状态，并且设置环境变量 SPSS_INSTALL_PATH 指向 SPSS 安装目录。目前 SPSS 引擎主要在 Windows 上支持完整分析功能；Linux/macOS 下可以降级为"文件模式"（读取 .sav 文件、查看元数据、预览数据，但不支持统计分析）。**
 
+### 可选：线上部署
+1、Docker镜像搭载
+- 下载Docker Desktop（Windows / macOS）或 Docker Engine（Docker CE）---linux服务器
+- 下载网址：https://docs.docker.com/get-started/get-docker/
+- Linux 快速安装可使用通用脚本：
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+- 具体使用，可在AI指导下完成
+
+2、部署原则
+- 最小侵入改造，实现了本地 CLI 与 Web 环境的物理隔离
+- 让 CLI 和 Web 的 API Key、聊天记录完全隔离，我们在 `config.py` 中引入了 `BAIZE_HOME` 环境变量
+- 本地 Docker 容器化与全栈开发，后端采用FastAPI 框架，会话状态通过 `asyncio.to_thread` 将同步的 `agent_loop` 放入后台线程，安全鉴权采用REST API和WebSocket
+- docker基础镜像若拉取缓慢，可替换为`docker.m.daocloud.io`
+- 通过 `docker-compose.yml` 挂载 `baize-config`、`baize-workspace`、`baize-sessions`、`baize-logs` 四个数据卷，实现数据持久化
+- 服务器推荐配置：2核4G 及以上（2核2G 属于紧平衡，Agent 执行复杂任务易 OOM）
+
+3、部署展示
+<div align="center">
+白泽 Web 启动界面
+</div>
+
+<p align="center">
+  <img src="image/baize-docker-可部署云端服务器.jpg" alt="白泽 web 启动界面" width="800" />
+</p>
 
 
 # 快速开始

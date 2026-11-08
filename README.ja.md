@@ -55,6 +55,8 @@
 
 **オープンソースの Coding Agent CLI。強力なプライバシー保護と多言語インタラクションを備え、複数バックエンド（DeepSeek / OpenAI 互換 / 智譜 / 通義 / Kimi / ローカル Ollama）をサポートします。ツール呼び出し、スキル読み込み、サブエージェント委任、コンテキスト圧縮、セキュアサンドボックスなどの完全な機能を提供します。**
 
+**Dockerのバージョンを追加しました。リリースにZipファイルが含まれています。**
+
 本プロジェクトは、北京2026年AI青年ハッカソン大会で実際に使用され、実戦検証が行われました。
 
 ----------
@@ -94,6 +96,8 @@
 - **セキュアサンドボックス**：コマンド許可リスト、パス脱出検出、危険コマンド遮断、機密ファイル保護、スクリプトインジェクション遮断。
 
 - **黒金テーマ CLI**：中国語幅の自動調整、コードハイライト、Diff 着色、思考の折りたたみ。
+
+- **オンラインで展開可能**：Dockerのデプロイバージョンを公開し、クラウドサーバーを委託することで、パブリックネットワークでの展開を実現できます。
 
 # 白澤 CLI 画面
 
@@ -185,6 +189,35 @@ pip install -e ".[sql-mssql]"     # SQL Server 専用（pyodbc を含む）
 
 - **⚠️ SQL Server ユーザー注意：`pyodbc` は Python バインディングのみです。システム側に Microsoft ODBC Driver 18 for SQL Server もインストールする必要があります。**
 - **⚠️ SPSS ユーザー注意：`spss-studio-mcp` は MCP ブリッジ層のみです。ローカルに IBM SPSS Statistics（バージョン 20–31）がインストールされ、ライセンス認証済みである必要があり、環境変数 `SPSS_INSTALL_PATH` を SPSS インストールディレクトリに設定する必要があります。SPSS エンジンによる完全な分析機能は主に Windows でサポートされます。Linux/macOS では「ファイルモード」に降格できます（`.sav` ファイルの読み取り、メタデータ確認、データプレビューは可能ですが、統計分析はできません）。**
+
+### オプション：オンラインデプロイ
+1、Dockerイメージの導入
+- Docker Desktop（Windows / macOS）または Docker Engine（Docker CE）をダウンロード --- Linuxサーバー用
+- ダウンロードURL：https://docs.docker.com/get-started/get-docker/
+- Linuxでのクイックインストールには汎用スクリプトを使用できます：
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+- 具体的な使用方法は、AIのガイドのもとで完了できます
+
+2、デプロイ原則
+- 最小限の侵襲的改修により、ローカルCLIとWeb環境の物理的隔離を実現
+- CLIとWebのAPI Key、チャット履歴を完全に分離するため、`config.py` に `BAIZE_HOME` 環境変数を導入しました
+- ローカルDockerコンテナ化とフルスタック開発。バックエンドはFastAPIフレームワークを採用。セッション状態は `asyncio.to_thread` により同期の `agent_loop` をバックグラウンドスレッドに入れ、セキュリティ認証はREST APIとWebSocketを採用
+- Dockerベースイメージの取得が遅い場合は、`docker.m.daocloud.io` に置き換え可能
+- `docker-compose.yml` を介して `baize-config`、`baize-workspace`、`baize-sessions`、`baize-logs` の4つのデータボリュームをマウントし、データ永続化を実現
+- 推奨サーバー構成：2コア4GB以上（2コア2GBはぎりぎりのバランスで、Agentが複雑なタスクを実行するとOOMになりやすい）
+
+3、部署展示
+<div align="center">
+白澤 Web 起動画面 
+</div>
+
+<p align="center">
+  <img src="image/baize-docker-可部署云端服务器.jpg" alt="白泽 web 启动界面" width="800" />
+</p>
 
 # クイックスタート
 

@@ -55,6 +55,8 @@ A security assistant for Vibe Coding and data analysis, inspired by a Chinese my
 
 **An open-source Coding Agent CLI with strong privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Tongyi / Kimi / local Ollama) and provides full capabilities such as tool calling, skill loading, subagent delegation, context compression, and a secure sandbox.**
 
+**The deployment version of Docker has been updated, and the Zip file has been added in the release**
+
 This project has been put to the test in practice by me at the Beijing 2026 AI Youth Hackathon.
 
 ----------
@@ -94,6 +96,8 @@ This project has been put to the test in practice by me at the Beijing 2026 AI Y
 - **Secure sandbox**: Command allowlist, path-escape detection, dangerous-command blocking, sensitive-file protection, and script-injection interception.
 
 - **Black-gold themed CLI**: Chinese-width adaptation, syntax highlighting, diff coloring, and collapsible thinking.
+
+- **Deployable Online**: Release the Docker deployment version v3.0.0. It can be deployed on the public network by delegating to a cloud server.
 
 # Baize CLI Interface
 
@@ -185,6 +189,36 @@ pip install -e ".[sql-mssql]"     # SQL Server only (includes pyodbc)
 
 - **⚠️ SQL Server users: `pyodbc` is only the Python binding. You also need Microsoft ODBC Driver 18 for SQL Server installed at the system level.**
 - **⚠️ SPSS users: `spss-studio-mcp` is only an MCP bridge. IBM SPSS Statistics (versions 20–31) must be installed locally and properly licensed, and the `SPSS_INSTALL_PATH` environment variable must point to the SPSS installation directory. Full statistical analysis with the SPSS engine is mainly supported on Windows. On Linux/macOS, it can fall back to "file mode" (read `.sav` files, inspect metadata, preview data, but no statistical analysis).**
+
+### Optional: Online Deployment
+1、Docker Image Setup
+- Download Docker Desktop (Windows / macOS) or Docker Engine (Docker CE) --- for Linux servers
+- Download URL: https://docs.docker.com/get-started/get-docker/
+- For quick installation on Linux, you can use the universal script:
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+- For specific usage, complete it under AI guidance
+
+2、Deployment Principles
+- Minimal-intrusion modification, achieving physical isolation between the local CLI and Web environments
+- To fully isolate the API Keys and chat histories of CLI and Web, we introduced the `BAIZE_HOME` environment variable in `config.py`
+- Local Docker containerization and full-stack development; the backend uses the FastAPI framework; session state uses `asyncio.to_thread` to place the synchronous `agent_loop` in a background thread; secure authentication uses REST API and WebSocket
+- If pulling the Docker base image is slow, replace it with `docker.m.daocloud.io`
+- Mount the four data volumes `baize-config`, `baize-workspace`, `baize-sessions`, and `baize-logs` via `docker-compose.yml` to achieve data persistence
+- Recommended server configuration: 2 cores and 4 GB or above (2 cores and 2 GB is a tight balance; the Agent is prone to OOM when executing complex tasks)
+
+3、Deployment Preview
+<div align="center">
+BaiZe Web startup interface
+</div>
+
+<p align="center">
+  <img src="image/baize-docker-可部署云端服务器.jpg" alt="白泽 web 启动界面" width="800" />
+</p>
+
 
 # Quick Start
 
