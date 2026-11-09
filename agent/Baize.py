@@ -2074,26 +2074,23 @@ def hook_auto_format(tool_call, result):
 
 #注册在 after_tool_call 事件上的内置钩子，其作用是在代理修改 JavaScript/TypeScript 文件后，自动静默运行 ESLint 进行代码质量检查
 def hook_lint_feedback(tool_call, result):
-    """PostToolUse 等价：对 JS/TS 文件运行 ESLint 并附加反馈"""
-    if tool_call.function.name not in ('run_write', 'run_edit'):
-        return
-    args = json.loads(tool_call.function.arguments)
-    file_path = args.get('path', '')
-    if not file_path:
-        return
-    resolved = CURRENT_WORKDIR / file_path
-    ext = resolved.suffix[1:]
+    ...
     if ext in ('js', 'jsx', 'ts', 'tsx') and (CURRENT_WORKDIR / 'package.json').exists():
         if shutil.which('npx'):
             try:
-                proc = subprocess.run(['npx', 'eslint', str(resolved)],
-                                      cwd=str(CURRENT_WORKDIR), capture_output=True, text=True, check=False)
+                proc = subprocess.run(
+                    ['npx', 'eslint', str(resolved)],
+                    cwd=str(CURRENT_WORKDIR),
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',   # ★ 关键
+                    errors='replace',   # ★ 关键
+                    timeout=120,
+                    check=False,
+                )
                 if proc.returncode != 0:
                     lint_output = proc.stdout + proc.stderr
-                    # 将 lint 结果作为额外上下文注入（可考虑推入消息队列）
-                    # 这里简单打印，或可追加到某个全局变量供后续对话使用
                     print(f"[Lint] Issues found in {file_path}:\n{lint_output[:500]}")
-                    # 我们可以在 agent_loop 中检查此结果并反馈给用户，但此处不阻塞
             except Exception:
                 pass
 
@@ -2103,29 +2100,70 @@ def hook_test_gate(*args, **kwargs):
     在 Agent 结束前运行测试，返回决策。
     若测试失败，返回 {'decision':'block', 'reason':'...', 'details':'...'}
     否则返回 {'decision':'allow'}
+
+    ⚠️ 所有 subprocess.run 必须显式 encoding='utf-8', errors='replace'
+       否则 Windows 下会用 GBK 解码 UTF-8 输出，抛 UnicodeDecodeError。
     """
-    # 检测测试框架并运行，如果失败返回 block 决策
-    if (CURRENT_WORKDIR / 'package.json').exists():
-        try:
-            result = subprocess.run(['npm', 'test'], cwd=str(CURRENT_WORKDIR), capture_output=True, text=True, check=False)
-            if result.returncode != 0:
-                return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
-        except FileNotFoundError:
-            pass
-    elif (CURRENT_WORKDIR / 'pyproject.toml').exists() or (CURRENT_WORKDIR / 'pytest.ini').exists():
-        try:
-            result = subprocess.run(['pytest'], cwd=str(CURRENT_WORKDIR), capture_output=True, text=True, check=False)
-            if result.returncode != 0:
-                return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
-        except FileNotFoundError:
-            pass
-    elif (CURRENT_WORKDIR / 'go.mod').exists():
-        try:
-            result = subprocess.run(['go', 'test', './...'], cwd=str(CURRENT_WORKDIR), capture_output=True, text=True, check=False)
-            if result.returncode != 0:
-                return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
-        except FileNotFoundError:
-            pass
+    try:
+        if (CURRENT_WORKDIR / 'package.json').exists():
+            try:
+                result = subprocess.run(
+                    ['npm', 'test'],
+                    cwd=str(CURRENT_WORKDIR),
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',      # ★ 关键
+                    errors='replace',      # ★ 关键
+                    timeout=300,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
+            except FileNotFoundError:
+                pass
+            except subprocess.TimeoutExpired:
+                return {'decision': 'block', 'reason': '测试超时', 'details': 'npm test 超过 300 秒'}
+        elif (CURRENT_WORKDIR / 'pyproject.toml').exists() or (CURRENT_WORKDIR / 'pytest.ini').exists():
+            try:
+                result = subprocess.run(
+                    ['pytest'],
+                    cwd=str(CURRENT_WORKDIR),
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',      # ★ 关键
+                    errors='replace',      # ★ 关键
+                    timeout=300,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
+            except FileNotFoundError:
+                pass
+            except subprocess.TimeoutExpired:
+                return {'decision': 'block', 'reason': '测试超时', 'details': 'pytest 超过 300 秒'}
+        elif (CURRENT_WORKDIR / 'go.mod').exists():
+            try:
+                result = subprocess.run(
+                    ['go', 'test', './...'],
+                    cwd=str(CURRENT_WORKDIR),
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',      # ★ 关键
+                    errors='replace',      # ★ 关键
+                    timeout=300,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    return {'decision': 'block', 'reason': '测试失败', 'details': result.stdout[:500]}
+            except FileNotFoundError:
+                pass
+            except subprocess.TimeoutExpired:
+                return {'decision': 'block', 'reason': '测试超时', 'details': 'go test 超过 300 秒'}
+    except Exception as e:
+        # ★ 兜底：任何异常都不阻断 agent_loop
+        import logging
+        logging.error(f"hook_test_gate 异常: {e}")
+        return None
 
 # ==================== 会话持久化方案  ====================
 def save_session(workdir: Path = None, commit_to_git: bool = False):
@@ -2188,7 +2226,10 @@ def save_session(workdir: Path = None, commit_to_git: bool = False):
             print(f"[系统] 会话已提交到 Git ({workdir})")
         except subprocess.CalledProcessError as e:
             # 若 "nothing to commit" 则忽略
-            stderr = e.stderr.decode()
+            if isinstance(e.stderr, bytes):
+                stderr = e.stderr.decode('utf-8', errors='replace')
+            else:
+                stderr = str(e.stderr) if e.stderr else ""
             if "nothing to commit" not in stderr:
                 print(f"[系统] Git 提交失败: {stderr}")
         except Exception as e:
@@ -3043,6 +3084,23 @@ def _colorize_baize_line(line: str, row_idx: int, total: int) -> str:
 # 主程序入口
 def main():
     '''CLI主入口'''
+    # ══════════════════════════════════════════════════════════════
+    # ★ UTF-8 初始化（必须放在最前面，先于任何 print）
+    #   - PYTHONIOENCODING：让所有 Python 子进程使用 UTF-8 输出
+    #   - reconfigure：让白泽自身的 stdout/stderr 也使用 UTF-8
+    # 两者缺一不可：
+    #   - reconfigure 只影响当前进程
+    #   - PYTHONIOENCODING 只影响子进程
+    # Windows 下默认是 GBK（cp936），遇到 UTF-8 的中文/emoji 会崩。
+    # ══════════════════════════════════════════════════════════════
+    os.environ.setdefault('PYTHONIOENCODING', 'utf-8')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        # 极端情况（如 stdout 被替换成非 TextIOWrapper）时静默跳过
+        pass
+    # ══════════════════════════════════════════════════════════════
     global ACTIVE_SKILL,SESSION_HISTORY
     # ---------- 新增启动标语 ----------
     print(f"\033[90m◈ 白泽 · 灵械核心 v2.7.1  |  链接《山海经》数据流 ...\033[0m")
