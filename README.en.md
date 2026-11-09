@@ -55,7 +55,7 @@ A security assistant for Vibe Coding and data analysis, inspired by a Chinese my
 
 **An open-source Coding Agent CLI with strong privacy protection and multilingual interaction. It supports multiple backends (DeepSeek / OpenAI-compatible / Zhipu / Tongyi / Kimi / local Ollama) and provides full capabilities such as tool calling, skill loading, subagent delegation, context compression, and a secure sandbox.**
 
-**The deployment version of Docker has been updated, and the Zip file has been added in the release**
+**The version with Docker has been added. The Zip file has also been included in the release.**
 
 This project has been put to the test in practice by me at the Beijing 2026 AI Youth Hackathon.
 
@@ -98,6 +98,9 @@ This project has been put to the test in practice by me at the Beijing 2026 AI Y
 - **Black-gold themed CLI**: Chinese-width adaptation, syntax highlighting, diff coloring, and collapsible thinking.
 
 - **Deployable Online**: Release the Docker deployment version v3.0.0. It can be deployed on the public network by delegating to a cloud server.
+
+# Product Introduction
+Static website: https://baize-agent-website.pages.dev/
 
 # Baize CLI Interface
 
