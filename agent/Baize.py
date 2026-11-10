@@ -2074,7 +2074,22 @@ def hook_auto_format(tool_call, result):
 
 #注册在 after_tool_call 事件上的内置钩子，其作用是在代理修改 JavaScript/TypeScript 文件后，自动静默运行 ESLint 进行代码质量检查
 def hook_lint_feedback(tool_call, result):
-    ...
+    """PostToolUse 等价：对 JS/TS 文件运行 ESLint 并附加反馈"""
+    # ── 1) 只处理 run_write / run_edit ──
+    if tool_call.function.name not in ('run_write', 'run_edit'):
+        return
+    # ── 2) 解析参数，提取文件路径 ──
+    try:
+        args = json.loads(tool_call.function.arguments)
+    except Exception:
+        return
+    file_path = args.get('path', '')
+    if not file_path:
+        return
+    # ── 3) 解析文件扩展名（★ 就是这行丢失了）──
+    resolved = CURRENT_WORKDIR / file_path
+    ext = resolved.suffix[1:].lower()      # 例如 "index.TS" → "ts"
+    # ── 4) 只对 JS/TS 文件运行 ESLint ──
     if ext in ('js', 'jsx', 'ts', 'tsx') and (CURRENT_WORKDIR / 'package.json').exists():
         if shutil.which('npx'):
             try:
