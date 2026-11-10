@@ -961,7 +961,6 @@ Se aceptan Issues y PRs. Lee `CONTRIBUTOR.md` antes de enviar un PR.
 **Gracias a todos los Contributors que envían PRs.**
 
 - GitHub Contributors:
-[@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)

@@ -958,7 +958,6 @@ Issue와 PR을 환영합니다. PR을 제출하기 전에 `CONTRIBUTOR.md`를 �
 **PR을 제출해 주시는 모든 Contributor께 감사드립니다.**
 
 - GitHub Contributor:
-[@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)

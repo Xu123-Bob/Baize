@@ -901,7 +901,6 @@ A：因为 MCP server 暴露的工具定义会跟着每一轮对话发给 LLM。
 
 **Thank you for every Contributor to Submit PR**
 - Github Contributor：
-[@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)

@@ -963,7 +963,6 @@ Issues and PRs are welcome. Please read `CONTRIBUTOR.md` before submitting a PR.
 **Thank you to every contributor who submits a PR.**
 
 - GitHub Contributors:
-[@anupamme](https://github.com/anupamme)
 [@wangyipeng0724](https://github.com/wangyipeng0724)
 
 [![Contributors](https://contrib.rocks/image?repo=Xu123-Bob/Baize&v=2)](https://github.com/Xu123-Bob/Baize/graphs/contributors)
